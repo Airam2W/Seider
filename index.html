@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seider</title>
+
+    <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="CSS/home.css">
+</head>
+<body>
+
+    <h1>Seider - Home</h1>
+
+    <!-- BUTTONS -->
+    <button id="btnLogin">Login</button>
+    <button id="btnSignup">Sign Up</button>
+
+    <!-- MODAL -->
+    <div id="modal" class="modal hidden">
+
+        <!-- LOGIN -->
+        <div id="loginBox" class="card hidden">
+            <h2>Login</h2>
+
+            <form id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+
+            <button id="googleBtn">Login with Google</button>
+
+            <button onclick="closeModal()">Close</button>
+        </div>
+
+        <!-- SIGNUP -->
+        <div id="signupBox" class="card hidden">
+            <h2>Sign Up</h2>
+
+            <form id="signupForm">
+                <input type="text" id="signupName" placeholder="Name" required>
+                <input type="email" id="signupEmail" placeholder="Email" required>
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <button type="submit">Create Account</button>
+            </form>
+
+            <button onclick="closeModal()">Close</button>
+        </div>
+
+    </div>
+
+    <script type="module" src="JS/home.js"></script>
+</body>
+</html>
