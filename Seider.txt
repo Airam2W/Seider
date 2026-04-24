@@ -1,7 +1,28 @@
+- Details
+  - Diseno
+  - Responsividad
+
+- Firebase
+  - Ocultar ID con obfuscamiento
+  - Modificar primer commit
+
 - Home
   - Presentacion (Description, Benefit, etc)
   - Login 
   - Sign up
 
 - Timeline
+  - Orden
+  - Current Money FIJO
+  - Format for Entries
+  - Tag resume for Entry
 
+- Entry
+  - Nuevos Tags
+  - Recibo/Foto
+  - Notes
+  - Interface Structure
+
+- Simulation
+  - Next day/week/mouth?
+  - Search anything

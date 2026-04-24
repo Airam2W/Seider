@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seider - Entry</title>
+
+    <link rel="stylesheet" href="/CSS/styles.css">
+    <link rel="stylesheet" href="/CSS/entry.css">
+</head>
+<body>
+
+    <header class="header">
+        <h2>New Entry</h2>
+    </header>
+
+    <main class="entry-container">
+
+        <!-- ITEMS TABLE -->
+        <div id="itemsContainer"></div>
+
+        <button id="btnAddItem">+ Add Item</button>
+
+        <!-- TOTAL -->
+        <div class="total-box">
+            <h3>Total:</h3>
+            <span id="totalAmount">0</span>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+            <button id="btnSave">Save</button>
+            <button id="btnCancel">Back</button>
+        </div>
+
+    </main>
+
+    <script type="module" src="/JS/entry.js"></script>
+    <script type="module" src="/JS/auth-guard.js"></script>
+</body>
+</html>

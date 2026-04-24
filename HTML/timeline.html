@@ -1,1 +1,40 @@
-Time
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seider - Timeline</title>
+
+    <link rel="stylesheet" href="/CSS/styles.css">
+    <link rel="stylesheet" href="/CSS/timeline.css">
+</head>
+<body>
+
+    <header class="header">
+        <h2>Seider</h2>
+
+        <div>
+            <button id="btnAdd">+ Add Entry</button>
+            <button id="btnLogout">Logout</button>
+        </div>
+    </header>
+
+    <main class="timeline">
+
+        <!-- Dynamic entries -->
+        <div id="entriesContainer"></div>
+
+        <!-- Fixed entries -->
+        <div class="entry fixed">
+            <h3>Money</h3>
+        </div>
+
+        <div class="entry fixed">
+            <h3>Welcome Message</h3>
+        </div>
+
+    </main>
+
+    <script type="module" src="/JS/timeline.js"></script>
+    <script type="module" src="/JS/auth-guard.js"></script>
+</body>
+</html>

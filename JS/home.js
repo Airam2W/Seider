@@ -8,6 +8,16 @@ import {
     updateProfile
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    collection,
+    addDoc
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+const db = getFirestore(app);
+
 // =======================
 // UI
 // =======================
@@ -48,11 +58,13 @@ window.closeModal = closeModal;
 document.getElementById("googleBtn").onclick = async () => {
     try {
         const result = await signInWithPopup(auth, provider);
-        alert("Welcome " + result.user.displayName);
-        console.log(result.user);
 
-        // Redireccionar a otra página
+        await createUserIfNotExists(result.user);
+
+        alert("Welcome " + result.user.displayName);
+
         window.location.href = "/HTML/timeline.html";
+
     } catch (error) {
         console.error(error);
         alert(error.message);
@@ -70,9 +82,14 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const password = document.getElementById("loginPassword").value;
 
     try {
-        const user = await signInWithEmailAndPassword(auth, email, password);
-        alert("Login success");
-        console.log(user.user);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+        await createUserIfNotExists(userCredential.user);
+
+        console.log("Login success:", userCredential.user);
+        alert("Welcome " + userCredential.user.displayName);
+
+        window.location.href = "/HTML/timeline.html";
     } catch (error) {
         console.error(error);
         alert(error.message);
@@ -97,11 +114,59 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
             displayName: name
         });
 
-        alert("Account created");
-        console.log(userCredential.user);
+        await createUserIfNotExists(userCredential.user);
+
+        alert("Signup success");
+        closeModal();
+
+        openModal("login");
+
 
     } catch (error) {
         console.error(error);
         alert(error.message);
     }
 });
+
+
+// =======================
+// DB Firebase
+// =======================
+// CREATE USER IN FIRESTORE
+async function createUserIfNotExists(user) {
+    try {
+        // Create user document
+        await setDoc(
+            doc(db, "users", user.uid),
+            {
+                name: user.displayName || "No Name",
+                email: user.email
+            },
+            { merge: true }
+        );
+
+        // Create default tags (no duplicates)
+        const tags = [
+            { id: "electricity", name: "Electricity", color: "#FF5733" },
+            { id: "water", name: "Water", color: "#3399FF" },
+            { id: "food", name: "Food", color: "#33FF57" },
+            { id: "transport", name: "Transport", color: "#FF33A8" },
+            { id: "entertainment", name: "Entertainment", color: "#FF8C33" },
+            { id: "rent", name: "Rent", color: "#8C33FF" }
+        ];
+
+        for (let tag of tags) {
+            await setDoc(
+                doc(db, "users", user.uid, "tags", tag.id),
+                {
+                    name: tag.name,
+                    color: tag.color
+                },
+                { merge: true }
+            );
+        }
+
+    } catch (error) {
+        console.error("Error creating user:", error);
+    }
+}
