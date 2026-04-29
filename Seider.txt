@@ -1,28 +1,36 @@
 - Details
+  - Estructura General de Todo.
   - Diseno
+  - Animaciones (Loading)
   - Responsividad
 
 - Firebase
-  - Ocultar ID con obfuscamiento
-  - Modificar primer commit
+  - Security (Encriptation of Tags, Note, Total, Amount, )
 
 - Home
-  - Presentacion (Description, Benefit, etc)
-  - Login 
-  - Sign up
+  - Presentacion (Description, Benefit, etc) (Imagenes/GIF)
+  - Login (strong formularios)
+  - Sign up (strong formularios)
+  - Autologin
 
 - Timeline
-  - Orden
-  - Current Money FIJO
   - Format for Entries
-  - Tag resume for Entry
+  - Information resumen for each Entry (Tags, etc)
 
-- Entry
-  - Nuevos Tags
-  - Recibo/Foto
-  - Notes
-  - Interface Structure
+- Entry [0]
+  - 
 
 - Simulation
   - Next day/week/mouth?
   - Search anything
+  - Otras predicciones
+  - Graficas
+  - Comparador
+
+- Settings
+  - Crear/Editar/Borrar Tags
+  - Crear/Editar/Borrar SubTags
+
+- Read Me
+  - Improvemnt
+    - Recibo Logic (Buy Google Storage)

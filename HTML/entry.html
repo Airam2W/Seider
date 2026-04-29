@@ -15,10 +15,43 @@
 
     <main class="entry-container">
 
-        <!-- ITEMS TABLE -->
-        <div id="itemsContainer"></div>
 
-        <button id="btnAddItem">+ Add Item</button>
+        <!-- ITEMS TABLE -->
+        <div id="itemsContainer">
+            <h3>Table:</h3>
+        </div>
+
+        <button id="btnAddBlock">+ Add Block</button>
+
+        <!-- NEW TAG MODAL -->
+        <div id="newTagModal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Create New Tag</h3>
+                <input id="newTagName" type="text" placeholder="Tag name">
+                <div class="modal-actions">
+                    <button id="btnCreateTag">Create</button>
+                    <button id="btnCancelTag">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NEW SUBTAG MODAL -->
+         <div id="newSubtagModal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Create New Subtag</h3>
+                <input id="newSubtagName" type="text" placeholder="Subtag name">
+                <div class="modal-actions">
+                    <button id="btnCreateSubtag">Create</button>
+                    <button id="btnCancelSubtag">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTES -->
+        <div class="notes-box">
+            <h3>Notes:</h3>
+            <textarea id="notes" placeholder="Add any notes about this entry..."></textarea>
+        </div>
 
         <!-- TOTAL -->
         <div class="total-box">
