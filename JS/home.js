@@ -156,14 +156,53 @@ async function createUserIfNotExists(user) {
         ];
 
         for (let tag of tags) {
+            const tagRef = doc(db, "users", user.uid, "tags", tag.id);
+
             await setDoc(
-                doc(db, "users", user.uid, "tags", tag.id),
+                tagRef,
                 {
                     name: tag.name,
                     color: tag.color
                 },
                 { merge: true }
             );
+
+            // =======================
+            // DEFAULT SUBTAGS
+            // =======================
+            let subtags = [];
+
+            if (tag.id === "food") {
+                subtags = ["Groceries", "Restaurant"];
+            }
+
+            if (tag.id === "transport") {
+                subtags = ["Bus", "Car", "Taxi"];
+            }
+
+            if (tag.id === "entertainment") {
+                subtags = ["Movies", "Games"];
+            }
+
+            if (tag.id === "rent") {
+                subtags = ["House", "Apartment"];
+            }
+
+            if (tag.id === "water") {
+                subtags = ["Bill"];
+            }
+
+            if (tag.id === "electricity") {
+                subtags = ["Bill"];
+            }
+
+            for (let sub of subtags) {
+                await setDoc(
+                    doc(db, "users", user.uid, "tags", tag.id, "subtags", sub.toLowerCase()),
+                    { name: sub },
+                    { merge: true }
+                );
+            }
         }
 
     } catch (error) {

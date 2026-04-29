@@ -24,5 +24,28 @@
 
 .fixed {
     border-left: 5px solid gray;
-    opacity: 0.7;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: -30px;
+    left: 0;
+    right: 0;
+
+    max-width: 600px;
+    margin: 30px auto;
+}
+
+.scroll-bottom {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+
+    padding: 10px 15px;
+    background: #2f80ed;
+    color: white;
+    border: none;
+    border-radius: 5px;
+
+    cursor: pointer;
 }

@@ -18,19 +18,24 @@
         </div>
     </header>
 
-    <main class="timeline">
+    <main class="timeline" id="timeline">
 
         <!-- Dynamic entries -->
         <div id="entriesContainer"></div>
 
-        <!-- Fixed entries -->
-        <div class="entry fixed">
-            <h3>Money</h3>
-        </div>
-
+        <!-- Welcome message -->
         <div class="entry fixed">
             <h3>Welcome Message</h3>
         </div>
+
+        <!-- Fixed entries -->
+        <div class="entry fixed fixed-bottom" id="totalAmountContainer">
+            <h3 id="totalAmount">Total Amount</h3>
+        </div>
+
+        <button id="btnScrollBottom" class="scroll-bottom">Scroll to Bottom</button>
+
+        <br>
 
     </main>
 
