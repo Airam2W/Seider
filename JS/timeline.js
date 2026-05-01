@@ -12,7 +12,9 @@ import {
     getDocs,
     doc,
     setDoc,
-    deleteDoc
+    deleteDoc,
+    query,
+    orderBy
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 const db = getFirestore(app);
@@ -29,6 +31,7 @@ let currentUser = null;
 onAuthStateChanged(auth, async (user) => {
     currentUser = user;
     await loadEntries(user.uid);
+    scrollToBottom(true);
 });
 
 // =======================
@@ -66,9 +69,12 @@ document.getElementById("btnAdd").onclick = async () => {
 async function loadEntries(uid) {
     entriesContainer.innerHTML = "";
 
-    const snapshot = await getDocs(
-        collection(db, "users", uid, "entries")
+    const q = query(
+        collection(db, "users", uid, "entries"),
+        orderBy("date", "asc") // 🔼 MÁS ANTIGUO ARRIBA
     );
+
+const snapshot = await getDocs(q);
 
     const totalAmount = snapshot.docs.reduce((sum, docItem) => {
         const data = docItem.data();
@@ -76,6 +82,11 @@ async function loadEntries(uid) {
     }, 0);
 
     totalAmountEl.textContent = `Total Amount: ${totalAmount}`;
+
+    // COUNT NUMBER OF ENTRIES AND UPDATE USER DOC
+    const entryCount = snapshot.size;
+    const userDocRef = doc(db, "users", uid);
+    await setDoc(userDocRef, { entryCount: entryCount }, { merge: true });
 
     snapshot.forEach((docItem) => {
         const data = docItem.data();
@@ -86,7 +97,11 @@ async function loadEntries(uid) {
         div.className = "entry";
 
         div.innerHTML = `
-            <p>${new Date(data.date.seconds * 1000).toLocaleString()}</p>
+            <p>
+            ${new Date(data.date.seconds * 1000).toLocaleDateString()}
+            -
+            ${new Date(data.date.seconds * 1000).toLocaleTimeString()}
+            </p>
             <p>Total: ${entryTotal}</p>
 
             <button onclick="viewEntry('${entryId}')">View / Edit</button>
@@ -124,16 +139,51 @@ window.deleteEntry = async (id) => {
     }
 };
 
+// =======================
+// NAVIGATION
+// =======================
+document.getElementById("smartTools").onclick = async () => {
+    const user = currentUser;
+
+    if (!user) return;
+
+    try {
+
+        window.location.href = "/HTML/smartTools.html";
+
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+document.getElementById("settings").onclick = async () => {
+    const user = currentUser;
+
+    if (!user) return;
+
+    try {
+
+        window.location.href = "/HTML/settings.html";
+
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 
 // =======================
 // SCROLL TO BOTTOM
 // =======================
 document.getElementById("btnScrollBottom").onclick = () => {
+    scrollToBottom(true);
+};
+
+function scrollToBottom(smooth = true) {
   window.scrollTo({
     top: document.documentElement.scrollHeight,
-    behavior: "smooth"
+    behavior: smooth ? "smooth" : "auto"
   });
-};
+}
 
 
 const element = document.getElementById("totalAmountContainer");

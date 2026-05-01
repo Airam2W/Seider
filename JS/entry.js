@@ -98,9 +98,9 @@ function updateTotal() {
     for (const group of groups) {
         let totalTag = 0;
 
-        const subBlocks = group.querySelectorAll(".subtag-block");
+        const subGroups = group.querySelectorAll(".subtag-Group");
 
-        for (const sub of subBlocks) {
+        for (const sub of subGroups) {
             let totalSub = 0;
 
             const rows = sub.querySelectorAll(".item-row");
@@ -156,9 +156,9 @@ document.getElementById("btnSave").onclick = async () => {
         if (!tagTotals[tag]) tagTotals[tag] = 0;
         if (!subtagTotals[tag]) subtagTotals[tag] = {};
 
-        const subBlocks = group.querySelectorAll(".subtag-block");
+        const subGroups = group.querySelectorAll(".subtag-Group");
 
-        for (const sub of subBlocks) {
+        for (const sub of subGroups) {
             const subtag = sub.querySelector("select").value;
 
             if (!subtagTotals[tag][subtag]) {
@@ -243,7 +243,7 @@ document.getElementById("btnSave").onclick = async () => {
     }
 };
 
-document.getElementById("btnAddBlock").onclick = () => {
+document.getElementById("btnAddGroup").onclick = () => {
     createTagGroup();
 };
 
@@ -280,7 +280,7 @@ async function loadEntry(id) {
         const container = group.querySelector(".subtags-container");
 
         Object.keys(grouped[tagName]).forEach(subtagName => {
-            createSubtagBlock(
+            createSubtagGroup(
                 select,
                 container,
                 subtagName,
@@ -543,15 +543,15 @@ function createTagGroup(selectedTag = null) {
         // 2. (Opcional pero recomendado) crear un subtag vacío inicial
         const firstSub = (subtagsMap[select.value] || [])[0];
 
-        createSubtagBlock(select, subtagsContainer, firstSub);
+        createSubtagGroup(select, subtagsContainer, firstSub);
 
     };
 
-    // ===== DELETE BLOCK =====
-    const btnDeleteBlock = document.createElement("button");
-    btnDeleteBlock.textContent = "Delete Block";
-    btnDeleteBlock.onclick = () => {
-        if (!confirm("Delete this block?")) return;
+    // ===== DELETE Group =====
+    const btnDeleteGroup = document.createElement("button");
+    btnDeleteGroup.textContent = "Delete Group";
+    btnDeleteGroup.onclick = () => {
+        if (!confirm("Delete this Group?")) return;
         group.remove();
         updateTotal();
     };
@@ -560,11 +560,11 @@ function createTagGroup(selectedTag = null) {
     const subtagsContainer = document.createElement("div");
     subtagsContainer.className = "subtags-container";
 
-    // ===== ADD SUBTAG BLOCK =====
+    // ===== ADD SUBTAG Group =====
     const btnAddSubtag = document.createElement("button");
     btnAddSubtag.textContent = "+ Add Item";
     btnAddSubtag.onclick = () => {
-        createSubtagBlock(select, subtagsContainer);
+        createSubtagGroup(select, subtagsContainer);
     };
 
     // ===== TOTAL TAG =====
@@ -574,7 +574,7 @@ function createTagGroup(selectedTag = null) {
 
     // ===== APPEND =====
     header.appendChild(select);
-    header.appendChild(btnDeleteBlock);
+    header.appendChild(btnDeleteGroup);
     header.appendChild(totalTag);
 
     group.appendChild(header);
@@ -584,9 +584,9 @@ function createTagGroup(selectedTag = null) {
     itemsContainer.appendChild(group);
 }
 
-function createSubtagBlock(tagSelect, container, subtagName = null, items = []) {
-    const subBlock = document.createElement("div");
-    subBlock.className = "subtag-block";
+function createSubtagGroup(tagSelect, container, subtagName = null, items = []) {
+    const subGroup = document.createElement("div");
+    subGroup.className = "subtag-Group";
 
     // ===== SELECT SUBTAG =====
     const subtagSelect = document.createElement("select");
@@ -629,7 +629,7 @@ function createSubtagBlock(tagSelect, container, subtagName = null, items = []) 
     const btnDeleteSub = document.createElement("button");
     btnDeleteSub.textContent = "✕";
     btnDeleteSub.onclick = () => {
-        subBlock.remove();
+        subGroup.remove();
         updateTotal();
     };
 
@@ -639,13 +639,13 @@ function createSubtagBlock(tagSelect, container, subtagName = null, items = []) 
     totalSubtag.textContent = "0";
 
     // ===== APPEND =====
-    subBlock.appendChild(subtagSelect);
-    subBlock.appendChild(btnDeleteSub);
-    subBlock.appendChild(totalSubtag);
-    subBlock.appendChild(itemsDiv);
-    subBlock.appendChild(btnAddSub);
+    subGroup.appendChild(subtagSelect);
+    subGroup.appendChild(btnDeleteSub);
+    subGroup.appendChild(totalSubtag);
+    subGroup.appendChild(itemsDiv);
+    subGroup.appendChild(btnAddSub);
 
-    container.appendChild(subBlock);
+    container.appendChild(subGroup);
 
     // cargar items si existen
     items.forEach(item => {
@@ -717,7 +717,7 @@ function closeSubtagModal() {
 document.getElementById("btnCancelSubtag").onclick = closeSubtagModal;
 
 function refreshAllSubtagSelects(newSubtagName = null) {
-    const selects = document.querySelectorAll(".subtag-block select");
+    const selects = document.querySelectorAll(".subtag-Group select");
 
     selects.forEach(select => {
         const currentValue = select.value;
@@ -821,7 +821,7 @@ function fileToBase64(file) {
 // =======================
 // BUTTONS
 // =======================
-document.getElementById("btnAddBlock").onclick = () => {
+document.getElementById("btnAddGroup").onclick = () => {
     createTagGroup();
 };
 
