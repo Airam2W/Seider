@@ -12,3 +12,7 @@ h1 {
 button {
     margin: 5px;
 }
+
+.hidden {
+    display: none;
+}

@@ -16,7 +16,29 @@ import {
     addDoc
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+import { GithubAuthProvider } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+const githubProvider = new GithubAuthProvider();
+
 const db = getFirestore(app);
+
+// =======================
+// AUTH
+// =======================
+onAuthStateChanged(auth, async (user) => {
+    document.body.classList.remove("hidden");
+
+    if (user) {
+        await createUserIfNotExists(user);
+        window.location.href = "/HTML/timeline.html";
+    }
+});
+
+onAuthStateChanged(auth, async (user) => {
+    
+});
 
 // =======================
 // UI
@@ -71,6 +93,24 @@ document.getElementById("googleBtn").onclick = async () => {
     }
 };
 
+// =======================
+// GITHUB LOGIN
+// =======================
+document.getElementById("githubBtn").onclick = async () => {
+    try {
+        const result = await signInWithPopup(auth, githubProvider);
+
+        await createUserIfNotExists(result.user);
+
+        alert("Welcome " + (result.user.displayName || "User"));
+
+        window.location.href = "/HTML/timeline.html";
+
+    } catch (error) {
+        handleFirebaseError(error);
+    }
+};
+
 
 // =======================
 // LOGIN EMAIL
@@ -78,21 +118,29 @@ document.getElementById("googleBtn").onclick = async () => {
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
+    const email = loginEmail.value.trim();
+    const password = loginPassword.value.trim();
+
+    if (!validateEmail(email)) {
+        alert("Invalid email format");
+        return;
+    }
+
+    if (!validatePassword(password)) {
+        alert("Password must be at least 6 characters");
+        return;
+    }
 
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
         await createUserIfNotExists(userCredential.user);
 
-        console.log("Login success:", userCredential.user);
-        alert("Welcome " + userCredential.user.displayName);
-
+        alert("Welcome " + (userCredential.user.displayName || "User"));
         window.location.href = "/HTML/timeline.html";
+
     } catch (error) {
-        console.error(error);
-        alert(error.message);
+        handleFirebaseError(error);
     }
 });
 
@@ -103,9 +151,24 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 document.getElementById("signupForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const name = document.getElementById("signupName").value;
-    const email = document.getElementById("signupEmail").value;
-    const password = document.getElementById("signupPassword").value;
+    const name = signupName.value.trim();
+    const email = signupEmail.value.trim();
+    const password = signupPassword.value.trim();
+
+    if (!validateName(name)) {
+        alert("Name must be at least 2 characters");
+        return;
+    }
+
+    if (!validateEmail(email)) {
+        alert("Invalid email format");
+        return;
+    }
+
+    if (!validatePassword(password)) {
+        alert("Password must be at least 6 characters");
+        return;
+    }
 
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -118,13 +181,10 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
 
         alert("Signup success");
         closeModal();
-
         openModal("login");
 
-
     } catch (error) {
-        console.error(error);
-        alert(error.message);
+        handleFirebaseError(error);
     }
 });
 
@@ -140,7 +200,8 @@ async function createUserIfNotExists(user) {
             doc(db, "users", user.uid),
             {
                 name: user.displayName || "No Name",
-                email: user.email
+                email: user.email,
+                entryCount: 0
             },
             { merge: true }
         );
@@ -208,4 +269,47 @@ async function createUserIfNotExists(user) {
     } catch (error) {
         console.error("Error creating user:", error);
     }
+}
+
+// =======================
+// VALIDATIONS
+// =======================
+function validateEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
+function validatePassword(password) {
+    return password.length >= 6;
+}
+
+function validateName(name) {
+    return name.trim().length >= 2;
+}
+
+function handleFirebaseError(error) {
+    let message = "Something went wrong";
+
+    switch (error.code) {
+        case "auth/email-already-in-use":
+            message = "Email already in use";
+            break;
+        case "auth/invalid-email":
+            message = "Invalid email";
+            break;
+        case "auth/user-not-found":
+            message = "User not found";
+            break;
+        case "auth/wrong-password":
+            message = "Wrong password";
+            break;
+        case "auth/weak-password":
+            message = "Password should be at least 6 characters";
+            break;
+        case "auth/popup-closed-by-user":
+            message = "Popup closed";
+            break;
+    }
+
+    alert(message);
 }

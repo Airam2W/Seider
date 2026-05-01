@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seider - Smart Tools</title>
+
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <link rel="stylesheet" href="../CSS/smartTools.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="top-bar">
+        <h1>Smart Tools</h1>
+
+        <div class="nav-buttons">
+            <button id="timeline">Timeline</button>
+            <button id="settings">Settings</button>
+            <button id="btnLogout">Logout</button>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div class="simulation-section block">
+            <h2>Simulación de usuarios</h2>
+
+            <button id="btnSim1">Simular 1</button>
+            <button id="btnSim2">Simular 2</button>
+            <button id="btnSim3">Simular 3</button>
+
+            <hr>
+
+            <button id="btnDeleteEntries" style="background:red;color:white;">
+                Borrar TODOS los entries
+            </button>
+        </div>
+
+        <!-- SECTION: Future Insights -->
+        <section class="block">
+            <h2>Future Insights</h2>
+            <p>Simulate how your entries will evolve over time based on your current habits.</p>
+            <button id="btnStartFuture" class="primary-btn">
+                Start Future
+            </button>
+
+            <!-- MODAL -->
+            <div id="modal" class="modal hidden">
+                <div class="modal-content" id="modalContent">
+                    <!-- contenido dinámico -->
+                </div>
+            </div>
+
+        </section>
+
+        <hr class="divider">
+
+        <!-- SECTION: Search -->
+        <section class="block">
+            <h2>Search</h2>
+            <p>Search for keywords within your notes</p>
+            <button id="btnStartSearch" class="primary-btn">Start Search</button>
+
+            
+        </section>
+
+    </main>
+
+    <script type="module" src="../JS/auth-guard.js"></script>
+    <script type="module" src="../JS/smartTools.js"></script>
+</body>
+</html>

@@ -1,35 +1,49 @@
-- Details
-  - Estructura General de Todo.
-  - Diseno
-  - Animaciones (Loading)
-  - Responsividad
+- Commit
+  - Order by Timeline
+  - Smart Tools
+  - Login with Github
+  - Change name "Blocks" to "Groups"
+
+- Simulation
+  - Search anything (Feature Github) -> Enviar al Entry
+  - Analisis por Tags/Subtags
+  - Comparador por dias/semanas/mes/year
+  - Otras predicciones
+
+  = Graficas
+
+- Entry
+  - MXN?
+  - Note -> Editor de texto 
+
+- Timeline
+  - Right bottoms
+  - MXN?
+  - Format for Entries
+  - Information resumen for each Entry (Tags, etc)
+
+- Settings
+  - Crear/Editar/Borrar Tags
+  - Crear/Editar/Borrar SubTags
+  - Cambiar Unidad de Dinero
+  - Cambiar idioma?
+  - Cambiar personal information (NO Money)
+  - {Conversiones de dinero?}
 
 - Firebase
   - Security (Encriptation of Tags, Note, Total, Amount, )
 
 - Home
+  - Ask about personal information (Age, Gender, (predict variable), NOW how much money)
   - Presentacion (Description, Benefit, etc) (Imagenes/GIF)
-  - Login (strong formularios)
-  - Sign up (strong formularios)
-  - Autologin
 
-- Timeline
-  - Format for Entries
-  - Information resumen for each Entry (Tags, etc)
-
-- Entry [0]
-  - 
-
-- Simulation
-  - Next day/week/mouth?
-  - Search anything
-  - Otras predicciones
-  - Graficas
-  - Comparador
-
-- Settings
-  - Crear/Editar/Borrar Tags
-  - Crear/Editar/Borrar SubTags
+- Details
+  - English Code Comments
+  - Estructura General de Todo.
+  - [New] <-- Stamp in {Simulation Section, Timeline button}
+  - Diseno
+  - Animaciones (Loading)
+  - Responsividad
 
 - Read Me
   - Improvemnt

@@ -49,3 +49,17 @@
 
     cursor: pointer;
 }
+
+.add-bottom {
+    position: fixed;
+    bottom: 60px;
+    right: 20px;
+
+    padding: 10px 15px;
+    background: #2f80ed;
+    color: white;
+    border: none;
+    border-radius: 5px;
+
+    cursor: pointer;
+}
