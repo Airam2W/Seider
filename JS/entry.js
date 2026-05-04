@@ -23,6 +23,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const entryId = urlParams.get("id");
 let isEdit = false;
 
+const entryDateValue = document.getElementById("entryDateValue");
+
 const db = getFirestore(app);
 
 const itemsContainer = document.getElementById("itemsContainer");
@@ -43,10 +45,16 @@ onAuthStateChanged(auth, async (user) => {
 
     await loadTags(user.uid);
 
+
+
     if (entryId) {
         isEdit = true;
         await loadEntry(entryId);
     } else {
+        if (!entryId) {
+            const now = new Date();
+            entryDateValue.textContent = now.toLocaleString();
+        }
         addItem();
     }
 });
@@ -271,6 +279,11 @@ async function loadEntry(id) {
 
         grouped[item.tag][item.subtag].push(item);
     });
+
+    if (data.date) {
+        const dateObj = data.date.toDate();
+        entryDateValue.textContent = dateObj.toLocaleString();
+    }
 
     Object.keys(grouped).forEach(tagName => {
         createTagGroup(tagName);
