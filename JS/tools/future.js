@@ -2,15 +2,10 @@
 import {
     getUserEntries,
     currentUser
-} from "../smartTools.js";
+} from "../timeline.js";
 
 export async function predictFuture() {
     const entries = await getUserEntries(currentUser.uid);
-
-    if (entries.length < 5) {
-        alert("Not enough data to simulate");
-        return;
-    }
 
     const duration = parseInt(document.getElementById("simulationDuration").value);
 

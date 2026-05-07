@@ -1,47 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Seider - Timeline</title>
 
     <link rel="stylesheet" href="/CSS/styles.css">
     <link rel="stylesheet" href="/CSS/timeline.css">
+    <link rel="stylesheet" href="/CSS/tools/future.css">
+    <link rel="stylesheet" href="/CSS/tools/search.css">
+    <link rel="stylesheet" href="/CSS/tools/spending.css">
 </head>
+
 <body>
 
-    <header class="header">
-        <h2>Seider</h2>
+    <main class="timeline" id="timeline">
 
-        <div>
-            <button id="smartTools">Smart Tools</button>
+        <!-- SIDE BUTTONS RIGHT -->
+        <div class="side-buttons-right">            
+            <button id="btnAdd" class="add-bottom">+ Add Entry</button>
+            <button id="btnScrollBottom" class="scroll-bottom">Scroll to Bottom</button>
+        </div>
+
+        <!-- SIDE BUTTONS RIGHT TOP-->
+        <div class="side-buttons-right-top">
+            <button id="btnSmartToggle" class="main-btn">
+                Smart Tools ▾
+            </button>
+            <div id="smartMenu" class="submenu hidden">
+
+                <button onclick="openFuture()">Future Insights</button>
+                <button onclick="openSearch()">Insight Search</button>
+                <button onclick="openSpending()">Spending Insights</button>
+                <button onclick="openComparison()">Insights Comparison</button>
+
+            </div>
+        </div>
+
+        <!-- SIDE BUTTONS LEFT -->
+        <div class="side-buttons-left">
+            
+        </div>
+
+        <!-- SIDE BUTTONS LEFT TOP-->
+        <div class="side-buttons-left-top">
             <button id="settings">Settings</button>
             <button id="btnLogout">Logout</button>
         </div>
-    </header>
 
-    <main class="timeline" id="timeline">
+        <!-- SMART TOOLS-->
+
+        <!-- SECTION: Future Insights -->
+        <div id="modalFuture" class="modal hidden">
+            <div class="modal-content" id="modalContentFuture">
+                <h2>Future Insights</h2>
+
+                <select id="simulationDuration">
+                    <option value="0">Today</option>
+                    <option value="1">Tomorrow</option>
+                    <option value="7">Next Week</option>
+                    <option value="30">Next Month</option>
+                    <option value="60">Next 2 Months</option>
+                    <option value="90">Next 3 Months</option>
+                    <option value="180">Next 6 Months</option>
+                    <option value="365">Next Year</option>
+                </select>
+
+                <div id="simulationResult"></div>
+
+                <button onclick="predictFuture()">Predict</button>
+
+                <button onclick="closeModal()">Close</button>
+            </div>
+        </div>
+
+        <!-- SECTION: Insight Search -->
+        <div id="modalSearch" class="modal hidden">
+            <div class="modal-content search-layout" id="modalContentSearch">
+
+                <!-- LEFT PANEL -->
+                <div class="search-left">
+
+                    <h2>Insight Search</h2>
+
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Type and press Enter...">
+                    </div>
+
+                    <div id="searchTags" class="search-tags"></div>
+
+                    <div class="filter-group">
+                        <p>Tags</p>
+                        <div id="tagFilter" class="filter-pills"></div>
+                    </div>
+
+                    <div class="filter-group">
+                        <p>Subtags</p>
+                        <div id="subtagFilter" class="filter-pills"></div>
+                    </div>
+
+                    <button onclick="closeModal()">Close</button>
+
+                </div>
+
+                <!-- RIGHT PANEL -->
+                <div class="search-right">
+                    <div id="searchResults" class="results-container">
+                        <p style="opacity:0.6;">No filters applied</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SECTION: Spending Insights -->
+        <div id="modalSpending" class="modal hidden">
+            <div class="insights-layout" id="modalContentSpending">
+                <div class="insights-header">
+                    <h2>Spending Insights</h2>
+
+                    <select id="timeRange">
+                        <option value="7">1 Week</option>
+                        <option value="30">1 Month</option>
+                        <option value="90">3 Months</option>
+                        <option value="180">6 Months</option>
+                        <option value="365">1 Year</option>
+                        <option value="all">All Time</option>
+                    </select>
+
+                    <button onclick="closeModal()">Close</button>
+                </div>
+
+                <div class="insights-content">
+
+                    <!-- GENERAL -->
+                    <div class="panel full">
+                        <h3>General Analysis</h3>
+                        <div id="generalAnalysis"></div>
+                    </div>
+
+                    <!-- TAG -->
+                    <div class="panel">
+                        <h3>Tag Evolution</h3>
+                        <select id="tagSelect"></select>
+                        <canvas id="tagLineChart"></canvas>
+                    </div>
+
+                    <!-- SUBTAG -->
+                    <div class="panel">
+                        <h3>Subtag Evolution</h3>
+                        <select id="subtagSelect"></select>
+                        <canvas id="subtagLineChart"></canvas>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: Insights Comparison -->
+        <div id="modalComparison" class="modal hidden">
+            <div class="insights-layout" id="modalContentComparison">
+
+                <div class="insights-header">
+                    <h2>Insights Comparison</h2>
+
+                    <select id="compareType">
+                        <option value="month">Monthly Comparison</option>
+                        <option value="week">Weekly Comparison</option>
+                        <option value="year">Yearly Comparison</option>
+                    </select>
+
+                    <button onclick="closeModal()">Close</button>
+                </div>
+
+                <div class="insights-content">
+
+                    <!-- SUMMARY -->
+                    <div class="panel full">
+                        <h3>Overview</h3>
+                        <div id="comparisonSummary"></div>
+                    </div>
+
+                    <!-- TAGS -->
+                    <div class="panel">
+                        <h3>Tag Trends</h3>
+                        <canvas id="tagCompareChart"></canvas>
+                    </div>
+
+                    <!-- SUBTAGS -->
+                    <div class="panel">
+                        <h3>Subtag Trends</h3>
+                        <canvas id="subtagCompareChart"></canvas>
+                    </div>
+
+                    <!-- WHY -->
+                    <div class="panel full">
+                        <h3>Main Drivers of Change</h3>
+                        <div id="comparisonWhy"></div>
+                    </div>
+
+                    <!-- HISTORY -->
+                    <div class="panel">
+                        <h3>Historical Evolution</h3>
+                        <canvas id="historyChart"></canvas>
+                    </div>
+
+                    <!-- TREND -->
+                    <div class="panel">
+                        <h3>Future Trend</h3>
+                        <div id="trendPrediction"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- TIMELINE -->
 
         <!-- Dynamic entries -->
         <div id="entriesContainer"></div>
 
         <!-- Welcome message -->
-        <div class="entry fixed">
+        <div class="entry entry-header fixed">
             <h3>Welcome Message</h3>
         </div>
 
         <!-- Fixed entries -->
-        <div class="entry fixed fixed-bottom" id="totalAmountContainer">
+        <div class="entry entry-header fixed fixed-bottom" id="totalAmountContainer">
             <h3 id="totalAmount">Total Amount</h3>
         </div>
-
-        <button id="btnAdd" class="add-bottom">+ Add Entry</button>
-        <button id="btnScrollBottom" class="scroll-bottom">Scroll to Bottom</button>
 
         <br>
 
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="/JS/timeline.js"></script>
     <script type="module" src="/JS/auth-guard.js"></script>
 </body>
+
 </html>

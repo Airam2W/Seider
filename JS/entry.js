@@ -129,20 +129,20 @@ function updateTotal() {
             // 🔹 SET SUBTAG TOTAL
             const subTotalSpan = sub.querySelector(".subtag-total");
             
-            if (subTotalSpan) subTotalSpan.textContent = totalSub;
+            if (subTotalSpan) subTotalSpan.textContent = `$ ${totalSub}`;
 
             totalTag += totalSub;
         };
 
         // 🔹 SET TAG TOTAL
         const tagTotalSpan = group.querySelector(".tag-total");
-        if (tagTotalSpan) tagTotalSpan.textContent = totalTag;
+        if (tagTotalSpan) tagTotalSpan.textContent = `$ ${totalTag}`;
 
         totalGlobal += totalTag;
     };
 
     // 🔹 GLOBAL TOTAL
-    totalAmount.textContent = totalGlobal;
+    totalAmount.textContent = `Total: $ ${totalGlobal}`;
 }
 
 
@@ -216,7 +216,12 @@ document.getElementById("btnSave").onclick = async () => {
         };
     };
 
-    const total = Number(totalAmount.textContent) || 0;
+    const numberTotal = Number(totalAmount.textContent.replace("Total: $", "").trim()) || 0;
+    const total = Number(numberTotal) || 0;
+
+
+    const html = quill.root.innerHTML;
+    const cleanHTML = DOMPurify.sanitize(html);
 
     try {
         if (isEdit) {
@@ -225,7 +230,7 @@ document.getElementById("btnSave").onclick = async () => {
                 {
                     items,
                     total,
-                    notes: notesInput.value,
+                    notes: cleanHTML,
                     tagTotals,
                     subtagTotals
                 }
@@ -237,7 +242,7 @@ document.getElementById("btnSave").onclick = async () => {
                     date: new Date(),
                     items,
                     total,
-                    notes: notesInput.value,
+                    notes: cleanHTML,
                     tagTotals,
                     subtagTotals
                 }
@@ -302,7 +307,7 @@ async function loadEntry(id) {
         });
     });
 
-    notesInput.value = data.notes || "";
+    quill.root.innerHTML = data.notes || "";
     updateTotal();
 }
 
@@ -583,7 +588,7 @@ function createTagGroup(selectedTag = null) {
     // ===== TOTAL TAG =====
     const totalTag = document.createElement("span");
     totalTag.className = "tag-total";
-    totalTag.textContent = "0";
+    totalTag.textContent = "$ 0";
 
     // ===== APPEND =====
     header.appendChild(select);
@@ -649,7 +654,7 @@ function createSubtagGroup(tagSelect, container, subtagName = null, items = []) 
     // ===== TOTAL SUBTAG =====
     const totalSubtag = document.createElement("span");
     totalSubtag.className = "subtag-total";
-    totalSubtag.textContent = "0";
+    totalSubtag.textContent = "$ 0";
 
     // ===== APPEND =====
     subGroup.appendChild(subtagSelect);
@@ -841,3 +846,20 @@ document.getElementById("btnAddGroup").onclick = () => {
 document.getElementById("btnCancel").onclick = () => {
     window.location.href = "timeline.html";
 };
+
+// =======================
+// NOTES
+// ======================
+const quill = new Quill('#editor', {
+    theme: 'snow',
+    placeholder: 'Add any notes about this entry...',
+    modules: {
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'align': [] }],
+            ['clean']
+        ]
+    }
+});

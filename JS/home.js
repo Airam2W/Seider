@@ -201,6 +201,7 @@ async function createUserIfNotExists(user) {
             {
                 name: user.displayName || "No Name",
                 email: user.email,
+                currency: "USD",
                 entryCount: 0
             },
             { merge: true }

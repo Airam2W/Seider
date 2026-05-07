@@ -1,7 +1,7 @@
 import {
     getUserEntries,
     currentUser
-} from "../smartTools.js";
+} from "../timeline.js";
 
 let searchKeywords = [];
 

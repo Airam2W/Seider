@@ -5,8 +5,78 @@
 
     padding: 15px 30px;
     background: #2f80ed;
-    color: white;
+    color: black;
 }
+
+
+/* BUTTONS */
+button {
+    padding: 10px 15px;
+    border: none;
+    background: #334155;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+button:hover {
+    background: #475569;
+}
+
+.primary-btn {
+    background: #22c55e;
+}
+
+.primary-btn:hover {
+    background: #16a34a;
+}
+
+/* SEARCH */
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+}
+
+/* RESULTS */
+.results {
+    margin-top: 15px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0,0,0,0.6);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+}
+
+.hidden {
+    display: none;
+}
+
 
 .timeline {
     max-width: 600px;
@@ -15,11 +85,99 @@
 
 .entry {
     background: white;
-    padding: 15px;
+    padding: 5px;
     margin-bottom: 15px;
 
     border-radius: 10px;
     border-left: 5px solid #2f80ed;
+}
+
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px 14px;
+}
+
+.entry-main-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.entry-date {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.entry-total {
+    font-size: 17px;
+    opacity: 0.8;
+}
+
+.expand-btn {
+    background: transparent;
+    border: none;
+    color: black;
+
+    font-size: 22px;
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.expand-btn:hover {
+    transform: scale(1.1);
+}
+
+.entry-details {
+    border-top: 1px solid #ffffff;
+
+    padding: 16px 18px;
+
+    background: #ffffff;
+
+    animation: fadeDown 0.2s ease;
+}
+
+.detail-section {
+    margin-bottom: 16px;
+}
+
+.detail-section strong {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.item-row {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 8px 0;
+
+    border-bottom: 1px solid #ffffff;
+
+    font-size: 16px;
+}
+
+.entry-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+@keyframes fadeDown {
+
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .fixed {
@@ -36,30 +194,197 @@
     margin: 30px auto;
 }
 
+.side-buttons-right button {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #1e1e1e;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+}
+
+.side-buttons-right-top button {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #1e1e1e;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+}
+
+.side-buttons-left button {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #1e1e1e;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+}
+
+.side-buttons-left-top button {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #1e1e1e;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+}
+
+.side-buttons-right button:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+}
+
+.side-buttons-right-top button:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+}
+
+.side-buttons-left button:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+}
+
+.side-buttons-left-top button:hover {
+    background: #2a2a2a;
+    transform: translateY(-2px);
+}
+
 .scroll-bottom {
+    background: #333;
+    font-size: 12px;
+}
+
+.side-buttons-right {
     position: fixed;
     bottom: 20px;
     right: 20px;
 
-    padding: 10px 15px;
-    background: #2f80ed;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
 
-    cursor: pointer;
+    z-index: 999;
 }
 
-.add-bottom {
+.side-buttons-right-top {
     position: fixed;
-    bottom: 60px;
+    top: 20px;
     right: 20px;
 
-    padding: 10px 15px;
-    background: #2f80ed;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
 
-    cursor: pointer;
+    z-index: 999;
+}
+
+.side-buttons-left {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+
+    z-index: 999;
+}
+
+.side-buttons-left-top {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+
+    z-index: 999;
+}
+
+/* botón principal */
+.main-btn {
+    background: #2196f3;
+    font-weight: bold;
+}
+
+/* submenu */
+.submenu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    background: #1e1e1e;
+    padding: 10px;
+    border-radius: 10px;
+
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+
+    transform: translateY(10px);
+    opacity: 0;
+    pointer-events: none;
+
+    transition: all 0.25s ease;
+}
+
+/* visible */
+.submenu.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* botones internos */
+.submenu button {
+    background: transparent;
+    text-align: left;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.submenu button:hover {
+    background: #2a2a2a;
+}
+
+
+/* MAIN */
+.container {
+    padding: 20px;
+}
+
+/* SECTIONS */
+.block {
+    margin-bottom: 25px;
+}
+
+.block h2 {
+    margin-bottom: 10px;
+}
+
+/* DIVIDER */
+.divider {
+    border: none;
+    border-top: 2px solid #334155;
+    margin: 25px 0;
 }
