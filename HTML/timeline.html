@@ -10,14 +10,17 @@
     <link rel="stylesheet" href="/CSS/tools/future.css">
     <link rel="stylesheet" href="/CSS/tools/search.css">
     <link rel="stylesheet" href="/CSS/tools/spending.css">
+    <link rel="stylesheet" href="/CSS/settings.css">
 </head>
 
 <body>
 
     <main class="timeline" id="timeline">
 
+        <!-- BUTTONS -->
+
         <!-- SIDE BUTTONS RIGHT -->
-        <div class="side-buttons-right">            
+        <div class="side-buttons-right">
             <button id="btnAdd" class="add-bottom">+ Add Entry</button>
             <button id="btnScrollBottom" class="scroll-bottom">Scroll to Bottom</button>
         </div>
@@ -27,7 +30,7 @@
             <button id="btnSmartToggle" class="main-btn">
                 Smart Tools ▾
             </button>
-            <div id="smartMenu" class="submenu hidden">
+            <div id="smartMenu" class="submenu">
 
                 <button onclick="openFuture()">Future Insights</button>
                 <button onclick="openSearch()">Insight Search</button>
@@ -39,7 +42,7 @@
 
         <!-- SIDE BUTTONS LEFT -->
         <div class="side-buttons-left">
-            
+
         </div>
 
         <!-- SIDE BUTTONS LEFT TOP-->
@@ -47,6 +50,9 @@
             <button id="settings">Settings</button>
             <button id="btnLogout">Logout</button>
         </div>
+
+
+
 
         <!-- SMART TOOLS-->
 
@@ -216,6 +222,235 @@
         </div>
 
 
+        
+        <!-- Settings -->
+        <div id="modalSettings" class="modal hidden">
+            <div class="modal-content" id="modalContentSettings">
+                <div class="settings-header">
+
+                    <div>
+                        <h2>Settings</h2>
+                        <p>Manage your personal information</p>
+                    </div>
+
+                    <button id="saveSettingsBtn" class="save-settings-btn">
+                        Save Changes
+                    </button>
+
+                    <button class="close-settings-btn" onclick="closeModal()">
+                        ✕
+                    </button>
+
+                </div>
+
+                <!-- CONTENT -->
+                <div class="settings-body">
+
+                    <!-- PERSONAL INFO -->
+                    <div class="settings-section">
+
+                        <h3>Personal Information</h3>
+
+                        <div class="settings-grid">
+
+                            <!-- NAME -->
+                            <div class="settings-field">
+                                <label>Name</label>
+
+                                <input type="text" id="settingsName" placeholder="Your name">
+                            </div>
+
+                            <!-- EMAIL -->
+                            <div class="settings-field">
+                                <label>Email</label>
+
+                                <input type="email" id="settingsEmail" disabled>
+                            </div>
+
+                            <!-- GENDER -->
+                            <div class="settings-field">
+                                <label>Gender</label>
+
+                                <select id="settingsGender">
+
+                                    <option value="no">Select / Prefer not to say</option>
+
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+
+
+                                </select>
+                            </div>
+
+                            <!-- AGE -->
+                            <div class="settings-field">
+                                <label>Age Range</label>
+
+                                <select id="settingsAgeRange">
+
+                                    <option value="no">Select / Prefer not to say</option>
+
+                                    <option value="13-17">13 - 17</option>
+                                    <option value="18-24">18 - 24</option>
+                                    <option value="25-34">25 - 34</option>
+                                    <option value="35-44">35 - 44</option>
+                                    <option value="45-54">45 - 54</option>
+                                    <option value="55+">55+</option>
+
+                                </select>
+                            </div>
+
+                            <!-- CURRENCY -->
+                            <div class="settings-field">
+                                <label>Currency</label>
+
+                                <select id="settingsCurrency">
+
+                                    <option value="USD">USD</option>
+                                    <option value="MXN">MXN</option>
+                                    <option value="EUR">EUR</option>
+
+                                </select>
+                            </div>
+
+                            <!-- BALANCE -->
+                            <div class="settings-field">
+                                <label>Inicial Balance</label>
+
+                                <input type="password" id="settingsBalance" placeholder="0" disabled>
+                            </div>
+
+                            <!-- INCOME -->
+                            <div class="settings-field">
+                                <label>Income Frequency</label>
+
+                                <select id="settingsIncome">
+
+                                    <option value="no">Select / Prefer not to say</option>
+
+                                    <option value="Weekly">Weekly</option>
+                                    <option value="Biweekly">Biweekly</option>
+                                    <option value="Monthly">Monthly</option>
+
+                                </select>
+                            </div>
+
+                            <!-- GOAL -->
+                            <div class="settings-field">
+                                <label>Financial Goal</label>
+
+                                <select id="settingsGoal">
+
+                                    <option value="no">Select / Prefer not to say</option>
+
+                                    <option value="Save Money">Save Money</option>
+                                    <option value="Track Expenses">Track Expenses</option>
+                                    <option value="Reduce Debt">Reduce Debt</option>
+                                    <option value="Improve Habits">Improve Habits</option>
+
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <!-- ONBOARDING WARNING -->
+                        <div id="onboardingWarning" class="onboarding-warning hidden">
+
+                            <p>
+                                Your onboarding is incomplete.
+                            </p>
+
+                            <button id="goToOnboardingBtn">
+                                Complete Setup
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <!-- User Settings -->
+                    <br>
+
+                    <div class="settings-section">
+
+                        <div class="section-header">
+                            <div>
+                                <h3>User Settings</h3>
+
+                                <p>
+                                    Customize your experience
+                                </p>
+                            </div>
+
+                            
+                        </div>
+
+                        </div>
+                    </div>
+
+                    <!-- TAGS & SUBTAGS -->
+                    <br>
+
+                    <div class="settings-section">
+
+                        <div class="section-header">
+
+                            <div>
+                                <h3>Tags & Subtags</h3>
+
+                                <p>
+                                    Organize your categories
+                                </p>
+                            </div>
+
+                            <button id="addTagBtn" class="primary-settings-btn">
+                                + Add Tag
+                            </button>
+
+                        </div>
+
+                        <!-- TABLE -->
+                        <div class="tags-table">
+
+                            <!-- HEADER -->
+                            <div class="tags-row tags-header">
+
+                                <span>Tag</span>
+                                <span>Color</span>
+                                <span>Subtags</span>
+                                <span>Actions</span>
+
+                            </div>
+
+                            <!-- GENERATED -->
+                            <div id="tagsContainer"></div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <br>
+                    <div class="settings-section">
+
+                        <div class="section-header">
+                            <h3>Danger Zone</h3>
+                            <p>
+                            Warning: This action cannot be undone.
+                            </p>
+                        </div>
+
+                        <button id="deleteAccountBtn" class="danger-btn">
+                            Delete Account
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
 
         <!-- TIMELINE -->
 
@@ -230,12 +465,14 @@
         <!-- Fixed entries -->
         <div class="entry entry-header fixed fixed-bottom" id="totalAmountContainer">
             <h3 id="totalAmount">Total Amount</h3>
+            <button id="toggleTotalAmount" class="toggle-btn">Show</button>
         </div>
 
         <br>
 
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="/JS/timeline.js"></script>
     <script type="module" src="/JS/auth-guard.js"></script>

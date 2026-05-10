@@ -12,13 +12,14 @@ import {
     getFirestore,
     doc,
     setDoc,
-    collection,
-    addDoc
+    getDoc
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 import { GithubAuthProvider } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+import { encryptData } from "./encryption.js";
 
 const githubProvider = new GithubAuthProvider();
 
@@ -28,16 +29,40 @@ const db = getFirestore(app);
 // AUTH
 // =======================
 onAuthStateChanged(auth, async (user) => {
+
     document.body.classList.remove("hidden");
 
-    if (user) {
-        await createUserIfNotExists(user);
-        window.location.href = "/HTML/timeline.html";
-    }
-});
+    if (!user) return;
 
-onAuthStateChanged(auth, async (user) => {
-    
+    try {
+
+        const isNewUser = await createUserIfNotExists(user);
+
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        const userData = userSnap.data();
+
+        // =======================
+        // NEW USER
+        // =======================
+        if (
+            isNewUser ||
+            !userData.onboardingCompleted
+        ) {
+
+            window.location.href = "/HTML/onboarding.html";
+            return;
+        }
+
+        // =======================
+        // EXISTING USER
+        // =======================
+        window.location.href = "/HTML/timeline.html";
+
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 // =======================
@@ -78,18 +103,16 @@ window.closeModal = closeModal;
 // GOOGLE LOGIN
 // =======================
 document.getElementById("googleBtn").onclick = async () => {
+
     try {
-        const result = await signInWithPopup(auth, provider);
 
-        await createUserIfNotExists(result.user);
-
-        alert("Welcome " + result.user.displayName);
-
-        window.location.href = "/HTML/timeline.html";
+        await signInWithPopup(auth, provider);
 
     } catch (error) {
+
         console.error(error);
         alert(error.message);
+
     }
 };
 
@@ -97,17 +120,15 @@ document.getElementById("googleBtn").onclick = async () => {
 // GITHUB LOGIN
 // =======================
 document.getElementById("githubBtn").onclick = async () => {
+
     try {
-        const result = await signInWithPopup(auth, githubProvider);
 
-        await createUserIfNotExists(result.user);
-
-        alert("Welcome " + (result.user.displayName || "User"));
-
-        window.location.href = "/HTML/timeline.html";
+        await signInWithPopup(auth, githubProvider);
 
     } catch (error) {
+
         handleFirebaseError(error);
+
     }
 };
 
@@ -132,12 +153,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     }
 
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-        await createUserIfNotExists(userCredential.user);
-
-        alert("Welcome " + (userCredential.user.displayName || "User"));
-        window.location.href = "/HTML/timeline.html";
+        await signInWithEmailAndPassword(auth, email, password);
 
     } catch (error) {
         handleFirebaseError(error);
@@ -177,11 +193,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
             displayName: name
         });
 
-        await createUserIfNotExists(userCredential.user);
-
         alert("Signup success");
-        closeModal();
-        openModal("login");
 
     } catch (error) {
         handleFirebaseError(error);
@@ -193,45 +205,88 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
 // DB Firebase
 // =======================
 // CREATE USER IN FIRESTORE
+// =======================
+// CREATE USER
+// =======================
 async function createUserIfNotExists(user) {
-    try {
-        // Create user document
-        await setDoc(
-            doc(db, "users", user.uid),
-            {
-                name: user.displayName || "No Name",
-                email: user.email,
-                currency: "USD",
-                entryCount: 0
-            },
-            { merge: true }
-        );
 
-        // Create default tags (no duplicates)
+    try {
+
+        const userRef = doc(db, "users", user.uid);
+
+        const userSnap = await getDoc(userRef);
+
+        // =======================
+        // USER EXISTS
+        // =======================
+        if (userSnap.exists()) {
+            return false;
+        }
+
+        // =======================
+        // CREATE USER
+        // =======================
+        await setDoc(userRef, {
+
+            name: encryptData(user.displayName) || encryptData("No Name"),
+            email: encryptData(user.email),
+
+            currency: "USD",
+
+            entryCount: 0,
+
+            onboardingCompleted: false,
+
+            createdAt: Date.now(),
+
+            profile: {
+
+                ageRange: "no",
+                gender: "no"
+
+            },
+
+            finance: {
+
+                currentBalance: 0,
+                incomeFrequency: "no",
+                financialGoal: "no"
+
+            }
+
+        });
+
+        // =======================
+        // DEFAULT TAGS
+        // =======================
         const tags = [
+
             { id: "electricity", name: "Electricity", color: "#FF5733" },
             { id: "water", name: "Water", color: "#3399FF" },
             { id: "food", name: "Food", color: "#33FF57" },
             { id: "transport", name: "Transport", color: "#FF33A8" },
             { id: "entertainment", name: "Entertainment", color: "#FF8C33" },
             { id: "rent", name: "Rent", color: "#8C33FF" }
+
         ];
 
         for (let tag of tags) {
-            const tagRef = doc(db, "users", user.uid, "tags", tag.id);
 
-            await setDoc(
-                tagRef,
-                {
-                    name: tag.name,
-                    color: tag.color
-                },
-                { merge: true }
+            const tagRef = doc(
+                db,
+                "users",
+                user.uid,
+                "tags",
+                tag.id
             );
 
-            // =======================
-            // DEFAULT SUBTAGS
-            // =======================
+            await setDoc(tagRef, {
+
+                name: tag.name,
+                color: tag.color
+
+            });
+
             let subtags = [];
 
             if (tag.id === "food") {
@@ -259,16 +314,31 @@ async function createUserIfNotExists(user) {
             }
 
             for (let sub of subtags) {
+
                 await setDoc(
-                    doc(db, "users", user.uid, "tags", tag.id, "subtags", sub.toLowerCase()),
-                    { name: sub },
-                    { merge: true }
+                    doc(
+                        db,
+                        "users",
+                        user.uid,
+                        "tags",
+                        tag.id,
+                        "subtags",
+                        sub.toLowerCase()
+                    ),
+                    {
+                        name: sub
+                    }
                 );
             }
         }
 
+        return true;
+
     } catch (error) {
-        console.error("Error creating user:", error);
+
+        console.error(error);
+
+        return false;
     }
 }
 

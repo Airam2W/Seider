@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Seider - Welcome</title>
+
+    <link rel="stylesheet" href="../CSS/onboarding.css">
+
+</head>
+<body>
+
+    <div class="background-glow"></div>
+
+    <div class="onboarding-container">
+
+        <!-- TOP -->
+        <div class="top-section">
+
+            <h1>Welcome to Seider</h1>
+
+            <p>
+                Let's personalize your experience
+            </p>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="card">
+
+            <!-- STEP 1 -->
+            <div class="step active" id="step-1">
+
+                <h2>Tell us about yourself</h2>
+
+                <div class="option-grid">
+
+                    <button class="option-btn gender-btn" data-value="Male">
+                        Male
+                    </button>
+
+                    <button class="option-btn gender-btn" data-value="Female">
+                        Female
+                    </button>
+
+                    <button class="option-btn gender-btn" data-value="Other">
+                        Other
+                    </button>
+
+                    <button class="option-btn gender-btn" data-value="no">
+                        Prefer not to say
+                    </button>
+
+                </div>
+
+                <select id="ageRange">
+
+                    <option value="no" selected>Select Age Range / Prefer not to say</option>
+
+                    <option value="13-17">13 - 17</option>
+                    <option value="18-24">18 - 24</option>
+                    <option value="25-34">25 - 34</option>
+                    <option value="35-44">35 - 44</option>
+                    <option value="45-54">45 - 54</option>
+                    <option value="55+">55+</option>
+
+                </select>
+
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step" id="step-2">
+
+                <h2>Your finances</h2>
+
+                <select id="incomeFrequency">
+
+                    <option value="no" selected>Income frequency / Prefer not to say</option>
+
+                    <option value="Weekly">Weekly</option>
+                    <option value="Biweekly">Biweekly</option>
+                    <option value="Monthly">Monthly</option>
+
+                </select>
+
+                <input
+                    type="number"
+                    id="currentBalance"
+                    placeholder="Current balance"
+                >
+
+                
+
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="step" id="step-3">
+
+                <h2>Your financial goal</h2>
+
+                <div class="option-grid">
+
+                    <button class="option-btn goal-btn" data-value="Save Money">
+                        Save Money
+                    </button>
+
+                    <button class="option-btn goal-btn" data-value="Track Expenses">
+                        Track Expenses
+                    </button>
+
+                    <button class="option-btn goal-btn" data-value="Reduce Debt">
+                        Reduce Debt
+                    </button>
+
+                    <button class="option-btn goal-btn" data-value="Improve Habits">
+                        Improve Habits
+                    </button>
+
+                    <button class="option-btn goal-btn" data-value="Other">
+                        Other
+                    </button>
+
+                    <button class="option-btn goal-btn" data-value="no">
+                        Prefer not to say
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="step" id="step-4">
+
+                <div class="finish-container">
+
+                    <h2>Everything is ready</h2>
+
+                    <p>
+                        Seider is now personalized for you.
+                    </p>
+
+                    <button id="finishBtn">
+                        Go To Timeline
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- NAVIGATION -->
+            <div class="navigation">
+
+                <button id="backBtn" class="secondary-btn">
+                    Back
+                </button>
+
+                <button id="nextBtn">
+                    Continue
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script type="module" src="../JS/onboarding.js"></script>
+
+</body>
+</html>

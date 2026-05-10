@@ -50,6 +50,40 @@
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.js"></script>
+    <script type="module">
+    import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { app, auth, provider } from "./JS/firebase-config.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    
+    const db = getFirestore(app);
+
+    function getSecretKey() {
+        const user = auth.currentUser;
+        if (!user) {
+            throw new Error("No user logged in");
+        }
+        return user.uid + user.email;
+    }
+
+    export function encryptData(text) {
+        if (!text) return "";
+        const SECRET_KEY = getSecretKey();
+
+        return CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
+    }
+
+    export function decryptData(cipher) {
+        if (!cipher) return "";
+        const SECRET_KEY = getSecretKey();
+
+        const bytes = CryptoJS.AES.decrypt(cipher, SECRET_KEY);
+        return bytes.toString(CryptoJS.enc.Utf8);
+    }
+
+    </script>
+
     <script type="module" src="JS/home.js"></script>
 </body>
 </html>

@@ -26,7 +26,7 @@ button:hover {
 }
 
 /* INPUTS */
-input {
+input:not([type="color"]) {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 6px;

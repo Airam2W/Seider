@@ -18,6 +18,8 @@ import {
     updateDoc
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+import { encryptData, decryptData } from "./encryption.js";
+
 
 const urlParams = new URLSearchParams(window.location.search);
 const entryId = urlParams.get("id");
@@ -230,7 +232,7 @@ document.getElementById("btnSave").onclick = async () => {
                 {
                     items,
                     total,
-                    notes: cleanHTML,
+                    notes: encryptData(cleanHTML),
                     tagTotals,
                     subtagTotals
                 }
@@ -242,7 +244,7 @@ document.getElementById("btnSave").onclick = async () => {
                     date: new Date(),
                     items,
                     total,
-                    notes: cleanHTML,
+                    notes: encryptData(cleanHTML),
                     tagTotals,
                     subtagTotals
                 }
@@ -307,7 +309,7 @@ async function loadEntry(id) {
         });
     });
 
-    quill.root.innerHTML = data.notes || "";
+    quill.root.innerHTML = decryptData(data.notes) || "";
     updateTotal();
 }
 

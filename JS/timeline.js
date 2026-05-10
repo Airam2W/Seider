@@ -15,8 +15,11 @@ import {
     setDoc,
     deleteDoc,
     query,
-    orderBy
+    orderBy,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+import { encryptData, decryptData } from "./encryption.js";
 
 const db = getFirestore(app);
 const entriesContainer = document.getElementById("entriesContainer");
@@ -24,6 +27,55 @@ const timelineEl = document.getElementById("timeline");
 const totalAmountEl = document.getElementById("totalAmount");
 
 export let currentUser = null;
+
+// SETTINGS INPUTS
+const settingsName =
+    document.getElementById("settingsName");
+
+const settingsEmail =
+    document.getElementById("settingsEmail");
+
+const settingsGender =
+    document.getElementById("settingsGender");
+
+const settingsAgeRange =
+    document.getElementById("settingsAgeRange");
+
+const settingsCurrency =
+    document.getElementById("settingsCurrency");
+
+const settingsBalance =
+    document.getElementById("settingsBalance");
+
+const settingsIncome =
+    document.getElementById("settingsIncome");
+
+const settingsGoal =
+    document.getElementById("settingsGoal");
+
+// BUTTONS
+const saveSettingsBtn =
+    document.getElementById("saveSettingsBtn");
+
+const onboardingWarning =
+    document.getElementById("onboardingWarning");
+
+const goToOnboardingBtn =
+    document.getElementById("goToOnboardingBtn");
+
+// =======================
+// TAGS
+// =======================
+const tagsContainer = document.getElementById("tagsContainer");
+const addTagBtn = document.getElementById("addTagBtn");
+
+let tagsData = [];
+
+// =======================
+// DANGER ZONE
+// =======================
+
+const deleteAccountBtn = document.getElementById("deleteAccountBtn");
 
 
 // =======================
@@ -82,12 +134,21 @@ const snapshot = await getDocs(q);
         return sum + (data.total || 0);
     }, 0);
 
-    totalAmountEl.textContent = `Total Amount: $ ${totalAmount}`;
 
     // COUNT NUMBER OF ENTRIES AND UPDATE USER DOC
     const entryCount = snapshot.size;
     const userDocRef = doc(db, "users", uid);
     await setDoc(userDocRef, { entryCount: entryCount }, { merge: true });
+
+    // GET CURRENT BALANCE FROM USER DOC
+    const userSnap = await getDoc(userDocRef);
+    const userData = userSnap.data();
+    const currentBalance = userData.finance?.currentBalance;
+
+    const finalTotal = currentBalance !== undefined ? currentBalance + totalAmount : totalAmount;
+    totalAmountEl.textContent = `Total Amount: $ ${finalTotal}`;
+    totalAmountCache = totalAmountEl.textContent;
+    updateTotalVisibility();
 
     snapshot.forEach((docItem) => {
         const data = docItem.data();
@@ -129,7 +190,7 @@ const snapshot = await getDocs(q);
 
                 <div class="detail-section">
                     <strong>Notes:</strong>
-                    <p>${data.notes || "No notes"}</p>
+                    <p>${decryptData(data.notes) || "No notes"}</p>
                 </div>
 
                 <div class="detail-section">
@@ -259,18 +320,575 @@ window.deleteEntry = async (id) => {
 // =======================
 
 document.getElementById("settings").onclick = async () => {
-    const user = currentUser;
+    openModal(0);
+    await loadUserSettings();
+};
 
-    if (!user) return;
+async function loadUserSettings() {
 
     try {
 
-        window.location.href = "/HTML/settings.html";
+        const user = auth.currentUser;
+
+        if (!user) return;
+
+        const userRef =
+            doc(db, "users", user.uid);
+
+        const userSnap =
+            await getDoc(userRef);
+
+        if (!userSnap.exists()) return;
+
+        const data = userSnap.data();
+
+        // BASIC
+        settingsName.value =
+            decryptData(data.name) || "";
+
+        settingsEmail.value =
+            decryptData(data.email) || "";
+
+        settingsCurrency.value =
+            data.currency || "USD";
+
+        // PROFILE
+        settingsGender.value =
+            data.profile?.gender || "no";
+
+        settingsAgeRange.value =
+            data.profile?.ageRange || "no";
+
+        // FINANCE
+        settingsBalance.value =
+            data.finance?.currentBalance || 0;
+
+        settingsIncome.value =
+            data.finance?.incomeFrequency || "no";
+
+        settingsGoal.value =
+            data.finance?.financialGoal || "no";
+
+        // ONBOARDING
+        if (data.onboardingCompleted === false) {
+
+            onboardingWarning.classList.remove("hidden");
+
+        } else {
+
+            onboardingWarning.classList.add("hidden");
+        }
+
+    } catch (error) {
+
+        console.error(error);
+    }
+
+    await loadTagsSettings();
+}
+
+saveSettingsBtn.onclick = async () => {
+
+    try {
+
+        const user = auth.currentUser;
+
+        if (!user) return;
+
+        await updateDoc(
+            doc(db, "users", user.uid),
+            {
+
+                name: encryptData(settingsName.value),
+
+                currency: settingsCurrency.value,
+
+                profile: {
+
+                    gender: settingsGender.value,
+                    ageRange: settingsAgeRange.value
+
+                },
+
+                finance: {
+
+                    currentBalance:
+                        Number(settingsBalance.value || 0),
+
+                    incomeFrequency:
+                        settingsIncome.value,
+
+                    financialGoal:
+                        settingsGoal.value
+
+                }
+
+            }
+        );
+
+        setTimeout(() => {
+            loadEntries(currentUser.uid);
+            toggleFixedBottom();
+            closeModal();
+        }, 100);
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Error updating settings");
+    }
+
+    try {
+
+        // =========================
+        // SAVE TAGS
+        // =========================
+        for (const tag of tagsData) {
+
+            await setDoc(
+                doc(db, "users", auth.currentUser.uid, "tags", tag.id),
+                {
+                    color: tag.color,
+                    name: tag.name
+                }
+            );
+
+            // SAVE SUBTAGS
+            for (const subtag of tag.subtags) {
+
+                await setDoc(
+                    doc(
+                        db,
+                        "users",
+                        auth.currentUser.uid,
+                        "tags",
+                        tag.id,
+                        "subtags",
+                        subtag.id
+                    ),
+                    {
+                        name: subtag.name
+                    }
+                );
+            }
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Error saving settings");
+    }
+};
+
+goToOnboardingBtn.onclick = () => {
+
+    window.location.href =
+        "/HTML/onboarding.html";
+};
+
+// =======================
+// TAGS - SETTINGS
+// =======================
+async function loadTagsSettings() {
+    try {
+        tagsContainer.innerHTML = "";
+
+        const tagsSnapshot = await getDocs(
+            collection(db, "users", auth.currentUser.uid, "tags")
+        );
+
+        tagsData = [];
+
+        for (const tagDoc of tagsSnapshot.docs) {
+
+            const tag = {
+                id: tagDoc.id,
+                ...tagDoc.data(),
+                subtags: []
+            };
+
+            const subtagsSnapshot = await getDocs(
+                collection(
+                    db,
+                    "users",
+                    auth.currentUser.uid,
+                    "tags",
+                    tag.id,
+                    "subtags"
+                )
+            );
+
+            subtagsSnapshot.forEach((subDoc) => {
+                tag.subtags.push({
+                    id: subDoc.id,
+                    name: subDoc.data().name
+                });
+            });
+
+            tag.color = normalizeColor(tag.color);
+
+            tagsData.push(tag);
+        }
+
+        renderTags();
 
     } catch (error) {
         console.error(error);
     }
+}
+
+window.saveTag = saveTag;
+
+async function saveTag(tagId) {
+
+    try {
+
+        const user = auth.currentUser;
+
+        const input =
+            document.getElementById(
+                `tag-name-${tagId}`
+            );
+
+        await updateDoc(
+            doc(
+                db,
+                "users",
+                user.uid,
+                "tags",
+                tagId
+            ),
+            {
+                name: input.value
+            }
+        );
+
+        alert("Tag updated");
+
+    } catch (error) {
+
+        console.error(error);
+    }
+}
+
+window.deleteTag = deleteTag;
+
+async function deleteTag(tagId) {
+
+    try {
+
+        const confirmed =
+            confirm("Delete this tag?");
+
+        if (!confirmed) return;
+
+        const user = auth.currentUser;
+
+        await deleteDoc(
+            doc(
+                db,
+                "users",
+                user.uid,
+                "tags",
+                tagId
+            )
+        );
+
+        await loadTagsSettings();
+
+    } catch (error) {
+
+        console.error(error);
+    }
+}
+
+addTagBtn.onclick = () => {
+
+    tagsData.unshift({
+        id: crypto.randomUUID(),
+        name: "New Tag",
+        color: "#000000",
+        subtags: []
+    });
+
+    renderTags();
 };
+
+
+window.deleteSubtag = deleteSubtag;
+
+async function deleteSubtag(
+    tagId,
+    subtagId
+) {
+
+    try {
+
+        const user = auth.currentUser;
+
+        await deleteDoc(
+            doc(
+                db,
+                "users",
+                user.uid,
+                "tags",
+                tagId,
+                "subtags",
+                subtagId
+            )
+        );
+
+        await loadTagsSettings();
+
+    } catch (error) {
+
+        console.error(error);
+    }
+}
+
+window.removeTag = async (index) => {
+
+    const confirmed =
+        confirm("Delete this tag?");
+
+    if (!confirmed) return;
+
+    const tag = tagsData[index];
+
+    try {
+
+        // DELETE SUBTAGS
+        for (const sub of tag.subtags) {
+
+            await deleteDoc(
+                doc(
+                    db,
+                    "users",
+                    auth.currentUser.uid,
+                    "tags",
+                    tag.id,
+                    "subtags",
+                    sub.id
+                )
+            );
+        }
+
+        // DELETE TAG
+        await deleteDoc(
+            doc(
+                db,
+                "users",
+                auth.currentUser.uid,
+                "tags",
+                tag.id
+            )
+        );
+
+        tagsData.splice(index, 1);
+
+        renderTags();
+
+    } catch (error) {
+
+        console.error(error);
+    }
+};
+
+window.addSubtag = (index) => {
+
+    tagsData[index].subtags.push({
+        id: crypto.randomUUID(),
+        name: "New Subtag"
+    });
+
+    renderTags();
+};
+
+window.removeSubtag = async (tagIndex, subIndex) => {
+
+    try {
+
+        const subtag =
+            tagsData[tagIndex].subtags[subIndex];
+
+        await deleteDoc(
+            doc(
+                db,
+                "users",
+                auth.currentUser.uid,
+                "tags",
+                tagsData[tagIndex].id,
+                "subtags",
+                subtag.id
+            )
+        );
+
+        tagsData[tagIndex]
+            .subtags.splice(subIndex, 1);
+
+        renderTags();
+
+    } catch (error) {
+
+        console.error(error);
+    }
+};
+
+window.updateTagName = (index, value) => {
+    tagsData[index].name = value;
+};
+
+window.updateTagColor = (index, value) => {
+
+    // FORZAR HEX 6 DIGITOS
+    tagsData[index].color =
+        normalizeColor(value).toLowerCase();
+
+};
+
+window.updateSubtag = (tagIndex, subIndex, value) => {
+
+    tagsData[tagIndex]
+        .subtags[subIndex]
+        .name = value;
+};
+
+function normalizeColor(color) {
+
+    if (!color)
+        return "#888888";
+
+    color = color.trim();
+
+    // #RRGGBB
+    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+        return color.toLowerCase();
+    }
+
+    // #RGB
+    if (/^#[0-9A-Fa-f]{3}$/.test(color)) {
+
+        return (
+            "#" +
+            color[1] + color[1] +
+            color[2] + color[2] +
+            color[3] + color[3]
+        ).toLowerCase();
+    }
+
+    return "#888888";
+}
+
+
+function renderTags() {
+
+    tagsContainer.innerHTML = "";
+
+    tagsData.forEach((tag, index) => {
+
+        const row = document.createElement("div");
+        row.className = "tags-row";
+
+        row.innerHTML = `
+
+            <!-- TAG NAME -->
+            <input
+                type="text"
+                value="${tag.name}"
+                onchange="updateTagName(${index}, this.value)"
+            >
+
+            <!-- COLOR -->
+            <input
+                type="color"
+                value="${normalizeColor(tag.color)}"
+                data-index="${index}"
+                class="tag-color-input"
+            >
+
+            <!-- SUBTAGS -->
+            <div class="subtags-inline">
+
+                ${tag.subtags.map((sub, subIndex) => `
+                    
+                    <div class="subtag-chip">
+
+                        <input
+                            type="text"
+                            value="${sub.name}"
+                            onchange="updateSubtag(${index}, ${subIndex}, this.value)"
+                        >
+
+                        <button onclick="removeSubtag(${index}, ${subIndex})">
+                            ✕
+                        </button>
+
+                    </div>
+
+                `).join("")}
+
+                <button
+                    class="mini-add-btn"
+                    onclick="addSubtag(${index})"
+                >
+                    + Subtag
+                </button>
+
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="tag-actions">
+
+                <button
+                    class="delete-btn"
+                    onclick="removeTag(${index})"
+                >
+                    Delete
+                </button>
+
+            </div>
+
+        `;
+
+        tagsContainer.appendChild(row);
+
+        const colorInput = row.querySelector(".tag-color-input");
+
+        colorInput.addEventListener("input", (e) => {
+
+            const i = Number(e.target.dataset.index);
+
+            tagsData[i].color = e.target.value;
+
+        });
+    });
+}
+
+
+// ========================
+// DANGER ZONE
+// =======================
+deleteAccountBtn.onclick = async () => {
+
+    const confirmed =
+        confirm("This will delete your account and all your data. Are you sure?");
+    
+    if (!confirmed) return;
+
+    try {
+        // DELETE USER DOC
+        await deleteDoc(
+            doc(db, "users", currentUser.uid)
+        );
+        // DELETE AUTH ACCOUNT
+        await auth.currentUser.delete();
+        alert("Account deleted");
+        window.location.href = "/index.html";
+    } catch (error) {
+        console.error(error);
+        alert("Error deleting account. Please try again.");
+    }
+};
+
 
 
 // =======================
@@ -312,6 +930,40 @@ function toggleFixedBottom() {
   }
 }
 
+const showTotalBtn =
+    document.getElementById("toggleTotalAmount");
+
+let totalVisible =
+    localStorage.getItem("totalVisible") !== "false";
+
+let totalAmountCache = "";
+
+function updateTotalVisibility() {
+
+    totalAmountEl.textContent =
+        totalVisible
+            ? totalAmountCache
+            : "Total Amount: $ ---";
+
+    showTotalBtn.textContent =
+        totalVisible
+            ? "Hide"
+            : "Show";
+}
+
+showTotalBtn.onclick = () => {
+
+    totalVisible = !totalVisible;
+
+    localStorage.setItem(
+        "totalVisible",
+        totalVisible
+    );
+
+    updateTotalVisibility();
+};
+
+
 // =======================
 // SUBMENU
 // ======================
@@ -321,7 +973,6 @@ const menu = document.getElementById("smartMenu");
 toggleBtn.onclick = () => {
     menu.classList.toggle("active");
 
-    // opcional: cambiar flechita
     toggleBtn.textContent = menu.classList.contains("active")
         ? "Smart Tools ▴"
         : "Smart Tools ▾";
@@ -370,11 +1021,13 @@ const modalFuture = document.getElementById("modalFuture");
 const modalSearch = document.getElementById("modalSearch");
 const modalSpending = document.getElementById("modalSpending");
 const modalComparison = document.getElementById("modalComparison");
+const modalSettings = document.getElementById("modalSettings");
 
 const modalContentFuture = document.getElementById("modalContentFuture");
 const modalContentSearch = document.getElementById("modalContentSearch");
 const modalContentSpending = document.getElementById("modalContentSpending");
 const modalContentComparison = document.getElementById("modalContentComparison");
+const modalContentSettings = document.getElementById("modalContentSettings");
 
 
 export async function getUserEntries(uid) {
@@ -410,7 +1063,11 @@ export async function getUserEntries(uid) {
 // =======================
 
 function openModal(section) {
-    if (section == 1) {
+    if (section == 0){
+        modalContentSettings.classList.remove("hidden");
+        modalSettings.classList.remove("hidden");
+    }else
+        if (section == 1) {
         modalContentFuture.classList.remove("hidden");
         modalFuture.classList.remove("hidden");
     } else if (section == 2) {
@@ -430,11 +1087,15 @@ function closeModal() {
     modalSearch.classList.add("hidden");
     modalSpending.classList.add("hidden");
     modalComparison.classList.add("hidden");
+    modalSettings.classList.add("hidden");
 }
 
 window.closeModal = closeModal;
 
 // cerrar al hacer click afuera
+modalSettings.addEventListener("click", (e) => {
+    if (e.target === modalSettings) closeModal();
+});
 modalFuture.addEventListener("click", (e) => {
     if (e.target === modalFuture) closeModal();
 });
@@ -455,9 +1116,9 @@ modalComparison.addEventListener("click", (e) => {
 // =======================
 // VERIFICATION
 // =======================
-async function verificationForSimulation(user, minEntries = 3) {
+async function verificationForSimulation(uid, minEntries = 3) {
     // let simulationOK = verificationForSimulation(currentUser, N);
-    const userRef = doc(db, "users", user.uid);
+    const userRef = doc(db, "users", uid);
     const snap = await getDoc(userRef);
 
     const count = snap.data().entryCount || -1;
@@ -476,10 +1137,13 @@ async function verificationForSimulation(user, minEntries = 3) {
 // =======================
 // SIMULATE THE FUTURE
 // =======================
-function openFuture() {
-    let simulationOK = verificationForSimulation(currentUser, 5);
-    if (!simulationOK) return;
-    openModal(1);
+async function openFuture() {
+    const simulationOK = await verificationForSimulation(currentUser.uid, 5);
+    if (!simulationOK){
+        closeModal();
+    }else{
+        openModal(1);
+    }
 }
 
 window.openFuture = openFuture;
@@ -487,13 +1151,15 @@ window.openFuture = openFuture;
 // =======================
 // SEARCH
 // =======================
-function openSearch() {
-    let simulationOK = verificationForSimulation(currentUser, 1);
-    if (!simulationOK) return;
-    openModal(2);
-
-    setupSearchInput();
-    loadTagFilters();
+async function openSearch() {
+    const simulationOK = await verificationForSimulation(currentUser.uid, 1);
+    if (!simulationOK){
+        closeModal();
+    }else{
+        openModal(2);
+        setupSearchInput();
+        loadTagFilters();
+    }
 }
 
 window.openSearch = openSearch;
@@ -501,11 +1167,14 @@ window.openSearch = openSearch;
 // =======================
 // Spending Insights
 // =======================
-function openSpending() {
-    let simulationOK = verificationForSimulation(currentUser, 3);
-    if (!simulationOK) return;
-    openModal(3);
-    loadInsights();
+async function openSpending() {
+    const simulationOK = await verificationForSimulation(currentUser.uid, 3);
+    if (!simulationOK){
+        closeModal();
+    }else {
+        openModal(3);
+        loadInsights();
+    }
 }
 
 window.openSpending = openSpending;
@@ -513,11 +1182,14 @@ window.openSpending = openSpending;
 // =======================
 // Insights Comparison
 // =======================
-function openComparison() {
-    let simulationOK = verificationForSimulation(currentUser, 3);
-    if (!simulationOK) return;
-    openModal(4);
-    loadComparison();
+async function openComparison() {
+    const simulationOK = await verificationForSimulation(currentUser.uid, 3);
+    if (!simulationOK){
+        closeModal();
+    }else {
+        openModal(4);
+        loadComparison();
+    }
 }
 
 window.openComparison = openComparison;

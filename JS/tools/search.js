@@ -3,6 +3,8 @@ import {
     currentUser
 } from "../timeline.js";
 
+import { encryptData, decryptData } from "../encryption.js";
+
 let searchKeywords = [];
 
 let selectedTags = new Set();
@@ -109,7 +111,7 @@ export async function startSearch() {
 
     const results = entries.filter(entry => {
 
-        const note = (entry.notes || "").toLowerCase();
+        const note = (decryptData(entry.notes) || "").toLowerCase();
 
         // 🔹 keywords
         const matchKeyword = searchKeywords.some(word =>
@@ -160,7 +162,7 @@ async function runLiveSearch() {
 
     const results = entries.filter(entry => {
 
-        const note = (entry.notes || "").toLowerCase();
+        const note = (decryptData(entry.notes) || "").toLowerCase();
 
         // 🔥 AND KEYWORDS
         const matchKeywords =
@@ -221,7 +223,7 @@ function renderSearchResults(entries) {
             </div>
 
             <div class="notes">
-                Notes: ${entry.notes || "-"}
+                Notes: ${decryptData(entry.notes) || "-"}
             </div>
 
             <br>
