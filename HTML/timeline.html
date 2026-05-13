@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/CSS/tools/search.css">
     <link rel="stylesheet" href="/CSS/tools/spending.css">
     <link rel="stylesheet" href="/CSS/settings.css">
+    <link rel="stylesheet" href="/CSS/exchange.css">
 </head>
 
 <body>
@@ -42,13 +43,32 @@
 
         <!-- SIDE BUTTONS LEFT -->
         <div class="side-buttons-left">
-
+            <button id="darkModeToggle" class="toggle-btn">Dark Mode</button>
         </div>
+
+        <script>
+            if (localStorage.getItem("darkMode") === "true") {
+                document.documentElement.classList.add("dark-mode");
+            }
+        </script>
 
         <!-- SIDE BUTTONS LEFT TOP-->
         <div class="side-buttons-left-top">
+            <button id="btnExchangeTable" onclick="openExchangeTable()">Currency Exchange Table</button>
             <button id="settings">Settings</button>
             <button id="btnLogout">Logout</button>
+        </div>
+
+
+        <!-- OPTIONAL INFORMATION -->
+        <div id="modalExchange" class="modal hidden">
+            <div class="modal-content" id="modalContentExchange">
+                <h2>Currency Exchange Table</h2>
+
+                <div id="exchangeTable"></div>
+
+                <button onclick="closeModal()">Close</button>
+            </div>
         </div>
 
 
@@ -303,20 +323,30 @@
 
                             <!-- CURRENCY -->
                             <div class="settings-field">
-                                <label>Currency</label>
+                                <label>Base Currency</label>
 
                                 <select id="settingsCurrency">
 
-                                    <option value="USD">USD</option>
-                                    <option value="MXN">MXN</option>
-                                    <option value="EUR">EUR</option>
+                                    <option id="USD" value="USD">USD - US Dollar</option>
+                                    <option id="AUD" value="AUD">AUD - Australian Dollar</option>
+                                    <option id="CAD" value="CAD">CAD - Canadian Dollar</option>
+                                    <option id="CHF" value="CHF">CHF - Swiss Franc</option>
+                                    <option id="CNY" value="CNY">CNY - Chinese Yuan</option>
+                                    <option id="EUR" value="EUR">EUR - Euro</option>
+                                    <option id="GBP" value="GBP">GBP - British Pound</option>
+                                    <option id="JPY" value="JPY">JPY - Japanese Yen</option>
+                                    <option id="KRW" value="KRW">KRW - Korean Won</option>
+                                    <option id="MXN" value="MXN">MXN - Mexican Peso</option>
+                                    <option id="NZD" value="NZD">NZD - New Zealand Dollar</option>
+                                    <option id="SEK" value="SEK">SEK - Swedish Krona</option>
+                                    
 
                                 </select>
                             </div>
 
                             <!-- BALANCE -->
                             <div class="settings-field">
-                                <label>Inicial Balance</label>
+                                <label>Initial Balance</label>
 
                                 <input type="password" id="settingsBalance" placeholder="0" disabled>
                             </div>
@@ -464,7 +494,7 @@
 
         <!-- Fixed entries -->
         <div class="entry entry-header fixed fixed-bottom" id="totalAmountContainer">
-            <h3 id="totalAmount">Total Amount</h3>
+            <h3 id="totalAmount">Total Amount: Waiting...</h3>
             <button id="toggleTotalAmount" class="toggle-btn">Show</button>
         </div>
 

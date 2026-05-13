@@ -384,3 +384,61 @@ function handleFirebaseError(error) {
 
     alert(message);
 }
+
+
+
+// =======================
+// DARK MODE TOGGLE
+// =======================
+const darkModeToggle =
+    document.getElementById("darkModeToggle");
+
+// =======================
+// APPLY SAVED MODE IMMEDIATELY
+// =======================
+
+const darkMode =
+    localStorage.getItem("darkMode") === "true";
+
+if (darkMode) {
+
+    document.body.classList.add("dark-mode");
+
+}
+
+// =======================
+// UPDATE BUTTON TEXT
+// =======================
+
+function updateDarkModeButton() {
+
+    const isDarkMode =
+        document.body.classList.contains("dark-mode");
+
+    darkModeToggle.textContent =
+        isDarkMode
+            ? "Light Mode"
+            : "Dark Mode";
+}
+
+// INITIAL BUTTON STATE
+updateDarkModeButton();
+
+// =======================
+// TOGGLE
+// =======================
+
+darkModeToggle.onclick = () => {
+
+    document.body.classList.toggle("dark-mode");
+
+    const isDarkMode =
+        document.body.classList.contains("dark-mode");
+
+    localStorage.setItem(
+        "darkMode",
+        isDarkMode
+    );
+
+    updateDarkModeButton();
+};

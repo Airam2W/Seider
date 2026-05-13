@@ -3,6 +3,10 @@ import {
     currentUser
 } from "../timeline.js";
 
+import { getCurrencySymbol } from "../utils.js";
+
+import { currencyFromUserGlobal } from "../timeline.js";
+
 let tagChart = null;
 let historyChart = null;
 
@@ -111,15 +115,18 @@ function getComparisonSummary(current, previous) {
     let message = "";
     let detail = "";
 
+    let diffSimbol = "+";
+    if (diff < 0) diffSimbol = "-";
+
     // 🔥 SOLO GASTOS (tu caso real)
     if (sumCurrent <= 0 && sumPrevious <= 0) {
 
         if (Math.abs(sumCurrent) > Math.abs(sumPrevious)) {
             message = "You spent more than in the previous period.";
-            detail = `Increase in spending: ${absDiff}`;
+            detail = `Increase in spending: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
         } else {
             message = "You spent less than in the previous period.";
-            detail = `Reduction in spending: ${absDiff}`;
+            detail = `Reduction in spending: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
         }
 
     }
@@ -128,23 +135,29 @@ function getComparisonSummary(current, previous) {
 
         if (sumCurrent > sumPrevious) {
             message = "Your income increased.";
-            detail = `Income growth: ${absDiff}`;
+            detail = `Income growth: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
         } else {
             message = "Your income decreased.";
-            detail = `Income drop: ${absDiff}`;
+            detail = `Income drop: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
         }
 
     }
     // 🔥 MIXTO
     else {
         message = "Your financial behavior changed significantly.";
-        detail = `Net change: ${formatMoney(diff)}`;
+        detail = `Net change: ${diffSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(diff).toFixed(2)} ${currencyFromUserGlobal}`;
     }
+
+    let sumPrevSimbol = "+";
+    if (sumPrevious < 0) sumPrevSimbol = "-";
+
+    let sumCurrSimbol = "+";
+    if (sumCurrent < 0) sumCurrSimbol = "-";
 
     return `
         <p>
-        Previous: <b>${formatMoney(sumPrevious)}</b><br>
-        Current: <b>${formatMoney(sumCurrent)}</b>
+        Previous: <b>${sumPrevSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(sumPrevious).toFixed(2)} ${currencyFromUserGlobal}</b><br>
+        Current: <b>${sumCurrSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(sumCurrent).toFixed(2)} ${currencyFromUserGlobal}</b>
         </p>
 
         <p><b>${message}</b></p>
@@ -223,6 +236,9 @@ function getWhyChanged(grouped) {
 
     const top3 = changes.slice(0,3);
 
+    let diffSimbol = "+";
+    if (top3[0].diff < 0) diffSimbol = "-";
+
     return `
         ${top3.map(c => {
 
@@ -233,7 +249,7 @@ function getWhyChanged(grouped) {
             return `
                 <p>
                 <b>${c.tag}</b>: ${type} 
-                (${Math.abs(c.diff)})
+                ( ${diffSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(c.diff).toFixed(2)} ${currencyFromUserGlobal})
                 </p>
             `;
         }).join("")}
@@ -494,7 +510,7 @@ function getTrendPrediction(grouped) {
     if (last <= 0 && prev <= 0) {
 
         if (Math.abs(last) > Math.abs(prev)) {
-            message = `Spending is increasing. If this pattern continues, you may spend around ${absDiff} more in the next period.`;
+            message = `Spending is increasing. If this pattern continues, you may spend around ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal} more in the next period.`;
         } else {
             message = `Spending is decreasing. You are likely reducing expenses gradually.`;
         }

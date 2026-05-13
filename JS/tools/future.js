@@ -4,6 +4,12 @@ import {
     currentUser
 } from "../timeline.js";
 
+import { getCurrencySymbol } from "../utils.js";
+
+import { currencyFromUserGlobal } from "../timeline.js";
+
+let currentCurrency = "...";
+
 export async function predictFuture() {
     const entries = await getUserEntries(currentUser.uid);
 
@@ -304,6 +310,11 @@ function generateSmartNote(items, total, day) {
     return "Normal day";
 }
 
+export function cleanRender() {
+    const container = document.getElementById("simulationResult");
+    container.innerHTML = "";
+}
+
 function renderSimulation(entries) {
 
     const container = document.getElementById("simulationResult");
@@ -359,8 +370,8 @@ function renderSimulation(entries) {
 
                     html += `
                         <div class="item-row">
-                            ${item.plus > 0 ? `<span class="plus">+${item.plus}</span>` : ""}
-                            ${item.minus > 0 ? `<span class="minus">-${item.minus}</span>` : ""}
+                            ${item.plus > 0 ? `<span class="plus">+ ${getCurrencySymbol(currencyFromUserGlobal)} ${item.plus} ${currencyFromUserGlobal}</span>` : ""}
+                            ${item.minus > 0 ? `<span class="minus">- ${getCurrencySymbol(currencyFromUserGlobal)} ${item.minus} ${currencyFromUserGlobal}</span>` : ""}
                         </div>
                     `;
                 });
@@ -369,14 +380,14 @@ function renderSimulation(entries) {
 
                 html += `
                     <div class="subtotal">
-                        Subtotal: ${subTotal >= 0 ? "+" : ""}${subTotal}
+                        Subtotal: ${subTotal >= 0 ? "+ " : "- "}${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(subTotal)} ${currencyFromUserGlobal}
                     </div>
                 `;
             });
 
                 html += `
                     <div class="group-total">
-                        Total: ${groupTotal >= 0 ? "+" : ""}${groupTotal}
+                        Total: ${groupTotal >= 0 ? "+ " : "- "}${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(groupTotal)} ${currencyFromUserGlobal}
                     </div>
                 `;
         });
@@ -387,7 +398,7 @@ function renderSimulation(entries) {
             </div>
 
             <div class="final-total">
-                Total = ${entry.total}
+                Total = ${getCurrencySymbol(currencyFromUserGlobal)} ${entry.total} ${currencyFromUserGlobal}
             </div>
         `;
 

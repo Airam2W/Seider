@@ -20,6 +20,10 @@ import {
 
 import { encryptData, decryptData } from "./encryption.js";
 
+import { getCurrencySymbol } from "./utils.js";
+
+import { currencies } from "./exchange.js";
+
 
 const urlParams = new URLSearchParams(window.location.search);
 const entryId = urlParams.get("id");
@@ -38,6 +42,10 @@ let currentSubtagContext = null;
 let tags = [];
 let subtagsMap = {};
 
+let currencyFromUserGlobal = "...";
+
+import { exchangeRates, loadExchangeRates } from "./exchange.js";
+
 
 // =======================
 // AUTH
@@ -46,8 +54,7 @@ onAuthStateChanged(auth, async (user) => {
     currentUser = user;
 
     await loadTags(user.uid);
-
-
+    await loadExchangeRates();
 
     if (entryId) {
         isEdit = true;
@@ -86,6 +93,19 @@ async function loadTags(uid) {
             subtagsMap[tagData.name].push(sub.data().name);
         });
     }
+
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        if (userData.currency) {
+            currencyFromUserGlobal = userData.currency;
+        }
+    }
+
+    updateTotal();
+    
 }
 
 
@@ -131,20 +151,20 @@ function updateTotal() {
             // 🔹 SET SUBTAG TOTAL
             const subTotalSpan = sub.querySelector(".subtag-total");
             
-            if (subTotalSpan) subTotalSpan.textContent = `$ ${totalSub}`;
+            if (subTotalSpan) subTotalSpan.textContent = `${getCurrencySymbol(currencyFromUserGlobal)} ${totalSub} ${currencyFromUserGlobal}`;
 
             totalTag += totalSub;
         };
 
         // 🔹 SET TAG TOTAL
         const tagTotalSpan = group.querySelector(".tag-total");
-        if (tagTotalSpan) tagTotalSpan.textContent = `$ ${totalTag}`;
+        if (tagTotalSpan) tagTotalSpan.textContent = `${getCurrencySymbol(currencyFromUserGlobal)} ${totalTag} ${currencyFromUserGlobal}`;
 
         totalGlobal += totalTag;
     };
 
     // 🔹 GLOBAL TOTAL
-    totalAmount.textContent = `Total: $ ${totalGlobal}`;
+    totalAmount.textContent = `Total: ${getCurrencySymbol(currencyFromUserGlobal)} ${totalGlobal} ${currencyFromUserGlobal}`;
 }
 
 
@@ -218,7 +238,8 @@ document.getElementById("btnSave").onclick = async () => {
         };
     };
 
-    const numberTotal = Number(totalAmount.textContent.replace("Total: $", "").trim()) || 0;
+    const totalText = totalAmount.textContent.replace(`Total: ${getCurrencySymbol(currencyFromUserGlobal)} `, "").trim();
+    const numberTotal = totalText.split(" ")[0].replace(/,/g, ""); // eliminar comas si las hay
     const total = Number(numberTotal) || 0;
 
 
@@ -231,10 +252,10 @@ document.getElementById("btnSave").onclick = async () => {
                 doc(db, "users", currentUser.uid, "entries", entryId),
                 {
                     items,
-                    total,
                     notes: encryptData(cleanHTML),
                     tagTotals,
-                    subtagTotals
+                    subtagTotals,
+                    total
                 }
             );
         } else {
@@ -243,10 +264,10 @@ document.getElementById("btnSave").onclick = async () => {
                 {
                     date: new Date(),
                     items,
-                    total,
                     notes: encryptData(cleanHTML),
                     tagTotals,
-                    subtagTotals
+                    subtagTotals,
+                    total
                 }
             );
         }
@@ -315,6 +336,8 @@ async function loadEntry(id) {
 
 
 
+
+
 // =======================
 // UI ENTRY CREATION
 // =======================
@@ -334,6 +357,43 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
     inputMinus.placeholder = "-";
     inputMinus.className = "red";
     inputMinus.value = item ? item.minus || "" : "";
+
+    // ===== CONVERTER INPUT =====
+    const convertInput = document.createElement("input");
+    convertInput.type = "number";
+    convertInput.placeholder = "Foreign Amount";
+
+    // ===== CURRENCY SELECT =====
+    const currencySelect = document.createElement("select");
+
+    // DELETE OF LIST OF OPTIONS USER CURRENT CURRENCY TO AVOID DUPLICATE
+    const currencyIndex = currencies.indexOf(currencyFromUserGlobal);
+    if (currencyIndex !== -1) {
+        currencies.splice(currencyIndex, 1);
+    }
+
+    // TITLE OF FOREIGN CURRENCY
+    const titleOption = document.createElement("h4");
+    titleOption.textContent = "Convert to "+currencyFromUserGlobal+" from:";
+    titleOption.style.marginRight = "10px";
+    
+    
+
+    currencies.forEach(currency => {
+        const option = document.createElement("option");
+        option.value = currency;
+        option.textContent = currency;
+        currencySelect.appendChild(option);
+    });
+
+    // ===== CONVERT BUTTON =====
+    const btnConvertPlus = document.createElement("button");
+    btnConvertPlus.textContent = "Put in +";
+    btnConvertPlus.onclick = () => convertPlus(convertInput, inputPlus, convertInput.value, currencySelect.value);
+
+    const btnConvertMinus = document.createElement("button");
+    btnConvertMinus.textContent = "Put in -";
+    btnConvertMinus.onclick = () => convertMinus(convertInput, inputMinus, convertInput.value, currencySelect.value);
 
     // ===== FILE INPUT (HIDDEN) =====
     const inputFile = document.createElement("input");
@@ -448,10 +508,74 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
     div.appendChild(preview);
     div.appendChild(btnDownload);
 
+    div.appendChild(titleOption);
+
+    div.appendChild(convertInput);
+    div.appendChild(currencySelect);
+
+    div.appendChild(btnConvertPlus);
+    div.appendChild(btnConvertMinus);
+
     div.appendChild(btnDelete);
 
     container.appendChild(div);
 }
+
+// =======================
+// CONVERT
+// =======================
+function convertCurrency(amount, fromCurrency, toCurrency) {
+
+    if (fromCurrency === toCurrency) {
+        return amount;
+    }
+
+    // convertir a USD primero
+    const amountInUSD = amount / exchangeRates[fromCurrency];
+
+    // luego USD -> moneda base
+    const converted =
+        amountInUSD * exchangeRates[toCurrency];
+
+    return converted;
+}
+
+function convertPlus(convertInput, inputPlus, amount, fromCurrency) {
+
+    if (!amount) return;
+
+    const converted =
+        convertCurrency(
+            amount,
+            fromCurrency,
+            currencyFromUserGlobal
+        );
+
+    inputPlus.value =
+        converted.toFixed(2);
+
+    updateTotal();
+
+    convertInput.value = "";
+};
+
+function convertMinus(convertInput, inputMinus, amount, fromCurrency) {
+
+    if (!amount) return;
+
+    const converted =
+        convertCurrency(
+            amount,
+            fromCurrency,
+            currencyFromUserGlobal
+        );
+
+    inputMinus.value =
+        converted.toFixed(2);
+
+    updateTotal();
+    convertInput.value = "";
+};
 
 // =======================
 // TAG
@@ -590,7 +714,7 @@ function createTagGroup(selectedTag = null) {
     // ===== TOTAL TAG =====
     const totalTag = document.createElement("span");
     totalTag.className = "tag-total";
-    totalTag.textContent = "$ 0";
+    totalTag.textContent = getCurrencySymbol(currencyFromUserGlobal) + " 0 " + currencyFromUserGlobal;
 
     // ===== APPEND =====
     header.appendChild(select);
@@ -656,7 +780,7 @@ function createSubtagGroup(tagSelect, container, subtagName = null, items = []) 
     // ===== TOTAL SUBTAG =====
     const totalSubtag = document.createElement("span");
     totalSubtag.className = "subtag-total";
-    totalSubtag.textContent = "$ 0";
+    totalSubtag.textContent = getCurrencySymbol(currencyFromUserGlobal) + " 0 " + currencyFromUserGlobal;
 
     // ===== APPEND =====
     subGroup.appendChild(subtagSelect);
@@ -865,3 +989,59 @@ const quill = new Quill('#editor', {
         ]
     }
 });
+
+// =======================
+// DARK MODE TOGGLE
+// =======================
+const darkModeToggle =
+    document.getElementById("darkModeToggle");
+
+// =======================
+// APPLY SAVED MODE IMMEDIATELY
+// =======================
+
+const darkMode =
+    localStorage.getItem("darkMode") === "true";
+
+if (darkMode) {
+
+    document.body.classList.add("dark-mode");
+
+}
+
+// =======================
+// UPDATE BUTTON TEXT
+// =======================
+
+function updateDarkModeButton() {
+
+    const isDarkMode =
+        document.body.classList.contains("dark-mode");
+
+    darkModeToggle.textContent =
+        isDarkMode
+            ? "Light Mode"
+            : "Dark Mode";
+}
+
+// INITIAL BUTTON STATE
+updateDarkModeButton();
+
+// =======================
+// TOGGLE
+// =======================
+
+darkModeToggle.onclick = () => {
+
+    document.body.classList.toggle("dark-mode");
+
+    const isDarkMode =
+        document.body.classList.contains("dark-mode");
+
+    localStorage.setItem(
+        "darkMode",
+        isDarkMode
+    );
+
+    updateDarkModeButton();
+};

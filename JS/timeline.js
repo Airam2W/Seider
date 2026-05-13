@@ -21,10 +21,13 @@ import {
 
 import { encryptData, decryptData } from "./encryption.js";
 
+import { getCurrencySymbol } from "./utils.js";
+
 const db = getFirestore(app);
 const entriesContainer = document.getElementById("entriesContainer");
 const timelineEl = document.getElementById("timeline");
 const totalAmountEl = document.getElementById("totalAmount");
+export let currencyFromUserGlobal = "...";
 
 export let currentUser = null;
 
@@ -76,6 +79,14 @@ let tagsData = [];
 // =======================
 
 const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+
+// =======================
+// Currency Exchange Table
+// =======================
+const btnExchangeTable = document.getElementById("btnExchangeTable");
+const modalExchange = document.getElementById("modalExchange");
+const modalContentExchange = document.getElementById("modalContentExchange");
+const exchangeTable = document.getElementById("exchangeTable");
 
 
 // =======================
@@ -144,9 +155,16 @@ const snapshot = await getDocs(q);
     const userSnap = await getDoc(userDocRef);
     const userData = userSnap.data();
     const currentBalance = userData.finance?.currentBalance;
+    const currencyFromUser = userData.currency || "USD";
+    currencyFromUserGlobal = currencyFromUser;
 
     const finalTotal = currentBalance !== undefined ? currentBalance + totalAmount : totalAmount;
-    totalAmountEl.textContent = `Total Amount: $ ${finalTotal}`;
+    let finalTotalSimbol = "+";
+    if (finalTotal < 0) {
+        finalTotalSimbol = "-";
+    }
+
+    totalAmountEl.textContent = `Total Amount: ${finalTotalSimbol} ${getCurrencySymbol(currencyFromUser)}${Math.abs(finalTotal).toFixed(2)} ${currencyFromUser}`;
     totalAmountCache = totalAmountEl.textContent;
     updateTotalVisibility();
 
@@ -154,6 +172,11 @@ const snapshot = await getDocs(q);
         const data = docItem.data();
         const entryId = docItem.id;
         const entryTotal = data.total || 0;
+
+        let entryTotalSimbol = "+";
+        if (entryTotal < 0) {
+            entryTotalSimbol = "-";
+        }
 
         const div = document.createElement("div");
         div.className = "entry";
@@ -172,7 +195,7 @@ const snapshot = await getDocs(q);
                     </p>
 
                     <p class="entry-total">
-                        Total: $ ${entryTotal}
+                        Total: ${entryTotalSimbol} ${getCurrencySymbol(currencyFromUser)}${Math.abs(entryTotal).toFixed(2)} ${currencyFromUser}
                     </p>
                 </div>
 
@@ -247,8 +270,8 @@ const snapshot = await getDocs(q);
                                 <span>
                                     ${
                                         item.minus
-                                            ? "-$" + item.minus
-                                            : "+$" + item.plus
+                                            ? "- " + getCurrencySymbol(currencyFromUser) + item.minus + " " + currencyFromUser
+                                            : "+ " + getCurrencySymbol(currencyFromUser) + item.plus + " " + currencyFromUser
                                     }
                                 </span>
 
@@ -309,6 +332,7 @@ window.deleteEntry = async (id) => {
 
         loadEntries(currentUser.uid);
         toggleFixedBottom();
+        window.location.reload();
 
     } catch (error) {
         console.error(error);
@@ -385,6 +409,7 @@ async function loadUserSettings() {
     }
 
     await loadTagsSettings();
+    await loadExchangeRates();
 }
 
 saveSettingsBtn.onclick = async () => {
@@ -426,12 +451,17 @@ saveSettingsBtn.onclick = async () => {
             }
         );
 
-        setTimeout(() => {
-            loadEntries(currentUser.uid);
-            toggleFixedBottom();
-            closeModal();
-        }, 100);
-
+        // IF CURRENCY CHANGED, ASK TO RELOAD FOR CORRECT DISPLAY
+        if (currencyFromUserGlobal !== settingsCurrency.value) {
+            await exchangeAll(currencyFromUserGlobal, settingsCurrency.value);
+        }else{
+            setTimeout(() => {
+                loadEntries(currentUser.uid);
+                toggleFixedBottom();
+                closeModal();
+                window.location.reload();
+            }, 100);
+        }
     } catch (error) {
 
         console.error(error);
@@ -477,6 +507,7 @@ saveSettingsBtn.onclick = async () => {
         console.error(error);
         alert("Error saving settings");
     }
+
 };
 
 goToOnboardingBtn.onclick = () => {
@@ -484,6 +515,392 @@ goToOnboardingBtn.onclick = () => {
     window.location.href =
         "/HTML/onboarding.html";
 };
+
+// =======================
+// EXCHANGE RATES
+// ======================
+
+import { exchangeRates, loadExchangeRates, convertCurrency, supportedCurrencies } from "./exchange.js";
+
+const USD = document.getElementById("USD")
+const MXN = document.getElementById("MXN")
+const JPY = document.getElementById("JPY")
+const KRW = document.getElementById("KRW")
+const CAD = document.getElementById("CAD")
+const CNY = document.getElementById("CNY")
+const EUR = document.getElementById("EUR")
+const GBP = document.getElementById("GBP")
+const AUD = document.getElementById("AUD")
+const CHF = document.getElementById("CHF")
+const SEK = document.getElementById("SEK")
+const NZD = document.getElementById("NZD")
+
+let currencyButtons = [USD, MXN, JPY, KRW, CAD, CNY, EUR, GBP, AUD, CHF, SEK, NZD];
+
+settingsCurrency.onchange = () => {
+    const prevCurrency = currencyFromUserGlobal;
+    const newCurrency = settingsCurrency.value;
+    if(confirm(
+    "Your Base Currency will be changed from " +
+    prevCurrency +
+    " to " +
+    newCurrency +
+    ".\n\n" +
+
+    "Current exchange rate:\n" +
+    "1 " + prevCurrency +
+    " = " +
+    (
+        exchangeRates[newCurrency] /
+        exchangeRates[prevCurrency]
+    ).toFixed(4) +
+    " " + newCurrency +
+    "\n" +
+    "1 " + newCurrency +
+    " = " +
+    (   exchangeRates[prevCurrency] /
+        exchangeRates[newCurrency]
+    ).toFixed(4) +
+    " " + prevCurrency +
+    "\n\n" +
+
+    "All stored amounts will be converted to the new Base Currency.\n\n" +
+
+    "Are you sure you want to continue?"
+    )){
+    }else{
+        currencyButtons.forEach(btn => {
+            if (btn.value === prevCurrency) {
+                settingsCurrency.value = prevCurrency;
+            }
+        });
+    }
+};
+
+async function openExchangeTable() {
+    openModal(5);
+    await loadExchangeTable();
+};
+
+window.openExchangeTable = openExchangeTable;
+
+async function loadExchangeTable() {
+
+    await loadExchangeRates();
+
+    exchangeTable.innerHTML = "";
+
+    const baseCurrency =
+        currencyFromUserGlobal;
+
+    // ===== FIND BASE INFO =====
+    const baseInfo =
+        supportedCurrencies.find(
+            c => c.code === baseCurrency
+        );
+
+    // ===== TITLE =====
+    const title =
+        document.createElement("p");
+
+    title.innerHTML =
+        `
+            <strong>
+                Base Currency:
+            </strong>
+
+            ${baseInfo.flag}
+            ${baseInfo.code}
+            - ${baseInfo.name}
+        `;
+
+    exchangeTable.appendChild(title);
+
+    // ===== TABLE =====
+    const table =
+        document.createElement("table");
+
+    table.className = "exchange-table";
+
+    table.innerHTML = `
+    
+        <thead>
+
+            <tr>
+                <th>Currency</th>
+                <th>Exchange Rate</th>
+            </tr>
+
+        </thead>
+
+        <tbody></tbody>
+    `;
+
+    const tbody =
+        table.querySelector("tbody");
+
+    // ===== ONLY SUPPORTED CURRENCIES =====
+    supportedCurrencies.forEach(currencyData => {
+
+        const currency =
+            currencyData.code;
+
+        // Skip same currency
+        if (currency === baseCurrency) return;
+
+        // Skip if API missing
+        if (!exchangeRates[currency]) return;
+
+        // ===== CONVERSION =====
+        const rate =
+            (
+                exchangeRates[currency] /
+                exchangeRates[baseCurrency]
+            ).toFixed(4);
+
+        // ===== ROW =====
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+        
+            <td>
+
+                <div class="currency-info">
+
+                    <span class="currency-flag">
+                        ${currencyData.flag}
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            ${currencyData.code}
+                        </strong>
+
+                        <br>
+
+                        <small>
+                            ${currencyData.name}
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+            <td>
+
+                1 ${baseCurrency}
+                =
+                ${rate} ${currency}
+
+            </td>
+        `;
+
+        tbody.appendChild(row);
+    });
+
+    const note = document.createElement("p");
+    note.style.marginTop = "12px";
+    note.style.fontSize = "12px";
+    note.style.color = "gray";
+    note.textContent = "Exchange rates provided by exchangerate-api.com";
+
+    exchangeTable.appendChild(note);
+    exchangeTable.appendChild(table);
+}
+
+
+
+async function exchangeAll(prevCurrency, newCurrency) {
+
+    if (!currentUser) return;
+
+    try {
+
+        
+
+        const entriesRef = collection(
+            db,
+            "users",
+            currentUser.uid,
+            "entries"
+        );
+
+        const snapshot = await getDocs(entriesRef);
+
+        console.log(
+            "Entries found:",
+            snapshot.size
+        );
+
+        for (const entryDoc of snapshot.docs) {
+
+            const data = entryDoc.data();
+
+            console.log(
+                "Converting Entry:",
+                entryDoc.id,
+                data
+            );
+
+            // =======================
+            // ITEMS
+            // =======================
+
+            const convertedItems = (data.items || []).map(item => {
+
+            const plus =
+                convertCurrency(
+                    Number(item.plus || 0),
+                    prevCurrency,
+                    newCurrency
+                );
+
+            const minus =
+                convertCurrency(
+                    Number(item.minus || 0),
+                    prevCurrency,
+                    newCurrency
+                );
+
+            return {
+
+                ...item,
+
+                plus: isNaN(plus) ? 0 : plus,
+
+                minus: isNaN(minus) ? 0 : minus
+            };
+        });
+
+            // =======================
+            // TOTAL
+            // =======================
+
+            const convertedTotal =
+                convertCurrency(
+                    Number(data.total || 0),
+                    prevCurrency,
+                    newCurrency
+                );
+
+            // =======================
+            // TAG TOTALS
+            // =======================
+
+            const convertedTagTotals = {};
+
+            if (data.tagTotals) {
+
+                for (const tag in data.tagTotals) {
+
+                    convertedTagTotals[tag] =
+                        convertCurrency(
+                            Number(data.tagTotals[tag] || 0),
+                            prevCurrency,
+                            newCurrency
+                        );
+                }
+            }
+
+            // =======================
+            // SUBTAG TOTALS
+            // =======================
+
+            const convertedSubtagTotals = {};
+
+            if (data.subtagTotals) {
+
+                for (const tag in data.subtagTotals) {
+
+                    convertedSubtagTotals[tag] = {};
+
+                    for (const subtag in data.subtagTotals[tag]) {
+
+                        convertedSubtagTotals[tag][subtag] =
+                            convertCurrency(
+                                Number(data.subtagTotals[tag][subtag] || 0),
+                                prevCurrency,
+                                newCurrency
+                            );
+                    }
+                }
+            }
+
+            // =======================
+            // UPDATE ENTRY
+            // =======================
+
+            console.log(
+                "NEW VALUES:",
+                {
+                    items: convertedItems,
+                    total: convertedTotal,
+                    tagTotals: convertedTagTotals,
+                    subtagTotals: convertedSubtagTotals
+                }
+            );
+
+            await updateDoc(
+                doc(
+                    db,
+                    "users",
+                    currentUser.uid,
+                    "entries",
+                    entryDoc.id
+                ),
+                {
+                    items: convertedItems,
+                    total: convertedTotal,
+                    tagTotals: convertedTagTotals,
+                    subtagTotals: convertedSubtagTotals
+                }
+            );
+
+            console.log(
+                "Updated:",
+                entryDoc.id
+            );
+        }
+
+        // =======================
+        // UPDATE USER CURRENCY
+        // =======================
+
+        await updateDoc(
+            doc(db, "users", currentUser.uid),
+            {
+                currency: newCurrency
+            }
+        );
+
+        console.log(
+            "Currency updated:",
+            newCurrency
+        );
+
+        location.reload();
+
+    } catch (error) {
+
+        console.error(
+            "exchangeAll ERROR:",
+            error.message,
+            error
+        );
+    }
+
+
+    setTimeout(() => {
+        loadEntries(currentUser.uid);
+        toggleFixedBottom();
+        closeModal();
+        window.location.reload();
+    }, 100);
+}
 
 // =======================
 // TAGS - SETTINGS
@@ -943,7 +1360,7 @@ function updateTotalVisibility() {
     totalAmountEl.textContent =
         totalVisible
             ? totalAmountCache
-            : "Total Amount: $ ---";
+            : "Total Amount: " + getCurrencySymbol(currencyFromUserGlobal)+" ***** "+currencyFromUserGlobal;
 
     showTotalBtn.textContent =
         totalVisible
@@ -985,6 +1402,63 @@ document.addEventListener("click", (e) => {
     }
 });
 
+// =======================
+// DARK MODE TOGGLE
+// =======================
+const darkModeToggle =
+    document.getElementById("darkModeToggle");
+
+// =======================
+// APPLY SAVED MODE IMMEDIATELY
+// =======================
+
+const darkMode =
+    localStorage.getItem("darkMode") === "true";
+
+if (darkMode) {
+
+    document.body.classList.add("dark-mode");
+
+}
+
+// =======================
+// UPDATE BUTTON TEXT
+// =======================
+
+function updateDarkModeButton() {
+
+    const isDarkMode =
+        document.body.classList.contains("dark-mode");
+
+    darkModeToggle.textContent =
+        isDarkMode
+            ? "Light Mode"
+            : "Dark Mode";
+}
+
+// INITIAL BUTTON STATE
+updateDarkModeButton();
+
+// =======================
+// TOGGLE
+// =======================
+
+darkModeToggle.onclick = () => {
+
+    document.body.classList.toggle("dark-mode");
+
+    const isDarkMode =
+        document.body.classList.contains("dark-mode");
+
+    localStorage.setItem(
+        "darkMode",
+        isDarkMode
+    );
+
+    updateDarkModeButton();
+};
+
+
 
 
 // Ejecutar al cargar
@@ -994,12 +1468,18 @@ window.addEventListener("resize", toggleFixedBottom);
 // Ejecutar al hacer scroll
 window.addEventListener("scroll", toggleFixedBottom);
 
+
+
+
+
+
 // =======================
 // SMART TOOLS CODE
 // =======================
 
 import {
     predictFuture,
+    cleanRender
 } from "./tools/future.js";
 
 import {
@@ -1062,7 +1542,10 @@ export async function getUserEntries(uid) {
 // MODAL
 // =======================
 
+let currentSection = null;
+
 function openModal(section) {
+    currentSection = section;
     if (section == 0){
         modalContentSettings.classList.remove("hidden");
         modalSettings.classList.remove("hidden");
@@ -1079,15 +1562,29 @@ function openModal(section) {
     } else if (section == 4) {
         modalContentComparison.classList.remove("hidden");
         modalComparison.classList.remove("hidden");
+    } else if (section == 5) {
+        modalContentExchange.classList.remove("hidden");
+        modalExchange.classList.remove("hidden");
     }
 }
 
 function closeModal() {
-    modalFuture.classList.add("hidden");
-    modalSearch.classList.add("hidden");
-    modalSpending.classList.add("hidden");
-    modalComparison.classList.add("hidden");
-    modalSettings.classList.add("hidden");
+    if (currentSection === null) return;
+
+    if (currentSection == 0){
+        modalSettings.classList.add("hidden");
+    } else if (currentSection == 1) {
+        modalFuture.classList.add("hidden");
+        cleanRender();
+    } else if (currentSection == 2) {
+        modalSearch.classList.add("hidden");
+    } else if (currentSection == 3) {
+        modalSpending.classList.add("hidden");
+    } else if (currentSection == 4) {
+        modalComparison.classList.add("hidden");
+    } else if (currentSection == 5) {
+        modalExchange.classList.add("hidden");
+    }
 }
 
 window.closeModal = closeModal;
@@ -1107,6 +1604,9 @@ modalSpending.addEventListener("click", (e) => {
 });
 modalComparison.addEventListener("click", (e) => {
     if (e.target === modalComparison) closeModal();
+});
+modalExchange.addEventListener("click", (e) => {
+    if (e.target === modalExchange) closeModal();
 });
 
 // =======================
@@ -1147,6 +1647,11 @@ async function openFuture() {
 }
 
 window.openFuture = openFuture;
+
+document.getElementById("simulationDuration").onchange = (e) => {
+    cleanRender();
+}
+
 
 // =======================
 // SEARCH

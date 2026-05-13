@@ -1,0 +1,38 @@
+.modal-content{
+ overflow-y: auto;
+}
+
+.exchange-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.exchange-table th,
+.exchange-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.exchange-table th {
+    background: #f3f3f3;
+}
+
+.dark-mode .exchange-table th {
+    background: #222;
+}
+
+.dark-mode .exchange-table td {
+    border-color: #444;
+}
+
+.currency-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.currency-flag {
+    font-size: 22px;
+}

@@ -3,6 +3,10 @@ import {
     currentUser
 } from "../timeline.js";
 
+import { getCurrencySymbol } from "../utils.js";
+
+import { currencyFromUserGlobal } from "../timeline.js";
+
 
 const timeSelect = document.getElementById("timeRange");
 timeSelect.selectedIndex = timeSelect.querySelectorAll("option").length - 1;
@@ -111,9 +115,9 @@ function generateStats(entries) {
     const min = Math.min(...totals);
 
     return `
-        <p>Average: ${avg.toFixed(2)}</p>
-        <p>Max: ${max}</p>
-        <p>Min: ${min}</p>
+        <p>Average: ${getCurrencySymbol(currencyFromUserGlobal)} ${avg.toFixed(2)} ${currencyFromUserGlobal}</p>
+        <p>Max: ${getCurrencySymbol(currencyFromUserGlobal)} ${max} ${currencyFromUserGlobal}</p>
+        <p>Min: ${getCurrencySymbol(currencyFromUserGlobal)} ${min} ${currencyFromUserGlobal}</p>
         <p>Trend: ${getTrend(entries)}</p>
     `;
 }
@@ -433,32 +437,62 @@ function getGeneralAnalysis(entries) {
     const maxSub = Object.entries(subStats).sort((a,b)=>b[1]-a[1])[0];
     const minSub = Object.entries(subStats).sort((a,b)=>a[1]-b[1])[0];
 
+    let totalNetSymbol = "+"
+    if (total < 0) {
+        totalNetSymbol = "-";
+    }
+
+    let averageSymbol = "+";
+    if (avg < 0) {
+        averageSymbol = "-";
+    }
+
+    let maxTagSymbol = "+";
+    if (maxTag?.[1] < 0) {
+        maxTagSymbol = "-";
+    }
+
+    let minTagSymbol = "+";
+    if (minTag?.[1] < 0) {
+        minTagSymbol = "-";
+    }
+
+    let maxSubSymbol = "+";
+    if (maxSub?.[1] < 0) {
+        maxSubSymbol = "-";
+    }
+
+    let minSubSymbol = "+";
+    if (minSub?.[1] < 0) {
+        minSubSymbol = "-";
+    }
+
     return `
         <div class="insight-box">
 
             <br>
-            <p><strong>💰 Total Net:</strong> ${total.toFixed(2)}</p>
-            <p><strong>📈 Income:</strong> +${income.toFixed(2)}</p>
-            <p><strong>📉 Expenses:</strong> ${expense.toFixed(2)}</p>
+            <p><strong>💰 Total Net:</strong> ${totalNetSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(total).toFixed(2)} ${currencyFromUserGlobal}</p>
+            <p><strong>📈 Income:</strong> + ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(income).toFixed(2)} ${currencyFromUserGlobal}</p>
+            <p><strong>📉 Expenses:</strong> - ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(expense).toFixed(2)} ${currencyFromUserGlobal}</p>
 
             <br>
             <hr>
 
             <br>
-            <p><strong>📊 Average per Entry:</strong> ${avg.toFixed(2)}</p>
+            <p><strong>📊 Average per Entry:</strong> ${averageSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(avg).toFixed(2)} ${currencyFromUserGlobal}</p>
 
-            <p><strong>🏆 Best Day:</strong> ${bestDay.date.toDate().toLocaleDateString()} (${bestDay.total})</p>
-            <p><strong>⚠️ Worst Day:</strong> ${worstDay.date.toDate().toLocaleDateString()} (${worstDay.total})</p>
+            <p><strong>🏆 Best Day:</strong> ${bestDay.date.toDate().toLocaleDateString()} ( + ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(bestDay.total).toFixed(2)} ${currencyFromUserGlobal})</p>
+            <p><strong>⚠️ Worst Day:</strong> ${worstDay.date.toDate().toLocaleDateString()} ( - ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(worstDay.total).toFixed(2)} ${currencyFromUserGlobal})</p>
 
             <br>
             <hr>
 
             <br>
-            <p><strong>🥇 Top Performing Tag:</strong> ${maxTag?.[0]} (${maxTag?.[1]})</p>
-            <p><strong>💸 Most Costly Tag:</strong> ${minTag?.[0]} (${minTag?.[1]})</p>
+            <p><strong>🥇 Top Performing Tag:</strong> ${maxTag?.[0]} ( ${maxTagSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(maxTag?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
+            <p><strong>💸 Most Costly Tag:</strong> ${minTag?.[0]} ( ${minTagSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(minTag?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
 
-            <p><strong>🥇 Top Subcategory:</strong> ${maxSub?.[0]} (${maxSub?.[1]})</p>
-            <p><strong>💸 Most Costly Subcategory:</strong> ${minSub?.[0]} (${minSub?.[1]})</p>
+            <p><strong>🥇 Top Subcategory:</strong> ${maxSub?.[0]} ( ${maxSubSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(maxSub?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
+            <p><strong>💸 Most Costly Subcategory:</strong> ${minSub?.[0]} ( ${minSubSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(minSub?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
 
             <br>
             <hr>

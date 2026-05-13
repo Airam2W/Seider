@@ -24,6 +24,8 @@ const finishBtn = document.getElementById("finishBtn");
 // =======================
 let onboardingData = {
 
+    currency: "USD",
+
     gender: "no",
     ageRange: "no",
 
@@ -62,6 +64,11 @@ document.querySelectorAll(".goal-btn").forEach(btn => {
         onboardingData.financialGoal = btn.dataset.value;
     };
 });
+
+document.getElementById("currency").onchange = (e) => {
+
+    onboardingData.currency = e.target.value;
+}
 
 // =======================
 // NAVIGATION
@@ -115,6 +122,21 @@ function renderStep() {
 }
 
 // =======================
+// RENDER OPTIONS
+// =======================
+
+const currentBalanceInput = document.getElementById("currentBalance");
+
+document.getElementById("incomeFrequency").onchange = (e) => {
+    const value = e.target.value;
+    if (value !== "no") {
+        currentBalanceInput.style.display = "block";
+    } else {
+        currentBalanceInput.style.display = "none";
+    }
+};
+
+// =======================
 // SAVE CURRENT STEP
 // =======================
 function saveCurrentStep() {
@@ -127,6 +149,8 @@ function saveCurrentStep() {
 
     onboardingData.incomeFrequency =
         document.getElementById("incomeFrequency").value;
+
+    onboardingData.currency = document.getElementById("currency").value;
 }
 
 // =======================
@@ -144,6 +168,7 @@ finishBtn.onclick = async () => {
             doc(db, "users", user.uid),
             {
 
+                currency: onboardingData.currency,
                 onboardingCompleted: true,
 
                 profile: {
@@ -174,3 +199,60 @@ finishBtn.onclick = async () => {
 };
 
 renderStep();
+
+
+// =======================
+// DARK MODE TOGGLE
+// =======================
+const darkModeToggle =
+    document.getElementById("darkModeToggle");
+
+// =======================
+// APPLY SAVED MODE IMMEDIATELY
+// =======================
+
+const darkMode =
+    localStorage.getItem("darkMode") === "true";
+
+if (darkMode) {
+
+    document.body.classList.add("dark-mode");
+
+}
+
+// =======================
+// UPDATE BUTTON TEXT
+// =======================
+
+function updateDarkModeButton() {
+
+    const isDarkMode =
+        document.body.classList.contains("dark-mode");
+
+    darkModeToggle.textContent =
+        isDarkMode
+            ? "Light Mode"
+            : "Dark Mode";
+}
+
+// INITIAL BUTTON STATE
+updateDarkModeButton();
+
+// =======================
+// TOGGLE
+// =======================
+
+darkModeToggle.onclick = () => {
+
+    document.body.classList.toggle("dark-mode");
+
+    const isDarkMode =
+        document.body.classList.contains("dark-mode");
+
+    localStorage.setItem(
+        "darkMode",
+        isDarkMode
+    );
+
+    updateDarkModeButton();
+};

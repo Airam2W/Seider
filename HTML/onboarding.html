@@ -88,6 +88,21 @@
 
                 </select>
 
+                <select id="currency">
+                    <option value="USD" selected>Base Currency</option>
+                    <option id="USD" value="USD">USD - US Dollar</option>
+                    <option id="AUD" value="AUD">AUD - Australian Dollar</option>
+                    <option id="CAD" value="CAD">CAD - Canadian Dollar</option>
+                    <option id="CHF" value="CHF">CHF - Swiss Franc</option>
+                    <option id="CNY" value="CNY">CNY - Chinese Yuan</option>
+                    <option id="EUR" value="EUR">EUR - Euro</option>
+                    <option id="GBP" value="GBP">GBP - British Pound</option>
+                    <option id="JPY" value="JPY">JPY - Japanese Yen</option>
+                    <option id="KRW" value="KRW">KRW - Korean Won</option>
+                    <option id="MXN" value="MXN">MXN - Mexican Peso</option>                        <option id="NZD" value="NZD">NZD - New Zealand Dollar</option>
+                    <option id="SEK" value="SEK">SEK - Swedish Krona</option>
+                </select>
+
                 <input
                     type="number"
                     id="currentBalance"
@@ -168,6 +183,17 @@
         </div>
 
     </div>
+
+    <!-- SIDE BUTTONS LEFT -->
+    <div class="side-buttons-left">
+        <button id="darkModeToggle" class="toggle-btn">Dark Mode</button>
+    </div>
+
+    <script>
+        if (localStorage.getItem("darkMode") === "true") {
+            document.documentElement.classList.add("dark-mode");
+        }
+    </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <script type="module" src="../JS/onboarding.js"></script>

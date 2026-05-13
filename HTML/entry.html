@@ -49,7 +49,7 @@
 
         <!-- TOTAL -->
         <div class="total-box">
-            <span id="totalAmount">Total: $ 0</span>
+            <span id="totalAmount">Total: Waiting...</span>
         </div>
 
         <br>
@@ -64,6 +64,19 @@
             <button id="btnSave">Save</button>
             <button id="btnCancel">Back</button>
         </div>
+
+
+        
+        <!-- SIDE BUTTONS LEFT -->
+        <div class="side-buttons-left">
+            <button id="darkModeToggle" class="toggle-btn">Dark Mode</button>
+        </div>
+
+        <script>
+            if (localStorage.getItem("darkMode") === "true") {
+                document.documentElement.classList.add("dark-mode");
+            }
+        </script>
 
     </main>
 
