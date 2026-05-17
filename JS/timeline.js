@@ -135,7 +135,7 @@ async function loadEntries(uid) {
 
     const q = query(
         collection(db, "users", uid, "entries"),
-        orderBy("date", "asc") // 🔼 MÁS ANTIGUO ARRIBA
+        orderBy("date", "asc") // 🔼 OLDEST UP
     );
 
 const snapshot = await getDocs(q);
@@ -731,20 +731,9 @@ async function exchangeAll(prevCurrency, newCurrency) {
 
         const snapshot = await getDocs(entriesRef);
 
-        console.log(
-            "Entries found:",
-            snapshot.size
-        );
-
         for (const entryDoc of snapshot.docs) {
 
             const data = entryDoc.data();
-
-            console.log(
-                "Converting Entry:",
-                entryDoc.id,
-                data
-            );
 
             // =======================
             // ITEMS
@@ -834,16 +823,6 @@ async function exchangeAll(prevCurrency, newCurrency) {
             // UPDATE ENTRY
             // =======================
 
-            console.log(
-                "NEW VALUES:",
-                {
-                    items: convertedItems,
-                    total: convertedTotal,
-                    tagTotals: convertedTagTotals,
-                    subtagTotals: convertedSubtagTotals
-                }
-            );
-
             await updateDoc(
                 doc(
                     db,
@@ -860,10 +839,6 @@ async function exchangeAll(prevCurrency, newCurrency) {
                 }
             );
 
-            console.log(
-                "Updated:",
-                entryDoc.id
-            );
         }
 
         // =======================
@@ -875,11 +850,6 @@ async function exchangeAll(prevCurrency, newCurrency) {
             {
                 currency: newCurrency
             }
-        );
-
-        console.log(
-            "Currency updated:",
-            newCurrency
         );
 
         location.reload();
@@ -1156,7 +1126,7 @@ window.updateTagName = (index, value) => {
 
 window.updateTagColor = (index, value) => {
 
-    // FORZAR HEX 6 DIGITOS
+    // VALIDATE COLOR
     tagsData[index].color =
         normalizeColor(value).toLowerCase();
 
@@ -1364,8 +1334,8 @@ function updateTotalVisibility() {
 
     showTotalBtn.textContent =
         totalVisible
-            ? "Hide"
-            : "Show";
+            ? "Hide ⌣"
+            : "Show 👁";
 }
 
 showTotalBtn.onclick = () => {
@@ -1432,8 +1402,8 @@ function updateDarkModeButton() {
 
     darkModeToggle.textContent =
         isDarkMode
-            ? "Light Mode"
-            : "Dark Mode";
+            ? "Light Mode ☀︎"
+            : "Dark Mode ☾";
 }
 
 // INITIAL BUTTON STATE
@@ -1461,11 +1431,11 @@ darkModeToggle.onclick = () => {
 
 
 
-// Ejecutar al cargar
+// Execute on load
 window.addEventListener("load", toggleFixedBottom);
-// Ejecutar al cambiar tamaño
+// Execute on resize
 window.addEventListener("resize", toggleFixedBottom);
-// Ejecutar al hacer scroll
+// Execute on scroll
 window.addEventListener("scroll", toggleFixedBottom);
 
 
@@ -1514,7 +1484,7 @@ export async function getUserEntries(uid) {
     try {
         const q = query(
             collection(db, "users", uid, "entries"),
-            orderBy("date", "asc") // 🔥 IMPORTANTE
+            orderBy("date", "asc")
         );
 
         const snapshot = await getDocs(q);
@@ -1589,7 +1559,7 @@ function closeModal() {
 
 window.closeModal = closeModal;
 
-// cerrar al hacer click afuera
+// CLOSE TO CLICKING OUTSIDE
 modalSettings.addEventListener("click", (e) => {
     if (e.target === modalSettings) closeModal();
 });
@@ -1617,7 +1587,6 @@ modalExchange.addEventListener("click", (e) => {
 // VERIFICATION
 // =======================
 async function verificationForSimulation(uid, minEntries = 3) {
-    // let simulationOK = verificationForSimulation(currentUser, N);
     const userRef = doc(db, "users", uid);
     const snap = await getDoc(userRef);
 

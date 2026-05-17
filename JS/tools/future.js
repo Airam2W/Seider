@@ -23,7 +23,7 @@ export async function predictFuture() {
 
     const today = new Date();
 
-    // 🔥 CASO ESPECIAL: TODAY
+    // TODAY
     if (duration === 0) {
         const forcedEntry = generateSingleEntry(today, dayPatterns, weights);
         renderSimulation([forcedEntry]);
@@ -33,12 +33,12 @@ export async function predictFuture() {
     for (let i = 0; i < duration; i++) {
 
         const currentDate = new Date();
-        currentDate.setDate(today.getDate() + i + 1); // siempre futuro
+        currentDate.setDate(today.getDate() + i + 1); // Always start from tomorrow
 
         const day = currentDate.getDay();
 
         const shouldGenerate =
-            (i === 0) || // 🔥 siempre el primero
+            (i === 0) || // Always generate for the first day
             (Math.random() <= usageProb);
 
         if (!shouldGenerate) continue;
@@ -47,7 +47,7 @@ export async function predictFuture() {
         results.push(entry);
     }
 
-    // 🔥 SEGURIDAD EXTRA (nunca vacío)
+    // EXTRA SECURITY
     if (results.length === 0) {
         const fallbackDate = new Date();
         fallbackDate.setDate(today.getDate() + 1);
@@ -92,7 +92,7 @@ function generateFutureEntries(patterns, days) {
     const result = [];
     const today = new Date();
 
-    // 🔹 Si es "Today"
+    // If Today
     const startOffset = (days === 0) ? 0 : 1;
 
     const totalDays = (days === 0) ? 1 : days;
@@ -106,7 +106,7 @@ function generateFutureEntries(patterns, days) {
 
         const probability = (patterns.dayFrequency[day] || 0) / patterns.entries.length;
 
-        // 🔥 regla: siempre al menos 1 entry
+        // Always 1 for the first day, then based on probability
         if (i !== 0 && Math.random() > probability) continue;
 
         const template = patterns.entries[
@@ -173,7 +173,7 @@ function generateItems(weights) {
 
         const totalCount = data.incomeCount + data.expenseCount;
 
-        // 🔥 probabilidad real
+        // REAL PROBABILITY
         const incomeProb = totalCount === 0 ? 0 : data.incomeCount / totalCount;
 
         const isIncome = Math.random() < incomeProb;
@@ -212,7 +212,7 @@ function getUsageProbability(entries) {
 
     const totalDays = Math.max(1, (last - first) / (1000*60*60*24));
 
-    return entries.length / totalDays; // probabilidad diaria
+    return entries.length / totalDays; // Daily probability of having at least one entry
 }
 
 function getDayPatterns(entries) {
@@ -336,7 +336,7 @@ function renderSimulation(entries) {
             </div>
         `;
 
-        // 🔥 AGRUPAR POR TAG Y SUBTAG
+        // GROUP BY TAG > SUBTAG
         const grouped = {};
 
         entry.items.forEach(item => {
@@ -346,7 +346,7 @@ function renderSimulation(entries) {
             grouped[item.tag][item.subtag].push(item);
         });
 
-        // 🔹 RECORRER GROUPS
+        // ITERATE GROUPS
         Object.keys(grouped).forEach(tag => {
 
             let groupTotal = 0;
@@ -360,9 +360,9 @@ function renderSimulation(entries) {
                 grouped[tag][subtag].forEach(item => {
 
                     const value = (item.plus || 0) - (item.minus || 0);
-                    subTotal += value; // 🔥 ESTA LÍNEA FALTA
+                    subTotal += value;
 
-                     // 🔥 MOSTRAR SUBTAG (ESTO TE FALTA)
+                     
                     html += `<div class="subtag-title">↳ ${subtag}</div>`;
 
                     const plusText = item.plus > 0 ? `+${item.plus}` : "";

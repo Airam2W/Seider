@@ -1,5 +1,5 @@
 
-/* CONTENEDOR GENERAL */
+/* GENERAL CONTAINER */
 .simulation-scroll {
     max-height: 55vh;
     overflow-y: auto;
@@ -8,7 +8,7 @@
     border-radius: 10px;
 }
 
-/* CARD DE CADA ENTRY */
+/* SIMULATION ENTRY */
 .simulation-entry {
     background: white;
     border-radius: 10px;
@@ -17,7 +17,7 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* FECHA */
+/* DATE */
 .entry-date {
     font-weight: bold;
     margin-bottom: 8px;
@@ -45,7 +45,7 @@
     gap: 10px;
 }
 
-/* COLORES */
+/* COLORS */
 .plus {
     color: green;
 }

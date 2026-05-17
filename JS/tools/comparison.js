@@ -118,7 +118,7 @@ function getComparisonSummary(current, previous) {
     let diffSimbol = "+";
     if (diff < 0) diffSimbol = "-";
 
-    // 🔥 SOLO GASTOS (tu caso real)
+    // JUST SPENDING
     if (sumCurrent <= 0 && sumPrevious <= 0) {
 
         if (Math.abs(sumCurrent) > Math.abs(sumPrevious)) {
@@ -130,7 +130,7 @@ function getComparisonSummary(current, previous) {
         }
 
     }
-    // 🔥 SOLO INGRESOS
+    // JUST INCOME
     else if (sumCurrent >= 0 && sumPrevious >= 0) {
 
         if (sumCurrent > sumPrevious) {
@@ -142,7 +142,7 @@ function getComparisonSummary(current, previous) {
         }
 
     }
-    // 🔥 MIXTO
+    // MIXED
     else {
         message = "Your financial behavior changed significantly.";
         detail = `Net change: ${diffSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(diff).toFixed(2)} ${currencyFromUserGlobal}`;

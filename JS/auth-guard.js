@@ -6,6 +6,6 @@ onAuthStateChanged(auth, (user) => {
         console.warn("User not authenticated, redirecting...");
         window.location.href = "../../index.html";
     } else {
-        console.log("User authenticated:", user.email);
+
     }
 });

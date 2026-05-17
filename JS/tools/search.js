@@ -24,7 +24,7 @@ export function setupSearchInput() {
             searchKeywords.push(value);
 
             renderSearchTags();
-            runLiveSearch(); // 🔥 SOLO AQUÍ
+            runLiveSearch();
 
             input.value = "";
         }
@@ -74,7 +74,7 @@ function renderPills(containerId, values, selectedSet) {
                 pill.classList.add("active");
             }
 
-            runLiveSearch(); // 🔥 AUTO SEARCH
+            runLiveSearch();
         };
 
         container.appendChild(pill);
@@ -102,7 +102,7 @@ function renderSearchTags() {
 window.removeKeyword = (index) => {
     searchKeywords.splice(index, 1);
     renderSearchTags();
-    runLiveSearch(); // 🔥 AUTO SEARCH
+    runLiveSearch();
 };
 
 export async function startSearch() {
@@ -113,12 +113,12 @@ export async function startSearch() {
 
         const note = (decryptData(entry.notes) || "").toLowerCase();
 
-        // 🔹 keywords
+        // Keywords
         const matchKeyword = searchKeywords.some(word =>
             note.includes(word)
         );
 
-        // 🔹 tags/subtags
+        // Tags/subtags
         const matchItems = entry.items.some(item => {
 
             return (
@@ -127,7 +127,7 @@ export async function startSearch() {
             );
         });
 
-        // 🔥 OR GLOBAL
+        // OR GLOBAL
         return (
             matchKeyword ||
             matchItems ||
@@ -151,7 +151,7 @@ export function clearFilters() {
     renderSearchTags();
     loadTagFilters();
 
-    runLiveSearch(); // 🔥 AUTO SEARCH VACÍO
+    runLiveSearch(); // AUTO SEARCH
 }
 
 window.clearFilters = clearFilters;
@@ -164,24 +164,24 @@ async function runLiveSearch() {
 
         const note = (decryptData(entry.notes) || "").toLowerCase();
 
-        // 🔥 AND KEYWORDS
+        // AND KEYWORDS
         const matchKeywords =
             searchKeywords.length === 0 ||
             searchKeywords.every(word => note.includes(word));
 
-        // 🔥 AND TAGS
+        // AND TAGS
         const entryTags = new Set(entry.items.map(i => i.tag));
         const matchTags =
             selectedTags.size === 0 ||
             [...selectedTags].every(tag => entryTags.has(tag));
 
-        // 🔥 AND SUBTAGS
+        // AND SUBTAGS
         const entrySubtags = new Set(entry.items.map(i => i.subtag));
         const matchSubtags =
             selectedSubtags.size === 0 ||
             [...selectedSubtags].every(sub => entrySubtags.has(sub));
 
-        // 🔥 AND GLOBAL
+        // AND GLOBAL
         return matchKeywords && matchTags && matchSubtags;
     });
 
@@ -236,7 +236,7 @@ function renderSearchResults(entries) {
         container.appendChild(div);
     });
 
-    // 🔥 Scroll arriba SIEMPRE
+    // Scroll to top on new results
     container.scrollTop = 0;
 }
 

@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/CSS/tools/spending.css">
     <link rel="stylesheet" href="/CSS/settings.css">
     <link rel="stylesheet" href="/CSS/exchange.css">
+    <link rel="stylesheet" href="/CSS/tools/comparison.css">
 </head>
 
 <body>
@@ -22,28 +23,64 @@
 
         <!-- SIDE BUTTONS RIGHT -->
         <div class="side-buttons-right">
-            <button id="btnAdd" class="add-bottom">+ Add Entry</button>
-            <button id="btnScrollBottom" class="scroll-bottom">Scroll to Bottom</button>
+            <button id="btnAdd" class="add-bottom">+ Entry</button>
+            <button id="btnScrollBottom" class="scroll-bottom">↓</button>
         </div>
 
         <!-- SIDE BUTTONS RIGHT TOP-->
         <div class="side-buttons-right-top">
-            <button id="btnSmartToggle" class="main-btn">
-                Smart Tools ▾
-            </button>
+
+
+
+
+            <div class="one-line">
+
+                <button id="btnSmartToggle" class="main-btn">
+                    Smart Tools ▾
+
+                    <div class="new-stamp">
+                        NEW!
+                    </div>
+                </button>
+                <button id="settings">Settings ⚙︎</button>
+            </div>
             <div id="smartMenu" class="submenu">
 
-                <button onclick="openFuture()">Future Insights</button>
-                <button onclick="openSearch()">Insight Search</button>
-                <button onclick="openSpending()">Spending Insights</button>
-                <button onclick="openComparison()">Insights Comparison</button>
+                <button onclick="openFuture()">
+                    Future Insights
+
+                    <div class="new-stamp">
+                        NEW!
+                    </div>
+                </button>
+                <button onclick="openSearch()">
+                    Insight Search
+
+                    <div class="new-stamp">
+                        NEW!
+                    </div>
+                </button>
+                <button onclick="openSpending()">
+                    Spending Insights
+
+                    <div class="new-stamp">
+                        NEW!
+                    </div>
+                </button>
+                <button onclick="openComparison()">
+                    Insights Comparison
+
+                    <div class="new-stamp">
+                        NEW!
+                    </div>
+                </button>
 
             </div>
         </div>
 
         <!-- SIDE BUTTONS LEFT -->
         <div class="side-buttons-left">
-            <button id="darkModeToggle" class="toggle-btn">Dark Mode</button>
+            <button id="darkModeToggle" class="toggle-btn"></button>
         </div>
 
         <script>
@@ -55,8 +92,7 @@
         <!-- SIDE BUTTONS LEFT TOP-->
         <div class="side-buttons-left-top">
             <button id="btnExchangeTable" onclick="openExchangeTable()">Currency Exchange Table</button>
-            <button id="settings">Settings</button>
-            <button id="btnLogout">Logout</button>
+            <button id="btnLogout">Logout ➜]</button>
         </div>
 
 
@@ -141,108 +177,175 @@
 
         <!-- SECTION: Spending Insights -->
         <div id="modalSpending" class="modal hidden">
+
             <div class="insights-layout" id="modalContentSpending">
+
+                <!-- HEADER -->
                 <div class="insights-header">
+
                     <h2>Spending Insights</h2>
 
-                    <select id="timeRange">
-                        <option value="7">1 Week</option>
-                        <option value="30">1 Month</option>
-                        <option value="90">3 Months</option>
-                        <option value="180">6 Months</option>
-                        <option value="365">1 Year</option>
-                        <option value="all">All Time</option>
-                    </select>
+                    <div class="insights-controls">
 
-                    <button onclick="closeModal()">Close</button>
+                        <select id="timeRange">
+                            <option value="7">1 Week</option>
+                            <option value="30">1 Month</option>
+                            <option value="90">3 Months</option>
+                            <option value="180">6 Months</option>
+                            <option value="365">1 Year</option>
+                            <option value="all">All Time</option>
+                        </select>
+
+                        <button onclick="closeModal()">
+                            Close
+                        </button>
+
+                    </div>
+
                 </div>
 
-                <div class="insights-content">
+                <!-- BODY -->
+                <div class="insights-body">
 
-                    <!-- GENERAL -->
-                    <div class="panel full">
-                        <h3>General Analysis</h3>
+                    <!-- LEFT PANEL -->
+                    <div class="analysis-panel">
+
+                        <h3>Spending Analysis</h3>
+
                         <div id="generalAnalysis"></div>
+
                     </div>
 
-                    <!-- TAG -->
-                    <div class="panel">
-                        <h3>Tag Evolution</h3>
-                        <select id="tagSelect"></select>
-                        <canvas id="tagLineChart"></canvas>
-                    </div>
+                    <!-- RIGHT PANEL -->
+                    <div class="charts-panel">
 
-                    <!-- SUBTAG -->
-                    <div class="panel">
-                        <h3>Subtag Evolution</h3>
-                        <select id="subtagSelect"></select>
-                        <canvas id="subtagLineChart"></canvas>
+                        <!-- TAG CHART -->
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+                                <h3>Tag Evolution</h3>
+                                <select id="tagSelect"></select>
+                            </div>
+
+                            <canvas id="tagLineChart"></canvas>
+
+                        </div>
+
+                        <!-- SUBTAG CHART -->
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+                                <h3>Subtag Evolution</h3>
+                                <select id="subtagSelect"></select>
+                            </div>
+
+                            <canvas id="subtagLineChart"></canvas>
+
+                        </div>
+
                     </div>
 
                 </div>
+
             </div>
+
         </div>
 
         <!-- SECTION: Insights Comparison -->
         <div id="modalComparison" class="modal hidden">
-            <div class="insights-layout" id="modalContentComparison">
 
-                <div class="insights-header">
+            <div class="comparison-layout" id="modalContentComparison">
+
+                <!-- HEADER -->
+                <div class="comparison-header">
+
                     <h2>Insights Comparison</h2>
 
-                    <select id="compareType">
-                        <option value="month">Monthly Comparison</option>
-                        <option value="week">Weekly Comparison</option>
-                        <option value="year">Yearly Comparison</option>
-                    </select>
+                    <div class="comparison-controls">
 
-                    <button onclick="closeModal()">Close</button>
-                </div>
+                        <select id="compareType">
+                            <option value="month">Monthly Comparison</option>
+                            <option value="week">Weekly Comparison</option>
+                            <option value="year">Yearly Comparison</option>
+                        </select>
 
-                <div class="insights-content">
+                        <button onclick="closeModal()">
+                            Close
+                        </button>
 
-                    <!-- SUMMARY -->
-                    <div class="panel full">
-                        <h3>Overview</h3>
-                        <div id="comparisonSummary"></div>
-                    </div>
-
-                    <!-- TAGS -->
-                    <div class="panel">
-                        <h3>Tag Trends</h3>
-                        <canvas id="tagCompareChart"></canvas>
-                    </div>
-
-                    <!-- SUBTAGS -->
-                    <div class="panel">
-                        <h3>Subtag Trends</h3>
-                        <canvas id="subtagCompareChart"></canvas>
-                    </div>
-
-                    <!-- WHY -->
-                    <div class="panel full">
-                        <h3>Main Drivers of Change</h3>
-                        <div id="comparisonWhy"></div>
-                    </div>
-
-                    <!-- HISTORY -->
-                    <div class="panel">
-                        <h3>Historical Evolution</h3>
-                        <canvas id="historyChart"></canvas>
-                    </div>
-
-                    <!-- TREND -->
-                    <div class="panel">
-                        <h3>Future Trend</h3>
-                        <div id="trendPrediction"></div>
                     </div>
 
                 </div>
+
+                <!-- BODY -->
+                <div class="comparison-body">
+
+                    <!-- LEFT PANEL -->
+                    <div class="comparison-analysis">
+
+                        <div class="comparison-card">
+
+                            <h3>Overview</h3>
+
+                            <div id="comparisonSummary"></div>
+
+                        </div>
+
+                        <div class="comparison-card">
+
+                            <h3>Main Drivers of Change</h3>
+
+                            <div id="comparisonWhy"></div>
+
+                        </div>
+
+                        <div class="comparison-card">
+
+                            <h3>Future Trend</h3>
+
+                            <div id="trendPrediction"></div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT PANEL -->
+                    <div class="comparison-charts">
+
+                        <div class="comparison-chart-card">
+
+                            <h3>Tag Trends</h3>
+
+                            <canvas id="tagCompareChart"></canvas>
+
+                        </div>
+
+                        <div class="comparison-chart-card">
+
+                            <h3>Subtag Trends</h3>
+
+                            <canvas id="subtagCompareChart"></canvas>
+
+                        </div>
+
+                        <div class="comparison-chart-card">
+
+                            <h3>Historical Evolution</h3>
+
+                            <canvas id="historyChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
 
 
-        
+
         <!-- Settings -->
         <div id="modalSettings" class="modal hidden">
             <div class="modal-content" id="modalContentSettings">
@@ -253,13 +356,17 @@
                         <p>Manage your personal information</p>
                     </div>
 
-                    <button id="saveSettingsBtn" class="save-settings-btn">
-                        Save Changes
-                    </button>
+                    <div class="settings-buttons">
 
-                    <button class="close-settings-btn" onclick="closeModal()">
-                        ✕
-                    </button>
+                        <button id="saveSettingsBtn" class="save-settings-btn">
+                            Save
+                        </button>
+
+                        <button class="close-settings-btn" onclick="closeModal()">
+                            ✕
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -339,7 +446,7 @@
                                     <option id="MXN" value="MXN">MXN - Mexican Peso</option>
                                     <option id="NZD" value="NZD">NZD - New Zealand Dollar</option>
                                     <option id="SEK" value="SEK">SEK - Swedish Krona</option>
-                                    
+
 
                                 </select>
                             </div>
@@ -413,71 +520,71 @@
                                 </p>
                             </div>
 
-                            
-                        </div>
-
-                        </div>
-                    </div>
-
-                    <!-- TAGS & SUBTAGS -->
-                    <br>
-
-                    <div class="settings-section">
-
-                        <div class="section-header">
-
-                            <div>
-                                <h3>Tags & Subtags</h3>
-
-                                <p>
-                                    Organize your categories
-                                </p>
-                            </div>
-
-                            <button id="addTagBtn" class="primary-settings-btn">
-                                + Add Tag
-                            </button>
-
-                        </div>
-
-                        <!-- TABLE -->
-                        <div class="tags-table">
-
-                            <!-- HEADER -->
-                            <div class="tags-row tags-header">
-
-                                <span>Tag</span>
-                                <span>Color</span>
-                                <span>Subtags</span>
-                                <span>Actions</span>
-
-                            </div>
-
-                            <!-- GENERATED -->
-                            <div id="tagsContainer"></div>
 
                         </div>
 
                     </div>
+                </div>
 
-                    <!-- Danger Zone -->
-                    <br>
-                    <div class="settings-section">
+                <!-- TAGS & SUBTAGS -->
+                <br>
 
-                        <div class="section-header">
-                            <h3>Danger Zone</h3>
+                <div class="settings-section">
+
+                    <div class="section-header">
+
+                        <div>
+                            <h3>Tags & Subtags</h3>
+
                             <p>
-                            Warning: This action cannot be undone.
+                                Organize your categories
                             </p>
                         </div>
 
-                        <button id="deleteAccountBtn" class="danger-btn">
-                            Delete Account
+                        <button id="addTagBtn" class="primary-settings-btn">
+                            + Add Tag
                         </button>
+
+                    </div>
+
+                    <!-- TABLE -->
+                    <div class="tags-table">
+
+                        <!-- HEADER -->
+                        <div class="tags-row tags-header">
+
+                            <span>Tag</span>
+                            <span>Color</span>
+                            <span>Subtags</span>
+                            <span>Actions</span>
+
+                        </div>
+
+                        <!-- GENERATED -->
+                        <div id="tagsContainer"></div>
+
                     </div>
 
                 </div>
+
+                <!-- Danger Zone -->
+                <br>
+                <div class="settings-section">
+
+                    <div class="section-header">
+                        <h3>Danger Zone</h3>
+                        <p>
+                            Warning: This action cannot be undone.
+                        </p>
+                    </div>
+
+                    <button id="deleteAccountBtn" class="danger-btn">
+                        Delete Account
+                    </button>
+                </div>
+
             </div>
+        </div>
         </div>
 
 
@@ -489,7 +596,7 @@
 
         <!-- Welcome message -->
         <div class="entry entry-header fixed">
-            <h3>Welcome Message</h3>
+            <h3>Welcome back to Seider — your smart finance companion.</h3>
         </div>
 
         <!-- Fixed entries -->

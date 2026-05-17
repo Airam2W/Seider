@@ -281,11 +281,17 @@ button:hover {
     right: 20px;
 
     display: flex;
-    flex-direction: column;
+    flex-direction: row-reverse;
     align-items: flex-end;
     gap: 10px;
 
     z-index: 999;
+}
+
+.one-line{
+    display: flex;
+    gap: 10px;
+    flex-direction: row-reverse;
 }
 
 .side-buttons-right-top {
@@ -327,13 +333,13 @@ button:hover {
     z-index: 999;
 }
 
-/* botón principal */
+/* MAIN BUTTON */
 .main-btn {
     background: #2196f3;
     font-weight: bold;
 }
 
-/* submenu */
+/* SUBMENU */
 .submenu {
     display: flex;
     flex-direction: column;
@@ -352,14 +358,14 @@ button:hover {
     transition: all 0.25s ease;
 }
 
-/* visible */
+/* VISIBLE */
 .submenu.active {
     transform: translateY(0);
     opacity: 1;
     pointer-events: auto;
 }
 
-/* botones internos */
+/* SUBMENU BUTTONS */
 .submenu button {
     background: transparent;
     text-align: left;
@@ -391,4 +397,42 @@ button:hover {
     border: none;
     border-top: 2px solid #334155;
     margin: 25px 0;
+}
+
+.new-stamp{
+    position:absolute;
+
+    top:-8px;
+    right:-8px;
+
+    background:#ff3b30;
+
+    color:white;
+
+    font-size:10px;
+    font-weight:700;
+
+    padding:4px 8px;
+
+    border-radius:999px;
+
+    letter-spacing:1px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,0.25);
+
+    transform:rotate(12deg);
+
+    z-index:10;
+
+    pointer-events:none;
+
+}
+
+/* IMPORTANT */
+.feature-btn{
+    position:relative;
+}
+
+#smartMenu button{
+    position:relative;
 }

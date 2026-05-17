@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Seider - Home</title>
@@ -7,45 +8,119 @@
     <link rel="stylesheet" href="CSS/styles.css">
     <link rel="stylesheet" href="CSS/home.css">
 </head>
+
 <body class="hidden">
 
     <h1>Seider</h1>
 
+    Index Text
+
     <!-- BUTTONS -->
-    <button id="btnLogin">Login</button>
-    <button id="btnSignup">Sign Up</button>
+    <div class="auth-buttons">
+        <button id="btnLogin">Login</button>
+        <button id="btnSignup">Sign Up</button>
+    </div>
 
     <!-- MODAL -->
     <div id="modal" class="modal hidden">
 
         <!-- LOGIN -->
         <div id="loginBox" class="card hidden">
-            <h2>Login</h2>
+
+            <h2>Welcome Back</h2>
+            <p class="auth-subtitle">
+                Login to continue using Seider.
+            </p>
 
             <form id="loginForm">
+
                 <input type="email" id="loginEmail" placeholder="Email" required>
+
                 <input type="password" minlength="6" id="loginPassword" placeholder="Password" required>
-                <button type="submit">Login</button>
+
+                <button type="submit">
+                    Login
+                </button>
+
             </form>
 
-            <button id="googleBtn">Login with Google</button>
-            <button id="githubBtn">Login with GitHub</button>
+            <!-- DIVIDER -->
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
 
-            <button onclick="closeModal()">Close</button>
+            <!-- OAUTH -->
+            <button id="googleBtn" class="oauth-btn">
+                Continue with Google
+            </button>
+
+            <button id="githubBtn" class="oauth-btn">
+                Continue with GitHub
+            </button>
+
+            <!-- SWITCH -->
+            <p class="switch-auth">
+                Don't have an account?
+                <span id="goSignup">
+                    Sign Up
+                </span>
+            </p>
+
+            <button class="close-btn" onclick="closeModal()">
+                Close
+            </button>
+
         </div>
 
         <!-- SIGNUP -->
         <div id="signupBox" class="card hidden">
-            <h2>Sign Up</h2>
+
+            <h2>Create Account</h2>
+
+            <p class="auth-subtitle">
+                Start managing your finances smarter.
+            </p>
 
             <form id="signupForm">
+
                 <input type="text" id="signupName" placeholder="Name" required>
+
                 <input type="email" id="signupEmail" placeholder="Email" required>
+
                 <input type="password" minlength="6" id="signupPassword" placeholder="Password" required>
-                <button type="submit">Create Account</button>
+
+                <button type="submit">
+                    Create Account
+                </button>
+
             </form>
 
-            <button onclick="closeModal()">Close</button>
+            <!-- DIVIDER -->
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
+
+            <!-- OAUTH -->
+            <button id="googleSignupBtn" class="oauth-btn">
+                Sign Up with Google
+            </button>
+
+            <button id="githubSignupBtn" class="oauth-btn">
+                Sign Up with GitHub
+            </button>
+
+            <!-- SWITCH -->
+            <p class="switch-auth">
+                Already have an account?
+                <span id="goLogin">
+                    Login
+                </span>
+            </p>
+
+            <button class="close-btn" onclick="closeModal()">
+                Close
+            </button>
+
         </div>
 
     </div>
@@ -63,38 +138,39 @@
 
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.js"></script>
     <script type="module">
-    import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { app, auth, provider } from "./JS/firebase-config.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-    
-    const db = getFirestore(app);
+        import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { app, auth, provider } from "./JS/firebase-config.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    function getSecretKey() {
-        const user = auth.currentUser;
-        if (!user) {
-            throw new Error("No user logged in");
+        const db = getFirestore(app);
+
+        function getSecretKey() {
+            const user = auth.currentUser;
+            if (!user) {
+                throw new Error("No user logged in");
+            }
+            return user.uid + user.email;
         }
-        return user.uid + user.email;
-    }
 
-    export function encryptData(text) {
-        if (!text) return "";
-        const SECRET_KEY = getSecretKey();
+        export function encryptData(text) {
+            if (!text) return "";
+            const SECRET_KEY = getSecretKey();
 
-        return CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
-    }
+            return CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
+        }
 
-    export function decryptData(cipher) {
-        if (!cipher) return "";
-        const SECRET_KEY = getSecretKey();
+        export function decryptData(cipher) {
+            if (!cipher) return "";
+            const SECRET_KEY = getSecretKey();
 
-        const bytes = CryptoJS.AES.decrypt(cipher, SECRET_KEY);
-        return bytes.toString(CryptoJS.enc.Utf8);
-    }
+            const bytes = CryptoJS.AES.decrypt(cipher, SECRET_KEY);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        }
 
     </script>
 
     <script type="module" src="JS/home.js"></script>
 </body>
+
 </html>

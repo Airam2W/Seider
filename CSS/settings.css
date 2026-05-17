@@ -15,7 +15,7 @@
 
 .settings-header{
     display:flex;
-    justify-content:space-evenly;
+    justify-content: space-between;
     align-items:center;
     margin-bottom:30px;
 }
@@ -27,6 +27,13 @@
 
 .settings-header p{
     color:#999;
+}
+
+.settings-buttons{
+    display:flex;
+    justify-content:flex-end;
+    gap:15px;
+    margin-top:20px;
 }
 
 .close-settings-btn{
@@ -462,7 +469,7 @@
     cursor: pointer;
 }
 
-/* COLOR INTERNO */
+/* COLOR PICKER */
 .tags-row input[type="color"]::-webkit-color-swatch {
     border: none;
     border-radius: 8px;

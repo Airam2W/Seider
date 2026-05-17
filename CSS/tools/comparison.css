@@ -1,47 +1,13 @@
-/* SCROLL CONTENT */
-.insights-content {
-    flex: 1;
-    overflow-y: auto;
-
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* PANEL */
-.panel {
-    background: #2a2a2a;
-    padding: 15px;
-    border-radius: 10px;
-}
-
-/* GENERAL */
-.panel.full {
-    width: 100%;
-}
-
-/* CANVAS */
-.panel canvas {
-    width: 100% !important;
-    height: 300px !important;
-}
-
-#modalContentSpending{
-    width: 80vw;
-    height: 60vh;
-}
-
-
 /* =========================
-   MAIN LAYOUT
+   COMPARISON LAYOUT
 ========================= */
 
-.insights-layout{
-    width: 90vw;
-    max-width:1400px;
+.comparison-layout{
+    width:95%;
+    max-width:1450px;
     height:90vh;
 
-    background: #1e1e1e;
+    background: #000;
 
     border-radius:20px;
 
@@ -59,7 +25,7 @@
    HEADER
 ========================= */
 
-.insights-header{
+.comparison-header{
     display:flex;
 
     justify-content:space-between;
@@ -68,22 +34,22 @@
     gap:20px;
 }
 
-.insights-controls{
+.comparison-controls{
     display:flex;
-    gap:10px;
     align-items:center;
+    gap:10px;
 }
 
 /* =========================
    BODY
 ========================= */
 
-.insights-body{
+.comparison-body{
     flex:1;
 
     display:grid;
 
-    grid-template-columns: 380px 1fr;
+    grid-template-columns:380px 1fr;
 
     gap:20px;
 
@@ -94,23 +60,7 @@
    LEFT PANEL
 ========================= */
 
-.analysis-panel{
-    background: #2a2a2a;
-
-    border-radius:16px;
-
-    padding:20px;
-
-    overflow-y:auto;
-
-    border:1px solid rgba(255,255,255,0.08);
-}
-
-/* =========================
-   RIGHT PANEL
-========================= */
-
-.charts-panel{
+.comparison-analysis{
     display:flex;
 
     flex-direction:column;
@@ -121,11 +71,39 @@
 }
 
 /* =========================
-   CHART CARD
+   ANALYSIS CARDS
 ========================= */
 
-.chart-card{
-    background: #2a2a2a;
+.comparison-card{
+    background: #1a1a1a;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+/* =========================
+   RIGHT PANEL
+========================= */
+
+.comparison-charts{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+    overflow-y:auto;
+}
+
+/* =========================
+   CHART CARDS
+========================= */
+
+.comparison-chart-card{
+    background: #1a1a1a;
 
     border-radius:16px;
 
@@ -137,48 +115,34 @@
 }
 
 /* =========================
-   CHART HEADER
-========================= */
-
-.chart-header{
-    display:flex;
-
-    justify-content:space-between;
-    align-items:center;
-
-    margin-bottom:15px;
-}
-
-/* =========================
-   ANALYSIS TEXT
-========================= */
-
-.insight-box p{
-    margin:10px 0;
-
-    line-height:1.5;
-}
-
-/* =========================
    CANVAS
 ========================= */
 
-.chart-card canvas{
+.comparison-chart-card canvas{
     width:100% !important;
     height:260px !important;
+}
+
+/* =========================
+   TEXT
+========================= */
+
+.comparison-card p{
+    line-height:1.5;
+    margin:10px 0;
 }
 
 /* =========================
    MOBILE
 ========================= */
 
-@media(max-width: 1000px){
+@media(max-width:1000px){
 
-    .insights-body{
+    .comparison-body{
         grid-template-columns:1fr;
     }
 
-    .analysis-panel{
-        max-height:300px;
+    .comparison-analysis{
+        max-height:320px;
     }
 }

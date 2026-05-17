@@ -99,6 +99,33 @@ modal.addEventListener("click", (e) => {
 window.closeModal = closeModal;
 
 
+const goSignup =
+    document.getElementById("goSignup");
+
+const goLogin =
+    document.getElementById("goLogin");
+
+// =======================
+// SWITCH TO SIGNUP
+// =======================
+goSignup.onclick = () => {
+
+    loginBox.classList.add("hidden");
+    signupBox.classList.remove("hidden");
+
+};
+
+// =======================
+// SWITCH TO LOGIN
+// =======================
+goLogin.onclick = () => {
+
+    signupBox.classList.add("hidden");
+    loginBox.classList.remove("hidden");
+
+};
+
+
 // =======================
 // GOOGLE LOGIN
 // =======================

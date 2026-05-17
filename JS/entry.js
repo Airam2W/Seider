@@ -148,7 +148,7 @@ function updateTotal() {
                 totalSub += result;
             };
 
-            // 🔹 SET SUBTAG TOTAL
+            // SET SUBTAG TOTAL
             const subTotalSpan = sub.querySelector(".subtag-total");
             
             if (subTotalSpan) subTotalSpan.textContent = `${getCurrencySymbol(currencyFromUserGlobal)} ${totalSub} ${currencyFromUserGlobal}`;
@@ -156,14 +156,14 @@ function updateTotal() {
             totalTag += totalSub;
         };
 
-        // 🔹 SET TAG TOTAL
+        // SET TAG TOTAL
         const tagTotalSpan = group.querySelector(".tag-total");
         if (tagTotalSpan) tagTotalSpan.textContent = `${getCurrencySymbol(currencyFromUserGlobal)} ${totalTag} ${currencyFromUserGlobal}`;
 
         totalGlobal += totalTag;
     };
 
-    // 🔹 GLOBAL TOTAL
+    // GLOBAL TOTAL
     totalAmount.textContent = `Total: ${getCurrencySymbol(currencyFromUserGlobal)} ${totalGlobal} ${currencyFromUserGlobal}`;
 }
 
@@ -221,7 +221,7 @@ document.getElementById("btnSave").onclick = async () => {
                     };
                 }
 
-                // 🔹 guardar item normal
+                // SAVE ITEM
                 items.push({
                     tag,
                     subtag,
@@ -230,7 +230,7 @@ document.getElementById("btnSave").onclick = async () => {
                     receipt: receiptData
                 });
 
-                // 🔹 acumular subtotales
+                // ACUMULATE TOTALS
                 subtagTotals[tag][subtag] += result;
                 tagTotals[tag] += result;
 
@@ -239,7 +239,7 @@ document.getElementById("btnSave").onclick = async () => {
     };
 
     const totalText = totalAmount.textContent.replace(`Total: ${getCurrencySymbol(currencyFromUserGlobal)} `, "").trim();
-    const numberTotal = totalText.split(" ")[0].replace(/,/g, ""); // eliminar comas si las hay
+    const numberTotal = totalText.split(" ")[0].replace(/,/g, "");
     const total = Number(numberTotal) || 0;
 
 
@@ -451,7 +451,7 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
 
         const base64 = await compressAndConvertToBase64(file);
 
-        // guardar en dataset
+        // Save in dataset for later upload when saving entry
         div.dataset.receipt = base64;
         div.dataset.receiptName = file.name;
         div.dataset.receiptType = file.type;
@@ -459,7 +459,7 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
         fileName.textContent = file.name;
         btnDownload.style.display = "inline";
 
-        // limpiar preview
+        // Clear previous preview
         preview.innerHTML = "";
 
         if (file.type.startsWith("image/")) {
@@ -530,10 +530,10 @@ function convertCurrency(amount, fromCurrency, toCurrency) {
         return amount;
     }
 
-    // convertir a USD primero
+    // Change to USD first
     const amountInUSD = amount / exchangeRates[fromCurrency];
 
-    // luego USD -> moneda base
+    // And then to target currency
     const converted =
         amountInUSD * exchangeRates[toCurrency];
 
@@ -589,10 +589,10 @@ document.getElementById("btnCreateTag").onclick = async () => {
 
     await loadTags(currentUser.uid);
 
-    // refrescar selects, reemplazando "+ New Tag" por el creado
+    // Refresh all selects with the new tag and select it
     refreshAllSelects(tagName);
 
-    // cerrar modal
+    // Close modal and reset input
     document.getElementById("newTagModal").classList.add("hidden");
     document.getElementById("newTagName").value = "";
   } catch (error) {
@@ -616,10 +616,9 @@ function refreshAllSelects(newTagName = null) {
   selects.forEach(select => {
     const currentValue = select.value;
 
-    // Limpiar opciones
     select.innerHTML = "";
 
-    // Volver a cargar tags
+    // Load tags again
     tags.forEach(tag => {
       const option = document.createElement("option");
       option.value = tag.name;
@@ -627,21 +626,21 @@ function refreshAllSelects(newTagName = null) {
       select.appendChild(option);
     });
 
-    // Opción de crear nuevo
+    // + New Tag option
     const createOption = document.createElement("option");
     createOption.value = "create";
     createOption.textContent = "+ New Tag";
     select.appendChild(createOption);
 
-    // Restaurar selección
+    // Logic to determine which tag should be selected after refresh
     if (currentValue === "create" && newTagName) {
-      // Si estaba en "+ New Tag" y se creó uno nuevo → selecciona el nuevo
+      // If user just created a new tag → select it
       select.value = newTagName;
     } else if (currentValue !== "create") {
-      // Si tenía otro valor → mantenerlo
+      // If user was on an existing tag → keep it (even if it was deleted, to avoid forcing them to switch to another tag)
       select.value = currentValue;
     } else {
-      // Si estaba en "+ New Tag" pero se canceló → no lo cambies a primer tag
+      // If user was on "create" option and didn't create a new tag → reset to default state (first tag or "+ New Tag" if no tags)
       select.value = "create";
     }
   });
@@ -681,10 +680,10 @@ function createTagGroup(selectedTag = null) {
             return;
         }
 
-        // 1. Limpiar todos los subtags actuales del bloque
+        // Clean subtags container when changing tag
         subtagsContainer.innerHTML = "";
 
-        // 2. (Opcional pero recomendado) crear un subtag vacío inicial
+        // Create first subtag group by default when selecting a tag (if subtags exist)
         const firstSub = (subtagsMap[select.value] || [])[0];
 
         createSubtagGroup(select, subtagsContainer, firstSub);
@@ -791,7 +790,7 @@ function createSubtagGroup(tagSelect, container, subtagName = null, items = []) 
 
     container.appendChild(subGroup);
 
-    // cargar items si existen
+    // Load existing items if provided
     items.forEach(item => {
         createUIEntry(item, tagSelect, itemsDiv);
     });
@@ -804,11 +803,9 @@ document.getElementById("btnCreateSubtag").onclick = async () => {
     try {
         const tagName = currentSubtagContext.tag;
 
-        // 🔥 buscar tagId por nombre
+        // Find the tag document to get its ID
         const tagDoc = tags.find(t => t.name === tagName);
 
-        // ⚠️ aquí está el detalle importante:
-        // necesitas el ID real del doc, no solo name
 
         const tagSnapshot = await getDocs(
             collection(db, "users", currentUser.uid, "tags")
@@ -824,7 +821,7 @@ document.getElementById("btnCreateSubtag").onclick = async () => {
 
         if (!tagId) return;
 
-        // crear subtag
+        // Save new subtag under the correct tag document
         await setDoc(
             doc(
                 db,
@@ -839,10 +836,10 @@ document.getElementById("btnCreateSubtag").onclick = async () => {
             { merge: true }
         );
 
-        // recargar tags + subtags
+        // Reload tags and subtags to get the updated list
         await loadTags(currentUser.uid);
 
-        // refrescar selects
+        // Refresh all subtag selects with the new subtag and select it
         refreshAllSubtagSelects(name);
 
         closeSubtagModal();
@@ -922,7 +919,7 @@ async function uploadReceipt(file, userId) {
 
 async function compressAndConvertToBase64(file) {
     if (file.type === "application/pdf") {
-        return await fileToBase64(file); // sin compresión
+        return await fileToBase64(file); // No compression for PDFs, just convert to base64
     }
 
     const img = new Image();

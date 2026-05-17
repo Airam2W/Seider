@@ -19,7 +19,7 @@ export async function loadInsights() {
     const tagSelect = document.getElementById("tagSelect");
     const subtagSelect = document.getElementById("subtagSelect");
 
-    // 🔥 DEFAULTS
+    // DEFAULTS
     timeSelect.value = "all";
 
     
@@ -33,15 +33,12 @@ export async function loadInsights() {
 
         updateTagChart(filtered);
 
-        // 🔥 AQUÍ estaba faltando esto
         document.getElementById("generalAnalysis").innerHTML =
             getGeneralAnalysis(filtered);
     }
 
-    // 🔥 EVENTOS REACTIVOS
     timeSelect.onchange = refreshAll;
 
-    // 🔥 PRIMER RENDER AUTOMÁTICO
     refreshAll();
 }
 
@@ -189,7 +186,6 @@ function loadTagSelector(entries) {
         select.appendChild(opt);
     });
 
-    // 🔥 DEFAULT SIEMPRE
     select.value = "ALL";
 
     select.onchange = () => updateTagChart(entries);
@@ -201,10 +197,10 @@ function updateTagChart(entries) {
 
     const tag = tagSelect.value || "ALL";
 
-    // 🔥 reconstruir subtag SIEMPRE
+    // ALWAYS UPDATE SUBTAG SELECTOR
     loadSubtagSelector(entries, tag);
 
-    // 🔥 FORZAR default en subtag
+    // DEFAULT SUBTAG
     if (!subtagSelect.value) {
         subtagSelect.value = "ALL";
     }
@@ -239,7 +235,6 @@ function updateTagChart(entries) {
         renderTagChart(series.labels, series.data);
     }
 
-    // 🔥 IMPORTANTE: actualizar subtag chart SIEMPRE
     updateSubtagChart(entries, tag);
 }
 
@@ -270,7 +265,7 @@ function loadSubtagSelector(entries, tag) {
         select.appendChild(opt);
     });
 
-    // 🔥 DEFAULT SIEMPRE
+    // DEFAULT
     select.value = "ALL";
 
     select.onchange = () => updateSubtagChart(entries, tag);
@@ -284,7 +279,7 @@ function updateSubtagChart(entries, tag) {
 
     if (subChartInstance) subChartInstance.destroy();
 
-    // 🔥 ALL TAGS + ALL SUBTAGS
+    // ALL TAGS + ALL SUBTAGS
     if (tag === "ALL" && sub === "ALL") {
 
         const subs = [...new Set(
@@ -314,7 +309,7 @@ function updateSubtagChart(entries, tag) {
         return;
     }
 
-    // 🔥 ALL SUBTAGS de un TAG
+    // ALL SUBTAGS de un TAG
     if (sub === "ALL") {
 
         const subs = [...new Set(
@@ -351,7 +346,7 @@ function updateSubtagChart(entries, tag) {
         return;
     }
 
-    // 🔥 NORMAL
+    // NORMAL
     const series = buildTimeSeries(entries, i =>
         (tag === "ALL" || i.tag === tag) && i.subtag === sub
     );

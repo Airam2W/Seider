@@ -11,10 +11,6 @@ export async function loadExchangeRates() {
         exchangeRates =
             JSON.parse(savedRates);
 
-        console.log(
-            "Loaded exchange rates from localStorage:",
-            exchangeRates
-        );
     }
 
     // ===== UPDATE FROM API =====
@@ -39,10 +35,6 @@ export async function loadExchangeRates() {
                 JSON.stringify(exchangeRates)
             );
 
-            console.log(
-                "Updated exchange rates from API:",
-                exchangeRates
-            );
         }
 
     } catch (error) {
@@ -83,10 +75,6 @@ export function convertCurrency(
     const converted =
         amountInUSD * exchangeRates[toCurrency];
 
-    console.log(
-        `${amount} ${fromCurrency} -> ${converted} ${toCurrency}`
-    );
-
     return Number(converted.toFixed(2));
 }
 
@@ -115,27 +103,21 @@ export const supportedCurrencies = [
     },
 
     {
-        code: "MXN",
-        name: "Mexican Peso",
-        flag: getFlagEmoji("MX")
-    },
-
-    {
-        code: "JPY",
-        name: "Japanese Yen",
-        flag: getFlagEmoji("JP")
-    },
-
-    {
-        code: "KRW",
-        name: "Korean Won",
-        flag: getFlagEmoji("KR")
+        code: "AUD",
+        name: "Australian Dollar",
+        flag: getFlagEmoji("AU")
     },
 
     {
         code: "CAD",
         name: "Canadian Dollar",
         flag: getFlagEmoji("CA")
+    },
+
+    {
+        code: "CHF",
+        name: "Swiss Franc",
+        flag: getFlagEmoji("CH")
     },
 
     {
@@ -157,34 +139,39 @@ export const supportedCurrencies = [
     },
 
     {
-        code: "AUD",
-        name: "Australian Dollar",
-        flag: getFlagEmoji("AU")
+        code: "JPY",
+        name: "Japanese Yen",
+        flag: getFlagEmoji("JP")
     },
 
     {
-        code: "CHF",
-        name: "Swiss Franc",
-        flag: getFlagEmoji("CH")
+        code: "KRW",
+        name: "South Korean Won",
+        flag: getFlagEmoji("KR")
     },
 
     {
-        code: "SEK",
-        name: "Swedish Krona",
-        flag: getFlagEmoji("SE")
+        code: "MXN",
+        name: "Mexican Peso",
+        flag: getFlagEmoji("MX")
     },
 
     {
         code: "NZD",
         name: "New Zealand Dollar",
         flag: getFlagEmoji("NZ")
+    },
+
+    {
+        code: "SEK",
+        name: "Swedish Krona",
+        flag: getFlagEmoji("SE")
     }
 ];
 
 function getFlagEmoji(countryCode) {
   const code = countryCode.toUpperCase();
   const OFFSET = 127397;
-  console.log("Flag for", code, ":", String.fromCodePoint(...[...code].map(c => c.charCodeAt(0) + OFFSET)));
   return String.fromCodePoint(
     ...[...code].map(c => c.charCodeAt(0) + OFFSET)
   );

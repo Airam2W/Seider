@@ -114,7 +114,6 @@
     min-height: 0;
 }
 
-/* 🔥 ÚNICO SCROLL REAL */
 .results-container {
     flex: 1;
     overflow-y: auto;
