@@ -6,6 +6,17 @@ import {
     updateDoc
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+import {
+    initI18n,
+    translatePage,
+    t
+} from "./i18n.js";
+
+await initI18n();
+translatePage();
+
+document.title = t("titles.onboarding");
+
 const db = getFirestore(app);
 
 let currentStep = 1;
@@ -194,7 +205,7 @@ finishBtn.onclick = async () => {
     } catch (error) {
 
         console.error(error);
-        alert("Error saving onboarding");
+        alert(t("alerts.errorSavingOnboarding"));
     }
 };
 
@@ -231,8 +242,8 @@ function updateDarkModeButton() {
 
     darkModeToggle.textContent =
         isDarkMode
-            ? "Light Mode"
-            : "Dark Mode";
+            ? t("common.lightMode")
+            : t("common.darkMode");
 }
 
 // INITIAL BUTTON STATE

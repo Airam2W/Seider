@@ -23,6 +23,23 @@ import { encryptData, decryptData } from "./encryption.js";
 
 import { getCurrencySymbol } from "./utils.js";
 
+import {
+    initI18n,
+    translatePage,
+    t,
+    translateStoredLabel,
+    getCurrencyName,
+    syncLanguageFromUser,
+    getStoredLanguageValue,
+    getLanguage,
+    setLanguage
+} from "./i18n.js";
+
+await initI18n();
+translatePage();
+
+document.title = t("titles.timeline");
+
 const db = getFirestore(app);
 const entriesContainer = document.getElementById("entriesContainer");
 const timelineEl = document.getElementById("timeline");
@@ -94,9 +111,29 @@ const exchangeTable = document.getElementById("exchangeTable");
 // =======================
 onAuthStateChanged(auth, async (user) => {
     currentUser = user;
+
+    const userDocRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userDocRef);
+    await syncLanguageFromUser(userSnap.data() || {});
+    translatePage();
+    updateDarkModeButton();
+    updateTotalVisibility();
+
     await loadEntries(user.uid);
     scrollToBottom(true);
 });
+
+// =======================
+// Language
+// =======================
+
+const languageSelect = document.getElementById("settingsLanguage");
+const enOption = document.getElementById("en");
+const esOption = document.getElementById("es");
+const jaOption = document.getElementById("ja");
+const koOption = document.getElementById("ko");
+
+
 
 // =======================
 // LOGOUT
@@ -138,7 +175,7 @@ async function loadEntries(uid) {
         orderBy("date", "asc") // 🔼 OLDEST UP
     );
 
-const snapshot = await getDocs(q);
+    const snapshot = await getDocs(q);
 
     const totalAmount = snapshot.docs.reduce((sum, docItem) => {
         const data = docItem.data();
@@ -164,7 +201,9 @@ const snapshot = await getDocs(q);
         finalTotalSimbol = "-";
     }
 
-    totalAmountEl.textContent = `Total Amount: ${finalTotalSimbol} ${getCurrencySymbol(currencyFromUser)}${Math.abs(finalTotal).toFixed(2)} ${currencyFromUser}`;
+    totalAmountEl.textContent = t("timeline.totalAmount", {
+        value: `${finalTotalSimbol} ${getCurrencySymbol(currencyFromUser)}${Math.abs(finalTotal).toFixed(2)} ${currencyFromUser}`
+    });
     totalAmountCache = totalAmountEl.textContent;
     updateTotalVisibility();
 
@@ -195,7 +234,9 @@ const snapshot = await getDocs(q);
                     </p>
 
                     <p class="entry-total">
-                        Total: ${entryTotalSimbol} ${getCurrencySymbol(currencyFromUser)}${Math.abs(entryTotal).toFixed(2)} ${currencyFromUser}
+                        ${t("timeline.entryTotal", {
+            value: `${entryTotalSimbol} ${getCurrencySymbol(currencyFromUser)}${Math.abs(entryTotal).toFixed(2)} ${currencyFromUser}`
+        })}
                     </p>
                 </div>
 
@@ -212,26 +253,24 @@ const snapshot = await getDocs(q);
             <div class="entry-details hidden" id="details-${entryId}">
 
                 <div class="detail-section">
-                    <strong>Notes:</strong>
-                    <p>${decryptData(data.notes) || "No notes"}</p>
+                    <strong data-i18n="labels.notes">Notes:</strong>
+                    <p>${decryptData(data.notes) || t("timeline.noNotes")}</p>
                 </div>
 
                 <div class="detail-section">
-                    <strong>Items:</strong>
+                    <strong data-i18n="labels.items">Items:</strong>
 
-                    ${
-                        data.items.map(item => `
+                    ${data.items.map(item => `
                             <div class="item-row">
 
                                 <div style="display:flex; flex-direction:column; gap:6px;">
 
                                     <span>
-                                        ${item.tag} / ${item.subtag}
+                                        ${translateStoredLabel(item.tag)} / ${translateStoredLabel(item.subtag)}
                                     </span>
 
-                                    ${
-                                        item.receipt
-                                        ? `
+                                    ${item.receipt
+                ? `
                                             <div>
 
                                                 <p style="
@@ -262,32 +301,31 @@ const snapshot = await getDocs(q);
 
                                             </div>
                                         `
-                                        : ''
-                                    }
+                : ''
+            }
 
                                 </div>
 
                                 <span>
-                                    ${
-                                        item.minus
-                                            ? "- " + getCurrencySymbol(currencyFromUser) + item.minus + " " + currencyFromUser
-                                            : "+ " + getCurrencySymbol(currencyFromUser) + item.plus + " " + currencyFromUser
-                                    }
+                                    ${item.minus
+                ? "- " + getCurrencySymbol(currencyFromUser) + item.minus + " " + currencyFromUser
+                : "+ " + getCurrencySymbol(currencyFromUser) + item.plus + " " + currencyFromUser
+            }
                                 </span>
 
                             </div>
                         `).join("")
-                    }
+            }
 
                 </div>
 
                 <div class="entry-actions">
                     <button onclick="viewEntry('${entryId}')">
-                        View / Edit
+                        ${t("buttons.viewEdit")}
                     </button>
 
                     <button onclick="deleteEntry('${entryId}')">
-                        Delete
+                        ${t("buttons.delete")}
                     </button>
                 </div>
 
@@ -323,7 +361,7 @@ window.viewEntry = (id) => {
 // DELETE
 // =======================
 window.deleteEntry = async (id) => {
-    if (!confirm("Delete this entry?")) return;
+    if (!confirm(t("alerts.deleteEntry"))) return;
 
     try {
         await deleteDoc(
@@ -344,6 +382,8 @@ window.deleteEntry = async (id) => {
 // =======================
 
 document.getElementById("settings").onclick = async () => {
+    let currentLanguage = getLanguage();
+    languageSelect.value = currentLanguage;
     openModal(0);
     await loadUserSettings();
 };
@@ -416,6 +456,68 @@ saveSettingsBtn.onclick = async () => {
 
     try {
 
+        // =========================
+        // SAVE TAGS
+        // =========================
+        for (const tag of tagsData) {
+
+            await setDoc(
+                doc(db, "users", auth.currentUser.uid, "tags", tag.id),
+                {
+                    color: tag.color,
+                    name: tag.name
+                }
+            );
+
+            // SAVE SUBTAGS
+            for (const subtag of tag.subtags) {
+
+                await setDoc(
+                    doc(
+                        db,
+                        "users",
+                        auth.currentUser.uid,
+                        "tags",
+                        tag.id,
+                        "subtags",
+                        subtag.id
+                    ),
+                    {
+                        name: subtag.name
+                    }
+                );
+            }
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert(t("alerts.errorSavingSettings"));
+    }
+
+    // CHANGE LANGUAGE IF NEEDED
+
+    if (languageSelect.value !== getLanguage()) {
+        await setLanguage(languageSelect.value);
+
+        translatePage();
+
+        const user = auth.currentUser;
+
+        if (user) {
+
+            await updateDoc(
+                doc(db, "users", user.uid),
+                {
+                    language: languageSelect.value
+                }
+            );
+        }
+    }
+
+
+
+    try {
+
         const user = auth.currentUser;
 
         if (!user) return;
@@ -454,7 +556,7 @@ saveSettingsBtn.onclick = async () => {
         // IF CURRENCY CHANGED, ASK TO RELOAD FOR CORRECT DISPLAY
         if (currencyFromUserGlobal !== settingsCurrency.value) {
             await exchangeAll(currencyFromUserGlobal, settingsCurrency.value);
-        }else{
+        } else {
             setTimeout(() => {
                 loadEntries(currentUser.uid);
                 toggleFixedBottom();
@@ -465,48 +567,10 @@ saveSettingsBtn.onclick = async () => {
     } catch (error) {
 
         console.error(error);
-        alert("Error updating settings");
+        alert(t("alerts.errorUpdatingSettings"));
     }
 
-    try {
 
-        // =========================
-        // SAVE TAGS
-        // =========================
-        for (const tag of tagsData) {
-
-            await setDoc(
-                doc(db, "users", auth.currentUser.uid, "tags", tag.id),
-                {
-                    color: tag.color,
-                    name: tag.name
-                }
-            );
-
-            // SAVE SUBTAGS
-            for (const subtag of tag.subtags) {
-
-                await setDoc(
-                    doc(
-                        db,
-                        "users",
-                        auth.currentUser.uid,
-                        "tags",
-                        tag.id,
-                        "subtags",
-                        subtag.id
-                    ),
-                    {
-                        name: subtag.name
-                    }
-                );
-            }
-        }
-
-    } catch (error) {
-        console.error(error);
-        alert("Error saving settings");
-    }
 
 };
 
@@ -540,35 +604,13 @@ let currencyButtons = [USD, MXN, JPY, KRW, CAD, CNY, EUR, GBP, AUD, CHF, SEK, NZ
 settingsCurrency.onchange = () => {
     const prevCurrency = currencyFromUserGlobal;
     const newCurrency = settingsCurrency.value;
-    if(confirm(
-    "Your Base Currency will be changed from " +
-    prevCurrency +
-    " to " +
-    newCurrency +
-    ".\n\n" +
-
-    "Current exchange rate:\n" +
-    "1 " + prevCurrency +
-    " = " +
-    (
-        exchangeRates[newCurrency] /
-        exchangeRates[prevCurrency]
-    ).toFixed(4) +
-    " " + newCurrency +
-    "\n" +
-    "1 " + newCurrency +
-    " = " +
-    (   exchangeRates[prevCurrency] /
-        exchangeRates[newCurrency]
-    ).toFixed(4) +
-    " " + prevCurrency +
-    "\n\n" +
-
-    "All stored amounts will be converted to the new Base Currency.\n\n" +
-
-    "Are you sure you want to continue?"
-    )){
-    }else{
+    if (confirm(t("alerts.currencyChange", {
+        prevCurrency,
+        newCurrency,
+        rateForward: (exchangeRates[newCurrency] / exchangeRates[prevCurrency]).toFixed(4),
+        rateBackward: (exchangeRates[prevCurrency] / exchangeRates[newCurrency]).toFixed(4)
+    }))) {
+    } else {
         currencyButtons.forEach(btn => {
             if (btn.value === prevCurrency) {
                 settingsCurrency.value = prevCurrency;
@@ -606,12 +648,12 @@ async function loadExchangeTable() {
     title.innerHTML =
         `
             <strong>
-                Base Currency:
+                ${t("labels.baseCurrency")}:
             </strong>
 
             ${baseInfo.flag}
             ${baseInfo.code}
-            - ${baseInfo.name}
+            - ${getCurrencyName(baseInfo.code)}
         `;
 
     exchangeTable.appendChild(title);
@@ -627,8 +669,8 @@ async function loadExchangeTable() {
         <thead>
 
             <tr>
-                <th>Currency</th>
-                <th>Exchange Rate</th>
+                <th>${t("labels.currency")}</th>
+                <th>${t("labels.exchangeRate")}</th>
             </tr>
 
         </thead>
@@ -681,7 +723,7 @@ async function loadExchangeTable() {
                         <br>
 
                         <small>
-                            ${currencyData.name}
+                            ${getCurrencyName(currencyData.code)}
                         </small>
 
                     </div>
@@ -706,7 +748,7 @@ async function loadExchangeTable() {
     note.style.marginTop = "12px";
     note.style.fontSize = "12px";
     note.style.color = "gray";
-    note.textContent = "Exchange rates provided by exchangerate-api.com";
+    note.textContent = t("timeline.currencyExchangeProvidedBy");
 
     exchangeTable.appendChild(note);
     exchangeTable.appendChild(table);
@@ -720,7 +762,7 @@ async function exchangeAll(prevCurrency, newCurrency) {
 
     try {
 
-        
+
 
         const entriesRef = collection(
             db,
@@ -741,29 +783,29 @@ async function exchangeAll(prevCurrency, newCurrency) {
 
             const convertedItems = (data.items || []).map(item => {
 
-            const plus =
-                convertCurrency(
-                    Number(item.plus || 0),
-                    prevCurrency,
-                    newCurrency
-                );
+                const plus =
+                    convertCurrency(
+                        Number(item.plus || 0),
+                        prevCurrency,
+                        newCurrency
+                    );
 
-            const minus =
-                convertCurrency(
-                    Number(item.minus || 0),
-                    prevCurrency,
-                    newCurrency
-                );
+                const minus =
+                    convertCurrency(
+                        Number(item.minus || 0),
+                        prevCurrency,
+                        newCurrency
+                    );
 
-            return {
+                return {
 
-                ...item,
+                    ...item,
 
-                plus: isNaN(plus) ? 0 : plus,
+                    plus: isNaN(plus) ? 0 : plus,
 
-                minus: isNaN(minus) ? 0 : minus
-            };
-        });
+                    minus: isNaN(minus) ? 0 : minus
+                };
+            });
 
             // =======================
             // TOTAL
@@ -949,7 +991,7 @@ async function saveTag(tagId) {
             }
         );
 
-        alert("Tag updated");
+        alert(t("alerts.tagUpdated"));
 
     } catch (error) {
 
@@ -964,7 +1006,7 @@ async function deleteTag(tagId) {
     try {
 
         const confirmed =
-            confirm("Delete this tag?");
+            confirm(t("alerts.deleteTag"));
 
         if (!confirmed) return;
 
@@ -992,7 +1034,7 @@ addTagBtn.onclick = () => {
 
     tagsData.unshift({
         id: crypto.randomUUID(),
-        name: "New Tag",
+        name: t("labels.newTag"),
         color: "#000000",
         subtags: []
     });
@@ -1035,7 +1077,7 @@ async function deleteSubtag(
 window.removeTag = async (index) => {
 
     const confirmed =
-        confirm("Delete this tag?");
+        confirm(t("alerts.deleteTag"));
 
     if (!confirmed) return;
 
@@ -1084,7 +1126,7 @@ window.addSubtag = (index) => {
 
     tagsData[index].subtags.push({
         id: crypto.randomUUID(),
-        name: "New Subtag"
+        name: t("labels.newSubtag")
     });
 
     renderTags();
@@ -1180,7 +1222,7 @@ function renderTags() {
             <!-- TAG NAME -->
             <input
                 type="text"
-                value="${tag.name}"
+                value="${translateStoredLabel(tag.name)}"
                 onchange="updateTagName(${index}, this.value)"
             >
 
@@ -1201,7 +1243,7 @@ function renderTags() {
 
                         <input
                             type="text"
-                            value="${sub.name}"
+                            value="${translateStoredLabel(sub.name)}"
                             onchange="updateSubtag(${index}, ${subIndex}, this.value)"
                         >
 
@@ -1217,7 +1259,7 @@ function renderTags() {
                     class="mini-add-btn"
                     onclick="addSubtag(${index})"
                 >
-                    + Subtag
+                    ${t("buttons.addSubcategory")}
                 </button>
 
             </div>
@@ -1229,7 +1271,7 @@ function renderTags() {
                     class="delete-btn"
                     onclick="removeTag(${index})"
                 >
-                    Delete
+                    ${t("buttons.delete")}
                 </button>
 
             </div>
@@ -1257,8 +1299,8 @@ function renderTags() {
 deleteAccountBtn.onclick = async () => {
 
     const confirmed =
-        confirm("This will delete your account and all your data. Are you sure?");
-    
+        confirm(t("alerts.deleteAccount"));
+
     if (!confirmed) return;
 
     try {
@@ -1268,11 +1310,11 @@ deleteAccountBtn.onclick = async () => {
         );
         // DELETE AUTH ACCOUNT
         await auth.currentUser.delete();
-        alert("Account deleted");
+        alert(t("alerts.accountDeleted"));
         window.location.href = "/index.html";
     } catch (error) {
         console.error(error);
-        alert("Error deleting account. Please try again.");
+        alert(t("alerts.errorDeletingAccount"));
     }
 };
 
@@ -1298,23 +1340,23 @@ window.addEventListener("scroll", () => {
 });
 
 function scrollToBottom(smooth = true) {
-  window.scrollTo({
-    top: document.documentElement.scrollHeight,
-    behavior: smooth ? "smooth" : "auto"
-  });
+    window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: smooth ? "smooth" : "auto"
+    });
 }
 
 
 const element = document.getElementById("totalAmountContainer");
 function toggleFixedBottom() {
-  const body = document.documentElement;
-  const hasScroll = body.scrollHeight > body.clientHeight;
+    const body = document.documentElement;
+    const hasScroll = body.scrollHeight > body.clientHeight;
 
-  if (hasScroll) {
-    element.classList.add("fixed-bottom");
-  } else {
-    element.classList.remove("fixed-bottom");
-  }
+    if (hasScroll) {
+        element.classList.add("fixed-bottom");
+    } else {
+        element.classList.remove("fixed-bottom");
+    }
 }
 
 const showTotalBtn =
@@ -1330,12 +1372,15 @@ function updateTotalVisibility() {
     totalAmountEl.textContent =
         totalVisible
             ? totalAmountCache
-            : "Total Amount: " + getCurrencySymbol(currencyFromUserGlobal)+" ***** "+currencyFromUserGlobal;
+            : t("timeline.balanceHidden", {
+                symbol: getCurrencySymbol(currencyFromUserGlobal),
+                currency: currencyFromUserGlobal
+            });
 
     showTotalBtn.textContent =
         totalVisible
-            ? "Hide ⌣"
-            : "Show 👁";
+            ? t("buttons.hideTotal")
+            : `${t("buttons.showTotal")} 👁`;
 }
 
 showTotalBtn.onclick = () => {
@@ -1361,14 +1406,14 @@ toggleBtn.onclick = () => {
     menu.classList.toggle("active");
 
     toggleBtn.textContent = menu.classList.contains("active")
-        ? "Smart Tools ▴"
-        : "Smart Tools ▾";
+        ? `${t("buttons.smartTools")} ▴`
+        : `${t("buttons.smartTools")} ▾`;
 };
 
 document.addEventListener("click", (e) => {
     if (!menu.contains(e.target) && !toggleBtn.contains(e.target)) {
         menu.classList.remove("active");
-        toggleBtn.textContent = "Smart Tools ▾";
+        toggleBtn.textContent = `${t("buttons.smartTools")} ▾`;
     }
 });
 
@@ -1402,8 +1447,8 @@ function updateDarkModeButton() {
 
     darkModeToggle.textContent =
         isDarkMode
-            ? "Light Mode ☀︎"
-            : "Dark Mode ☾";
+            ? `${t("common.lightMode")}`
+            : `${t("common.darkMode")}`;
 }
 
 // INITIAL BUTTON STATE
@@ -1516,32 +1561,32 @@ let currentSection = null;
 
 function openModal(section) {
     currentSection = section;
-    if (section == 0){
+    if (section == 0) {
         modalContentSettings.classList.remove("hidden");
         modalSettings.classList.remove("hidden");
-    }else
+    } else
         if (section == 1) {
-        modalContentFuture.classList.remove("hidden");
-        modalFuture.classList.remove("hidden");
-    } else if (section == 2) {
-        modalContentSearch.classList.remove("hidden");
-        modalSearch.classList.remove("hidden");
-    } else if (section == 3) {
-        modalContentSpending.classList.remove("hidden");
-        modalSpending.classList.remove("hidden");
-    } else if (section == 4) {
-        modalContentComparison.classList.remove("hidden");
-        modalComparison.classList.remove("hidden");
-    } else if (section == 5) {
-        modalContentExchange.classList.remove("hidden");
-        modalExchange.classList.remove("hidden");
-    }
+            modalContentFuture.classList.remove("hidden");
+            modalFuture.classList.remove("hidden");
+        } else if (section == 2) {
+            modalContentSearch.classList.remove("hidden");
+            modalSearch.classList.remove("hidden");
+        } else if (section == 3) {
+            modalContentSpending.classList.remove("hidden");
+            modalSpending.classList.remove("hidden");
+        } else if (section == 4) {
+            modalContentComparison.classList.remove("hidden");
+            modalComparison.classList.remove("hidden");
+        } else if (section == 5) {
+            modalContentExchange.classList.remove("hidden");
+            modalExchange.classList.remove("hidden");
+        }
 }
 
 function closeModal() {
     if (currentSection === null) return;
 
-    if (currentSection == 0){
+    if (currentSection == 0) {
         modalSettings.classList.add("hidden");
     } else if (currentSection == 1) {
         modalFuture.classList.add("hidden");
@@ -1555,6 +1600,7 @@ function closeModal() {
     } else if (currentSection == 5) {
         modalExchange.classList.add("hidden");
     }
+
 }
 
 window.closeModal = closeModal;
@@ -1595,11 +1641,11 @@ async function verificationForSimulation(uid, minEntries = 3) {
     if (count >= minEntries) return true;
 
     if (count === -1) {
-        alert("User data not found");
+        alert(t("alerts.userDataNotFound"));
         return false;
     }
 
-    alert("No tienes suficientes entries "+count+" (min: "+minEntries+")");
+    alert(t("alerts.insufficientEntries", { count, minEntries }));
     return false;
 }
 
@@ -1608,9 +1654,9 @@ async function verificationForSimulation(uid, minEntries = 3) {
 // =======================
 async function openFuture() {
     const simulationOK = await verificationForSimulation(currentUser.uid, 5);
-    if (!simulationOK){
+    if (!simulationOK) {
         closeModal();
-    }else{
+    } else {
         openModal(1);
     }
 }
@@ -1627,9 +1673,9 @@ document.getElementById("simulationDuration").onchange = (e) => {
 // =======================
 async function openSearch() {
     const simulationOK = await verificationForSimulation(currentUser.uid, 1);
-    if (!simulationOK){
+    if (!simulationOK) {
         closeModal();
-    }else{
+    } else {
         openModal(2);
         setupSearchInput();
         loadTagFilters();
@@ -1643,9 +1689,9 @@ window.openSearch = openSearch;
 // =======================
 async function openSpending() {
     const simulationOK = await verificationForSimulation(currentUser.uid, 3);
-    if (!simulationOK){
+    if (!simulationOK) {
         closeModal();
-    }else {
+    } else {
         openModal(3);
         loadInsights();
     }
@@ -1658,12 +1704,13 @@ window.openSpending = openSpending;
 // =======================
 async function openComparison() {
     const simulationOK = await verificationForSimulation(currentUser.uid, 3);
-    if (!simulationOK){
+    if (!simulationOK) {
         closeModal();
-    }else {
+    } else {
         openModal(4);
         loadComparison();
     }
 }
 
 window.openComparison = openComparison;
+

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Seider - Entry</title>
+    <title data-i18n="titles.entry">Seider - Entry</title>
 
     <link rel="stylesheet" href="/CSS/styles.css">
     <link rel="stylesheet" href="/CSS/entry.css">
@@ -13,7 +13,7 @@
     <main class="entry-container">
 
         <div id="entryDateContainer" class="entry-date-box">
-            <span id="entryDateLabel">Date:</span>
+            <span id="entryDateLabel" data-i18n="labels.date">Date:</span>
             <span id="entryDateValue">--</span>
         </div>
 
@@ -21,16 +21,16 @@
         <div id="itemsContainer">
         </div>
 
-        <button id="btnAddGroup">+ Add Group</button>
+        <button id="btnAddGroup" data-i18n="buttons.addCategory">+ Add Category</button>
 
         <!-- NEW TAG MODAL -->
         <div id="newTagModal" class="modal hidden">
             <div class="modal-content">
-                <h3>Create New Tag</h3>
-                <input id="newTagName" type="text" placeholder="Tag name">
+                <h3 data-i18n="labels.newTag">Create New Tag</h3>
+                <input id="newTagName" type="text" placeholder="Tag name" data-i18n-placeholder="placeholders.tagName">
                 <div class="modal-actions">
-                    <button id="btnCreateTag">Create</button>
-                    <button id="btnCancelTag">Cancel</button>
+                    <button id="btnCreateTag" data-i18n="buttons.create">Create</button>
+                    <button id="btnCancelTag" data-i18n="buttons.cancelTag">Cancel</button>
                 </div>
             </div>
         </div>
@@ -38,18 +38,18 @@
         <!-- NEW SUBTAG MODAL -->
          <div id="newSubtagModal" class="modal hidden">
             <div class="modal-content">
-                <h3>Create New Subtag</h3>
-                <input id="newSubtagName" type="text" placeholder="Subtag name">
+                <h3 data-i18n="labels.newSubtag">Create New Subtag</h3>
+                <input id="newSubtagName" type="text" placeholder="Subtag name" data-i18n-placeholder="placeholders.subtagName">
                 <div class="modal-actions">
-                    <button id="btnCreateSubtag">Create</button>
-                    <button id="btnCancelSubtag">Cancel</button>
+                    <button id="btnCreateSubtag" data-i18n="buttons.create">Create</button>
+                    <button id="btnCancelSubtag" data-i18n="buttons.cancelTag">Cancel</button>
                 </div>
             </div>
         </div>
 
         <!-- TOTAL -->
         <div class="total-box">
-            <span id="totalAmount">Total: Waiting...</span>
+            <span id="totalAmount" data-i18n="timeline.totalWaiting">Total: Waiting...</span>
         </div>
 
         <br>
@@ -61,15 +61,15 @@
 
         <!-- ACTIONS -->
         <div class="actions">
-            <button id="btnSave">Save</button>
-            <button id="btnCancel">Back</button>
+            <button id="btnSave" data-i18n="entry.save">Save</button>
+            <button id="btnCancel" data-i18n="common.back">Back</button>
         </div>
 
 
         
         <!-- SIDE BUTTONS LEFT -->
         <div class="side-buttons-left">
-            <button id="darkModeToggle" class="toggle-btn">Dark Mode</button>
+            <button id="darkModeToggle" class="toggle-btn" data-i18n="common.darkMode">Dark Mode</button>
         </div>
 
         <script>

@@ -6,6 +6,13 @@ import {
 import { getCurrencySymbol } from "../utils.js";
 
 import { currencyFromUserGlobal } from "../timeline.js";
+import {
+    initI18n,
+    t,
+    translateStoredLabel
+} from "../i18n.js";
+
+await initI18n();
 
 let tagChart = null;
 let historyChart = null;
@@ -122,11 +129,11 @@ function getComparisonSummary(current, previous) {
     if (sumCurrent <= 0 && sumPrevious <= 0) {
 
         if (Math.abs(sumCurrent) > Math.abs(sumPrevious)) {
-            message = "You spent more than in the previous period.";
-            detail = `Increase in spending: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
+            message = t("analytics.spentMore");
+            detail = `${t("analytics.increaseInSpending")}: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
         } else {
-            message = "You spent less than in the previous period.";
-            detail = `Reduction in spending: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
+            message = t("analytics.spentLess");
+            detail = `${t("analytics.reductionInSpending")}: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
         }
 
     }
@@ -134,18 +141,18 @@ function getComparisonSummary(current, previous) {
     else if (sumCurrent >= 0 && sumPrevious >= 0) {
 
         if (sumCurrent > sumPrevious) {
-            message = "Your income increased.";
-            detail = `Income growth: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
+            message = t("analytics.incomeIncreased");
+            detail = `${t("analytics.incomeGrowth")}: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
         } else {
-            message = "Your income decreased.";
-            detail = `Income drop: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
+            message = t("analytics.incomeDecreased");
+            detail = `${t("analytics.incomeDrop")}: ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`;
         }
 
     }
     // MIXED
     else {
-        message = "Your financial behavior changed significantly.";
-        detail = `Net change: ${diffSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(diff).toFixed(2)} ${currencyFromUserGlobal}`;
+        message = t("analytics.changedSignificantly");
+        detail = `${t("analytics.netChange")}: ${diffSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(diff).toFixed(2)} ${currencyFromUserGlobal}`;
     }
 
     let sumPrevSimbol = "+";
@@ -156,8 +163,8 @@ function getComparisonSummary(current, previous) {
 
     return `
         <p>
-        Previous: <b>${sumPrevSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(sumPrevious).toFixed(2)} ${currencyFromUserGlobal}</b><br>
-        Current: <b>${sumCurrSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(sumCurrent).toFixed(2)} ${currencyFromUserGlobal}</b>
+        ${t("analytics.previous")}: <b>${sumPrevSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(sumPrevious).toFixed(2)} ${currencyFromUserGlobal}</b><br>
+        ${t("analytics.current")}: <b>${sumCurrSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(sumCurrent).toFixed(2)} ${currencyFromUserGlobal}</b>
         </p>
 
         <p><b>${message}</b></p>
@@ -215,7 +222,7 @@ function getWhyChanged(grouped) {
 
     const periods = Object.keys(grouped).sort();
 
-    if (periods.length < 2) return "Not enough data.";
+    if (periods.length < 2) return t("status.notEnoughData");
 
     const first = grouped[periods[0]];
     const last = grouped[periods[periods.length - 1]];
@@ -243,8 +250,8 @@ function getWhyChanged(grouped) {
         ${top3.map(c => {
 
             const type = c.diff < 0 
-                ? "Higher spending" 
-                : "Lower spending";
+                ? t("analytics.higherSpending") 
+                : t("analytics.lowerSpending");
 
             return `
                 <p>
@@ -254,9 +261,7 @@ function getWhyChanged(grouped) {
             `;
         }).join("")}
 
-        <p>
-        These categories had the strongest impact on your financial change.
-        </p>
+        <p>${t("analytics.strongestImpact")}</p>
     `;
 }
 
@@ -282,11 +287,11 @@ function renderTagComparison(current, previous) {
             labels: tags,
             datasets: [
                 {
-                    label: "Current",
+                    label: t("analytics.current"),
                     data: tags.map(t => mapA[t] || 0)
                 },
                 {
-                    label: "Previous",
+                    label: t("analytics.previous"),
                     data: tags.map(t => mapB[t] || 0)
                 }
             ]
@@ -312,7 +317,7 @@ function renderTagHistory(grouped) {
 
     allTags.forEach(tag => {
         datasets.push({
-            label: tag,
+            label: translateStoredLabel(tag),
             data: labels.map(l => grouped[l][tag] || 0),
             borderWidth: 2,
             fill: false
@@ -372,7 +377,7 @@ function updateSubtagComparison(entries) {
 
     allSubtags.forEach(sub => {
         datasets.push({
-            label: sub,
+            label: translateStoredLabel(sub),
             data: labels.map(l => grouped[l][sub] || 0),
             borderWidth: 2,
             fill: false
@@ -393,7 +398,7 @@ function renderMultiLineChart(canvasId, labels, datasets) {
     subtagChart = new Chart(ctx, {
         type: "line",
         data: {
-            labels,
+            labels: translateStoredLabel(labels),
             datasets
         },
         options: {
@@ -436,7 +441,7 @@ function renderMonthlyHistory(entries) {
         data: {
             labels,
             datasets: [{
-                label: "Monthly Total",
+                label: t("analytics.monthlyTotal"),
                 data
             }]
         }
@@ -473,7 +478,7 @@ function renderTrendPrediction(entries) {
         .map(e => e.total || 0);
 
     if (values.length < 2) {
-        container.innerHTML = "Not enough data";
+        container.innerHTML = t("status.notEnoughData");
         return;
     }
 
@@ -482,9 +487,9 @@ function renderTrendPrediction(entries) {
 
     let trend = "";
 
-    if (last > first * 1.1) trend = "📈 Spending increasing over time";
-    else if (last < first * 0.9) trend = "📉 Spending decreasing over time";
-    else trend = "➖ Spending stable";
+    if (last > first * 1.1) trend = t("analytics.trendIncreasingOverTime");
+    else if (last < first * 0.9) trend = t("analytics.trendDecreasingOverTime");
+    else trend = t("analytics.trendStableOverTime");
 
     container.innerHTML = `<p>${trend}</p>`;
 }
@@ -494,7 +499,7 @@ function getTrendPrediction(grouped) {
     const periods = Object.keys(grouped).sort();
 
     if (periods.length < 3) {
-        return "Not enough data to predict trend.";
+        return t("status.notEnoughDataToPredict");
     }
 
     const totals = periods.map(p => sumValues(grouped[p]));
@@ -510,13 +515,15 @@ function getTrendPrediction(grouped) {
     if (last <= 0 && prev <= 0) {
 
         if (Math.abs(last) > Math.abs(prev)) {
-            message = `Spending is increasing. If this pattern continues, you may spend around ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal} more in the next period.`;
+            message = t("analytics.spendingIncreasing", {
+                value: `${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(absDiff).toFixed(2)} ${currencyFromUserGlobal}`
+            });
         } else {
-            message = `Spending is decreasing. You are likely reducing expenses gradually.`;
+            message = t("analytics.spendingDecreasing");
         }
 
     } else {
-        message = `Your financial pattern is changing. Future behavior may vary.`;
+        message = t("analytics.financialPatternChanging");
     }
 
     return `

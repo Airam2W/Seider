@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Seider - Timeline</title>
+    <title data-i18n="titles.timeline">Seider - Timeline</title>
 
     <link rel="stylesheet" href="/CSS/styles.css">
     <link rel="stylesheet" href="/CSS/timeline.css">
@@ -23,7 +23,7 @@
 
         <!-- SIDE BUTTONS RIGHT -->
         <div class="side-buttons-right">
-            <button id="btnAdd" class="add-bottom">+ Entry</button>
+            <button id="btnAdd" class="add-bottom" data-i18n="buttons.addEntry"></button>
             <button id="btnScrollBottom" class="scroll-bottom">↓</button>
         </div>
 
@@ -35,43 +35,43 @@
 
             <div class="one-line">
 
-                <button id="btnSmartToggle" class="main-btn">
+                <button id="btnSmartToggle" class="main-btn" data-i18n="buttons.smartTools">
                     Smart Tools ▾
 
                     <div class="new-stamp">
-                        NEW!
+                        <span data-i18n="buttons.newBadge">NEW!</span>
                     </div>
                 </button>
-                <button id="settings">Settings ⚙︎</button>
+                <button id="settings" data-i18n="buttons.settings">Settings ⚙︎</button>
             </div>
             <div id="smartMenu" class="submenu">
 
                 <button onclick="openFuture()">
-                    Future Insights
+                    <span data-i18n="timeline.futureInsights">Future Insights</span>
 
                     <div class="new-stamp">
-                        NEW!
+                        <span data-i18n="buttons.newBadge">NEW!</span>
                     </div>
                 </button>
                 <button onclick="openSearch()">
-                    Insight Search
+                    <span data-i18n="timeline.insightSearch">Insight Search</span>
 
                     <div class="new-stamp">
-                        NEW!
+                        <span data-i18n="buttons.newBadge">NEW!</span>
                     </div>
                 </button>
                 <button onclick="openSpending()">
-                    Spending Insights
+                    <span data-i18n="timeline.spendingInsights">Spending Insights</span>
 
                     <div class="new-stamp">
-                        NEW!
+                        <span data-i18n="buttons.newBadge">NEW!</span>
                     </div>
                 </button>
                 <button onclick="openComparison()">
-                    Insights Comparison
+                    <span data-i18n="timeline.insightsComparison">Insights Comparison</span>
 
                     <div class="new-stamp">
-                        NEW!
+                        <span data-i18n="buttons.newBadge">NEW!</span>
                     </div>
                 </button>
 
@@ -91,19 +91,20 @@
 
         <!-- SIDE BUTTONS LEFT TOP-->
         <div class="side-buttons-left-top">
-            <button id="btnExchangeTable" onclick="openExchangeTable()">Currency Exchange Table</button>
-            <button id="btnLogout">Logout ➜]</button>
+            <button id="btnExchangeTable" onclick="openExchangeTable()" data-i18n="buttons.exchangeTable">Currency
+                Exchange Table</button>
+            <button id="btnLogout" data-i18n="buttons.logout">Logout ➜]</button>
         </div>
 
 
         <!-- OPTIONAL INFORMATION -->
         <div id="modalExchange" class="modal hidden">
             <div class="modal-content" id="modalContentExchange">
-                <h2>Currency Exchange Table</h2>
+                <h2 data-i18n="labels.currencyExchangeTable">Currency Exchange Table</h2>
 
                 <div id="exchangeTable"></div>
 
-                <button onclick="closeModal()">Close</button>
+                <button onclick="closeModal()" data-i18n="common.close">Close</button>
             </div>
         </div>
 
@@ -115,24 +116,24 @@
         <!-- SECTION: Future Insights -->
         <div id="modalFuture" class="modal hidden">
             <div class="modal-content" id="modalContentFuture">
-                <h2>Future Insights</h2>
+                <h2 data-i18n="timeline.futureInsights">Future Insights</h2>
 
                 <select id="simulationDuration">
-                    <option value="0">Today</option>
-                    <option value="1">Tomorrow</option>
-                    <option value="7">Next Week</option>
-                    <option value="30">Next Month</option>
-                    <option value="60">Next 2 Months</option>
-                    <option value="90">Next 3 Months</option>
-                    <option value="180">Next 6 Months</option>
-                    <option value="365">Next Year</option>
+                    <option value="0" data-i18n="timeline.today">Today</option>
+                    <option value="1" data-i18n="timeline.tomorrow">Tomorrow</option>
+                    <option value="7" data-i18n="timeline.nextWeek">Next Week</option>
+                    <option value="30" data-i18n="timeline.nextMonth">Next Month</option>
+                    <option value="60" data-i18n="timeline.next2Months">Next 2 Months</option>
+                    <option value="90" data-i18n="timeline.next3Months">Next 3 Months</option>
+                    <option value="180" data-i18n="timeline.next6Months">Next 6 Months</option>
+                    <option value="365" data-i18n="timeline.nextYear">Next Year</option>
                 </select>
 
                 <div id="simulationResult"></div>
 
-                <button onclick="predictFuture()">Predict</button>
+                <button onclick="predictFuture()" data-i18n="buttons.predict">Predict</button>
 
-                <button onclick="closeModal()">Close</button>
+                <button onclick="closeModal()" data-i18n="common.close">Close</button>
             </div>
         </div>
 
@@ -143,32 +144,33 @@
                 <!-- LEFT PANEL -->
                 <div class="search-left">
 
-                    <h2>Insight Search</h2>
+                    <h2 data-i18n="timeline.insightSearch">Insight Search</h2>
 
                     <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Type and press Enter...">
+                        <input type="text" id="searchInput" placeholder="Type and press Enter..."
+                            data-i18n-placeholder="timeline.typeAndEnter">
                     </div>
 
                     <div id="searchTags" class="search-tags"></div>
 
                     <div class="filter-group">
-                        <p>Tags</p>
+                        <p data-i18n="timeline.tags">Tags</p>
                         <div id="tagFilter" class="filter-pills"></div>
                     </div>
 
                     <div class="filter-group">
-                        <p>Subtags</p>
+                        <p data-i18n="timeline.subtags">Subtags</p>
                         <div id="subtagFilter" class="filter-pills"></div>
                     </div>
 
-                    <button onclick="closeModal()">Close</button>
+                    <button onclick="closeModal()" data-i18n="common.close">Close</button>
 
                 </div>
 
                 <!-- RIGHT PANEL -->
                 <div class="search-right">
                     <div id="searchResults" class="results-container">
-                        <p style="opacity:0.6;">No filters applied</p>
+                        <p style="opacity:0.6;" data-i18n="timeline.noFiltersApplied">No filters applied</p>
                     </div>
                 </div>
 
@@ -183,22 +185,20 @@
                 <!-- HEADER -->
                 <div class="insights-header">
 
-                    <h2>Spending Insights</h2>
+                    <h2 data-i18n="timeline.spendingInsights">Spending Insights</h2>
 
                     <div class="insights-controls">
 
                         <select id="timeRange">
-                            <option value="7">1 Week</option>
-                            <option value="30">1 Month</option>
-                            <option value="90">3 Months</option>
-                            <option value="180">6 Months</option>
-                            <option value="365">1 Year</option>
-                            <option value="all">All Time</option>
+                            <option value="7" data-i18n="timeline.oneWeek">1 Week</option>
+                            <option value="30" data-i18n="timeline.oneMonth">1 Month</option>
+                            <option value="90" data-i18n="timeline.threeMonths">3 Months</option>
+                            <option value="180" data-i18n="timeline.sixMonths">6 Months</option>
+                            <option value="365" data-i18n="timeline.oneYear">1 Year</option>
+                            <option value="all" data-i18n="timeline.allTime">All Time</option>
                         </select>
 
-                        <button onclick="closeModal()">
-                            Close
-                        </button>
+                        <button onclick="closeModal()" data-i18n="common.close">Close</button>
 
                     </div>
 
@@ -210,7 +210,7 @@
                     <!-- LEFT PANEL -->
                     <div class="analysis-panel">
 
-                        <h3>Spending Analysis</h3>
+                        <h3 data-i18n="timeline.spendingAnalysis">Spending Analysis</h3>
 
                         <div id="generalAnalysis"></div>
 
@@ -223,7 +223,7 @@
                         <div class="chart-card">
 
                             <div class="chart-header">
-                                <h3>Tag Evolution</h3>
+                                <h3 data-i18n="timeline.tagEvolution">Tag Evolution</h3>
                                 <select id="tagSelect"></select>
                             </div>
 
@@ -235,7 +235,7 @@
                         <div class="chart-card">
 
                             <div class="chart-header">
-                                <h3>Subtag Evolution</h3>
+                                <h3 data-i18n="timeline.subtagEvolution">Subtag Evolution</h3>
                                 <select id="subtagSelect"></select>
                             </div>
 
@@ -259,19 +259,17 @@
                 <!-- HEADER -->
                 <div class="comparison-header">
 
-                    <h2>Insights Comparison</h2>
+                    <h2 data-i18n="timeline.insightsComparison">Insights Comparison</h2>
 
                     <div class="comparison-controls">
 
                         <select id="compareType">
-                            <option value="month">Monthly Comparison</option>
-                            <option value="week">Weekly Comparison</option>
-                            <option value="year">Yearly Comparison</option>
+                            <option value="month" data-i18n="timeline.monthlyComparison">Monthly Comparison</option>
+                            <option value="week" data-i18n="timeline.weeklyComparison">Weekly Comparison</option>
+                            <option value="year" data-i18n="timeline.yearlyComparison">Yearly Comparison</option>
                         </select>
 
-                        <button onclick="closeModal()">
-                            Close
-                        </button>
+                        <button onclick="closeModal()" data-i18n="common.close">Close</button>
 
                     </div>
 
@@ -285,7 +283,7 @@
 
                         <div class="comparison-card">
 
-                            <h3>Overview</h3>
+                            <h3 data-i18n="timeline.overview">Overview</h3>
 
                             <div id="comparisonSummary"></div>
 
@@ -293,7 +291,7 @@
 
                         <div class="comparison-card">
 
-                            <h3>Main Drivers of Change</h3>
+                            <h3 data-i18n="timeline.mainDriversOfChange">Main Drivers of Change</h3>
 
                             <div id="comparisonWhy"></div>
 
@@ -301,7 +299,7 @@
 
                         <div class="comparison-card">
 
-                            <h3>Future Trend</h3>
+                            <h3 data-i18n="timeline.futureTrend">Future Trend</h3>
 
                             <div id="trendPrediction"></div>
 
@@ -314,7 +312,7 @@
 
                         <div class="comparison-chart-card">
 
-                            <h3>Tag Trends</h3>
+                            <h3 data-i18n="timeline.tagTrends">Tag Trends</h3>
 
                             <canvas id="tagCompareChart"></canvas>
 
@@ -322,7 +320,7 @@
 
                         <div class="comparison-chart-card">
 
-                            <h3>Subtag Trends</h3>
+                            <h3 data-i18n="timeline.subtagTrends">Subtag Trends</h3>
 
                             <canvas id="subtagCompareChart"></canvas>
 
@@ -330,7 +328,7 @@
 
                         <div class="comparison-chart-card">
 
-                            <h3>Historical Evolution</h3>
+                            <h3 data-i18n="timeline.historicalEvolution">Historical Evolution</h3>
 
                             <canvas id="historyChart"></canvas>
 
@@ -352,19 +350,16 @@
                 <div class="settings-header">
 
                     <div>
-                        <h2>Settings</h2>
-                        <p>Manage your personal information</p>
+                        <h2 data-i18n="timeline.settings">Settings</h2>
+                        <p data-i18n="labels.managePersonalInformation">Manage your personal information</p>
                     </div>
 
                     <div class="settings-buttons">
 
-                        <button id="saveSettingsBtn" class="save-settings-btn">
-                            Save
-                        </button>
+                        <button id="saveSettingsBtn" class="save-settings-btn" data-i18n="settings.save">Save</button>
 
-                        <button class="close-settings-btn" onclick="closeModal()">
-                            ✕
-                        </button>
+                        <button class="close-settings-btn" onclick="closeModal()"
+                            data-i18n="buttons.closeIcon">✕</button>
 
                     </div>
 
@@ -376,35 +371,37 @@
                     <!-- PERSONAL INFO -->
                     <div class="settings-section">
 
-                        <h3>Personal Information</h3>
+                        <h3 data-i18n="labels.personalInformation">Personal Information</h3>
 
                         <div class="settings-grid">
 
                             <!-- NAME -->
                             <div class="settings-field">
-                                <label>Name</label>
+                                <label data-i18n="labels.name">Name</label>
 
-                                <input type="text" id="settingsName" placeholder="Your name">
+                                <input type="text" id="settingsName" placeholder="Your name"
+                                    data-i18n-placeholder="placeholders.yourName">
                             </div>
 
                             <!-- EMAIL -->
                             <div class="settings-field">
-                                <label>Email</label>
+                                <label data-i18n="labels.email">Email</label>
 
                                 <input type="email" id="settingsEmail" disabled>
                             </div>
 
                             <!-- GENDER -->
                             <div class="settings-field">
-                                <label>Gender</label>
+                                <label data-i18n="labels.gender">Gender</label>
 
                                 <select id="settingsGender">
 
-                                    <option value="no">Select / Prefer not to say</option>
+                                    <option value="no" data-i18n="timeline.selectPreferNotToSay">Select / Prefer not to
+                                        say</option>
 
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
+                                    <option value="Male" data-i18n="common.male">Male</option>
+                                    <option value="Female" data-i18n="common.female">Female</option>
+                                    <option value="Other" data-i18n="common.other">Other</option>
 
 
                                 </select>
@@ -412,11 +409,12 @@
 
                             <!-- AGE -->
                             <div class="settings-field">
-                                <label>Age Range</label>
+                                <label data-i18n="labels.ageRange">Age Range</label>
 
                                 <select id="settingsAgeRange">
 
-                                    <option value="no">Select / Prefer not to say</option>
+                                    <option value="no" data-i18n="timeline.selectPreferNotToSay">Select / Prefer not to
+                                        say</option>
 
                                     <option value="13-17">13 - 17</option>
                                     <option value="18-24">18 - 24</option>
@@ -430,22 +428,25 @@
 
                             <!-- CURRENCY -->
                             <div class="settings-field">
-                                <label>Base Currency</label>
+                                <label data-i18n="labels.baseCurrency">Base Currency</label>
 
                                 <select id="settingsCurrency">
 
-                                    <option id="USD" value="USD">USD - US Dollar</option>
-                                    <option id="AUD" value="AUD">AUD - Australian Dollar</option>
-                                    <option id="CAD" value="CAD">CAD - Canadian Dollar</option>
-                                    <option id="CHF" value="CHF">CHF - Swiss Franc</option>
-                                    <option id="CNY" value="CNY">CNY - Chinese Yuan</option>
-                                    <option id="EUR" value="EUR">EUR - Euro</option>
-                                    <option id="GBP" value="GBP">GBP - British Pound</option>
-                                    <option id="JPY" value="JPY">JPY - Japanese Yen</option>
-                                    <option id="KRW" value="KRW">KRW - Korean Won</option>
-                                    <option id="MXN" value="MXN">MXN - Mexican Peso</option>
-                                    <option id="NZD" value="NZD">NZD - New Zealand Dollar</option>
-                                    <option id="SEK" value="SEK">SEK - Swedish Krona</option>
+                                    <option id="USD" value="USD" data-i18n="currencies.USD">USD - US Dollar</option>
+                                    <option id="AUD" value="AUD" data-i18n="currencies.AUD">AUD - Australian Dollar
+                                    </option>
+                                    <option id="CAD" value="CAD" data-i18n="currencies.CAD">CAD - Canadian Dollar
+                                    </option>
+                                    <option id="CHF" value="CHF" data-i18n="currencies.CHF">CHF - Swiss Franc</option>
+                                    <option id="CNY" value="CNY" data-i18n="currencies.CNY">CNY - Chinese Yuan</option>
+                                    <option id="EUR" value="EUR" data-i18n="currencies.EUR">EUR - Euro</option>
+                                    <option id="GBP" value="GBP" data-i18n="currencies.GBP">GBP - British Pound</option>
+                                    <option id="JPY" value="JPY" data-i18n="currencies.JPY">JPY - Japanese Yen</option>
+                                    <option id="KRW" value="KRW" data-i18n="currencies.KRW">KRW - Korean Won</option>
+                                    <option id="MXN" value="MXN" data-i18n="currencies.MXN">MXN - Mexican Peso</option>
+                                    <option id="NZD" value="NZD" data-i18n="currencies.NZD">NZD - New Zealand Dollar
+                                    </option>
+                                    <option id="SEK" value="SEK" data-i18n="currencies.SEK">SEK - Swedish Krona</option>
 
 
                                 </select>
@@ -453,38 +454,42 @@
 
                             <!-- BALANCE -->
                             <div class="settings-field">
-                                <label>Initial Balance</label>
+                                <label data-i18n="labels.initialBalance">Initial Balance</label>
 
                                 <input type="password" id="settingsBalance" placeholder="0" disabled>
                             </div>
 
                             <!-- INCOME -->
                             <div class="settings-field">
-                                <label>Income Frequency</label>
+                                <label data-i18n="labels.incomeFrequency">Income Frequency</label>
 
                                 <select id="settingsIncome">
 
-                                    <option value="no">Select / Prefer not to say</option>
+                                    <option value="no" data-i18n="timeline.selectPreferNotToSay">Select / Prefer not to
+                                        say</option>
 
-                                    <option value="Weekly">Weekly</option>
-                                    <option value="Biweekly">Biweekly</option>
-                                    <option value="Monthly">Monthly</option>
+                                    <option value="Weekly" data-i18n="common.weekly">Weekly</option>
+                                    <option value="Biweekly" data-i18n="common.biweekly">Biweekly</option>
+                                    <option value="Monthly" data-i18n="common.monthly">Monthly</option>
 
                                 </select>
                             </div>
 
                             <!-- GOAL -->
                             <div class="settings-field">
-                                <label>Financial Goal</label>
+                                <label data-i18n="labels.financialGoal">Financial Goal</label>
 
                                 <select id="settingsGoal">
 
-                                    <option value="no">Select / Prefer not to say</option>
+                                    <option value="no" data-i18n="timeline.selectPreferNotToSay">Select / Prefer not to
+                                        say</option>
 
-                                    <option value="Save Money">Save Money</option>
-                                    <option value="Track Expenses">Track Expenses</option>
-                                    <option value="Reduce Debt">Reduce Debt</option>
-                                    <option value="Improve Habits">Improve Habits</option>
+                                    <option value="Save Money" data-i18n="common.saveMoney">Save Money</option>
+                                    <option value="Track Expenses" data-i18n="common.trackExpenses">Track Expenses
+                                    </option>
+                                    <option value="Reduce Debt" data-i18n="common.reduceDebt">Reduce Debt</option>
+                                    <option value="Improve Habits" data-i18n="common.improveHabits">Improve Habits
+                                    </option>
 
                                 </select>
                             </div>
@@ -511,80 +516,79 @@
 
                     <div class="settings-section">
 
-                        <div class="section-header">
-                            <div>
-                                <h3>User Settings</h3>
+                        <h3 data-i18n="labels.userSettings">User Settings</h3>
 
-                                <p>
-                                    Customize your experience
-                                </p>
+                        <div class="settings-grid">
+
+                            <!-- NAME -->
+                            <div class="settings-field">
+                                <label data-i18n="labels.language">Language</label>
+
+                                <select id="settingsLanguage">
+
+                                    <option id="en" value="en" data-i18n="languages.english">English</option>
+                                    <option id="es" value="es" data-i18n="languages.spanish">Spanish</option>
+                                    <option id="ja" value="ja" data-i18n="languages.japanese">Japanese</option>
+                                    <option id="ko" value="ko" data-i18n="languages.korean">Korean</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAGS & SUBTAGS -->
+                    <br>
+
+                    <div class="settings-section">
+
+                        <div class="section-header">
+
+                            <div>
+                                <h3 data-i18n="labels.tagsAndSubtags">Tags & Subtags</h3>
+
+                                <p data-i18n="labels.organizeCategories">Organize your categories</p>
                             </div>
 
+                            <button id="addTagBtn" class="primary-settings-btn" data-i18n="buttons.addCategory">+ Add
+                                Category</button>
+
+                        </div>
+
+                        <!-- TABLE -->
+                        <div class="tags-table">
+
+                            <!-- HEADER -->
+                            <div class="tags-row tags-header">
+
+                                <span data-i18n="labels.tag">Tag</span>
+                                <span data-i18n="labels.color">Color</span>
+                                <span data-i18n="labels.subtags">Subtags</span>
+                                <span data-i18n="labels.actions">Actions</span>
+
+                            </div>
+
+                            <!-- GENERATED -->
+                            <div id="tagsContainer"></div>
 
                         </div>
 
                     </div>
-                </div>
 
-                <!-- TAGS & SUBTAGS -->
-                <br>
+                    <!-- Danger Zone -->
+                    <br>
+                    <div class="settings-section">
 
-                <div class="settings-section">
-
-                    <div class="section-header">
-
-                        <div>
-                            <h3>Tags & Subtags</h3>
-
-                            <p>
-                                Organize your categories
-                            </p>
+                        <div class="section-header">
+                            <h3 data-i18n="labels.dangerZone">Danger Zone</h3>
+                            <p data-i18n="labels.warning">Warning: This action cannot be undone.</p>
                         </div>
 
-                        <button id="addTagBtn" class="primary-settings-btn">
-                            + Add Tag
-                        </button>
-
-                    </div>
-
-                    <!-- TABLE -->
-                    <div class="tags-table">
-
-                        <!-- HEADER -->
-                        <div class="tags-row tags-header">
-
-                            <span>Tag</span>
-                            <span>Color</span>
-                            <span>Subtags</span>
-                            <span>Actions</span>
-
-                        </div>
-
-                        <!-- GENERATED -->
-                        <div id="tagsContainer"></div>
-
+                        <button id="deleteAccountBtn" class="danger-btn" data-i18n="buttons.deleteAccount">Delete
+                            Account</button>
                     </div>
 
                 </div>
-
-                <!-- Danger Zone -->
-                <br>
-                <div class="settings-section">
-
-                    <div class="section-header">
-                        <h3>Danger Zone</h3>
-                        <p>
-                            Warning: This action cannot be undone.
-                        </p>
-                    </div>
-
-                    <button id="deleteAccountBtn" class="danger-btn">
-                        Delete Account
-                    </button>
-                </div>
-
             </div>
-        </div>
         </div>
 
 
@@ -596,13 +600,13 @@
 
         <!-- Welcome message -->
         <div class="entry entry-header fixed">
-            <h3>Welcome back to Seider — your smart finance companion.</h3>
+            <h3 data-i18n="timeline.welcome">Welcome back to Seider — your smart finance companion.</h3>
         </div>
 
         <!-- Fixed entries -->
         <div class="entry entry-header fixed fixed-bottom" id="totalAmountContainer">
-            <h3 id="totalAmount">Total Amount: Waiting...</h3>
-            <button id="toggleTotalAmount" class="toggle-btn">Show</button>
+            <h3 id="totalAmount" data-i18n="timeline.totalAmountWaiting">Total Amount: Waiting...</h3>
+            <button id="toggleTotalAmount" class="toggle-btn" data-i18n="buttons.showTotal">Show</button>
         </div>
 
         <br>

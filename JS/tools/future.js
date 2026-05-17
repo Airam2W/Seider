@@ -1,4 +1,3 @@
-
 import {
     getUserEntries,
     currentUser
@@ -7,6 +6,14 @@ import {
 import { getCurrencySymbol } from "../utils.js";
 
 import { currencyFromUserGlobal } from "../timeline.js";
+
+import {
+    initI18n,
+    t,
+    translateStoredLabel
+} from "../i18n.js";
+
+await initI18n();
 
 let currentCurrency = "...";
 
@@ -20,10 +27,8 @@ export async function predictFuture() {
     const weights = getCategoryWeights(entries);
 
     const results = [];
-
     const today = new Date();
 
-    // TODAY
     if (duration === 0) {
         const forcedEntry = generateSingleEntry(today, dayPatterns, weights);
         renderSimulation([forcedEntry]);
@@ -31,15 +36,10 @@ export async function predictFuture() {
     }
 
     for (let i = 0; i < duration; i++) {
-
         const currentDate = new Date();
-        currentDate.setDate(today.getDate() + i + 1); // Always start from tomorrow
+        currentDate.setDate(today.getDate() + i + 1);
 
-        const day = currentDate.getDay();
-
-        const shouldGenerate =
-            (i === 0) || // Always generate for the first day
-            (Math.random() <= usageProb);
+        const shouldGenerate = (i === 0) || (Math.random() <= usageProb);
 
         if (!shouldGenerate) continue;
 
@@ -47,33 +47,29 @@ export async function predictFuture() {
         results.push(entry);
     }
 
-    // EXTRA SECURITY
     if (results.length === 0) {
         const fallbackDate = new Date();
         fallbackDate.setDate(today.getDate() + 1);
-
-        results.push(
-            generateSingleEntry(fallbackDate, dayPatterns, weights)
-        );
+        results.push(generateSingleEntry(fallbackDate, dayPatterns, weights));
     }
 
     renderSimulation(results);
 }
+
 window.predictFuture = predictFuture;
 
 function analyzePatterns(entries) {
-
     const dayFrequency = {};
     const tagAverages = {};
 
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
         const date = new Date(entry.date.seconds * 1000);
         const day = date.getDay();
 
         dayFrequency[day] = (dayFrequency[day] || 0) + 1;
 
-        entry.items.forEach(item => {
-            const key = item.tag + "_" + item.subtag;
+        entry.items.forEach((item) => {
+            const key = `${item.tag}_${item.subtag}`;
 
             if (!tagAverages[key]) {
                 tagAverages[key] = { total: 0, count: 0 };
@@ -88,38 +84,26 @@ function analyzePatterns(entries) {
 }
 
 function generateFutureEntries(patterns, days) {
-
     const result = [];
     const today = new Date();
-
-    // If Today
-    const startOffset = (days === 0) ? 0 : 1;
-
-    const totalDays = (days === 0) ? 1 : days;
+    const startOffset = days === 0 ? 0 : 1;
+    const totalDays = days === 0 ? 1 : days;
 
     for (let i = 0; i < totalDays; i++) {
-
         const date = new Date();
         date.setDate(today.getDate() + i + startOffset);
 
         const day = date.getDay();
-
         const probability = (patterns.dayFrequency[day] || 0) / patterns.entries.length;
 
-        // Always 1 for the first day, then based on probability
         if (i !== 0 && Math.random() > probability) continue;
 
-        const template = patterns.entries[
-            Math.floor(Math.random() * patterns.entries.length)
-        ];
+        const template = patterns.entries[Math.floor(Math.random() * patterns.entries.length)];
 
-        const newItems = template.items.map(item => {
-
-            const key = item.tag + "_" + item.subtag;
+        const newItems = template.items.map((item) => {
+            const key = `${item.tag}_${item.subtag}`;
             const avg = patterns.tagAverages[key];
-
             const base = avg ? avg.total / avg.count : 0;
-
             const variation = base * (Math.random() * 0.4 - 0.2);
 
             return {
@@ -132,7 +116,7 @@ function generateFutureEntries(patterns, days) {
         result.push({
             date,
             items: newItems,
-            total: newItems.reduce((sum, i) => sum + i.plus, 0),
+            total: newItems.reduce((sum, item) => sum + item.plus, 0),
             notes: generateFakeNote()
         });
     }
@@ -142,12 +126,9 @@ function generateFutureEntries(patterns, days) {
 
 function generateSingleEntry(date, dayPatterns, weights) {
     const day = date.getDay();
-
     const baseTotal = dayPatterns[day] || 0;
-
     const items = generateItems(weights, baseTotal);
-
-    const total = items.reduce((sum, it) => sum + (it.plus - it.minus), 0);
+    const total = items.reduce((sum, item) => sum + (item.plus - item.minus), 0);
 
     return {
         date,
@@ -158,38 +139,26 @@ function generateSingleEntry(date, dayPatterns, weights) {
 }
 
 function generateItems(weights) {
-
     const keys = Object.keys(weights);
     const numItems = Math.floor(Math.random() * 3) + 1;
-
     const items = [];
 
     for (let i = 0; i < numItems; i++) {
-
         const key = keys[Math.floor(Math.random() * keys.length)];
         const [tag, subtag] = key.split(">");
-
         const data = weights[key];
 
         const totalCount = data.incomeCount + data.expenseCount;
-
-        // REAL PROBABILITY
         const incomeProb = totalCount === 0 ? 0 : data.incomeCount / totalCount;
-
         const isIncome = Math.random() < incomeProb;
 
         let amount = 0;
 
         if (isIncome) {
-            const avgIncome = data.incomeCount === 0 ? 0 :
-                data.incomeTotal / data.incomeCount;
-
+            const avgIncome = data.incomeCount === 0 ? 0 : data.incomeTotal / data.incomeCount;
             amount = Math.abs(randomize(avgIncome, 0.4));
-
         } else {
-            const avgExpense = data.expenseCount === 0 ? 0 :
-                data.expenseTotal / data.expenseCount;
-
+            const avgExpense = data.expenseCount === 0 ? 0 : data.expenseTotal / data.expenseCount;
             amount = Math.abs(randomize(avgExpense, 0.4));
         }
 
@@ -205,33 +174,30 @@ function generateItems(weights) {
 }
 
 function getUsageProbability(entries) {
-    const dates = entries.map(e => e.date.toDate()).sort((a,b)=>a-b);
-
+    const dates = entries.map((entry) => entry.date.toDate()).sort((a, b) => a - b);
     const first = dates[0];
     const last = dates[dates.length - 1];
+    const totalDays = Math.max(1, (last - first) / (1000 * 60 * 60 * 24));
 
-    const totalDays = Math.max(1, (last - first) / (1000*60*60*24));
-
-    return entries.length / totalDays; // Daily probability of having at least one entry
+    return entries.length / totalDays;
 }
 
 function getDayPatterns(entries) {
     const map = {};
 
-    entries.forEach(e => {
-        const d = e.date.toDate().getDay(); // 0-6
-        if (!map[d]) map[d] = [];
+    entries.forEach((entry) => {
+        const day = entry.date.toDate().getDay();
+        if (!map[day]) map[day] = [];
 
-        map[d].push(e.total || 0);
+        map[day].push(entry.total || 0);
     });
 
     const result = {};
 
-    for (let d in map) {
-        const arr = map[d];
-        const avg = arr.reduce((a,b)=>a+b,0) / arr.length;
-
-        result[d] = avg;
+    for (const day in map) {
+        const arr = map[day];
+        const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
+        result[day] = avg;
     }
 
     return result;
@@ -240,10 +206,9 @@ function getDayPatterns(entries) {
 function getCategoryWeights(entries) {
     const weights = {};
 
-    entries.forEach(e => {
-        e.items.forEach(item => {
-
-            const key = item.tag + ">" + item.subtag;
+    entries.forEach((entry) => {
+        entry.items.forEach((item) => {
+            const key = `${item.tag}>${item.subtag}`;
 
             if (!weights[key]) {
                 weights[key] = {
@@ -263,7 +228,6 @@ function getCategoryWeights(entries) {
                 weights[key].expenseCount++;
                 weights[key].expenseTotal += item.minus;
             }
-
         });
     });
 
@@ -277,37 +241,37 @@ function randomize(value, variance = 0.3) {
 
 function generateFakeNote() {
     const notes = [
-        "Normal expenses day",
-        "Went out with friends",
-        "Bought groceries",
-        "Unexpected expense",
-        "Paid bills",
-        "Weekend activities"
+        t("future.normalExpensesDay"),
+        t("future.wentOutWithFriends"),
+        t("future.boughtGroceries"),
+        t("future.unexpectedExpense"),
+        t("future.paidBills"),
+        t("future.weekendActivities")
     ];
 
     return notes[Math.floor(Math.random() * notes.length)];
 }
 
 function generateSmartNote(items, total, day) {
-    const tags = items.map(i => i.tag);
+    const tags = items.map((item) => item.tag);
 
     if (tags.includes("Food")) {
-        return "Ate outside today";
+        return t("future.ateOutsideToday");
     }
 
     if (tags.includes("Transport")) {
-        return "Moved around the city";
+        return t("future.movedAroundTheCity");
     }
 
     if (total > 500) {
-        return "Spent more than usual";
+        return t("future.spentMoreThanUsual");
     }
 
     if (day === 5 || day === 6) {
-        return "Weekend spending";
+        return t("future.weekendSpending");
     }
 
-    return "Normal day";
+    return t("future.normalDay");
 }
 
 export function cleanRender() {
@@ -316,57 +280,41 @@ export function cleanRender() {
 }
 
 function renderSimulation(entries) {
-
     const container = document.getElementById("simulationResult");
 
-    container.innerHTML = `
-        <div class="simulation-scroll"></div>
-    `;
+    container.innerHTML = `<div class="simulation-scroll"></div>`;
 
     const scroll = container.querySelector(".simulation-scroll");
 
-    entries.forEach(entry => {
-
+    entries.forEach((entry) => {
         const entryDiv = document.createElement("div");
         entryDiv.className = "simulation-entry";
 
         let html = `
-            <div class="entry-date">
-                ${entry.date.toLocaleDateString()}
-            </div>
+            <div class="entry-date">${entry.date.toLocaleDateString()}</div>
         `;
 
-        // GROUP BY TAG > SUBTAG
         const grouped = {};
 
-        entry.items.forEach(item => {
+        entry.items.forEach((item) => {
             if (!grouped[item.tag]) grouped[item.tag] = {};
             if (!grouped[item.tag][item.subtag]) grouped[item.tag][item.subtag] = [];
 
             grouped[item.tag][item.subtag].push(item);
         });
 
-        // ITERATE GROUPS
-        Object.keys(grouped).forEach(tag => {
-
+        Object.keys(grouped).forEach((tag) => {
             let groupTotal = 0;
+            html += `<div class="group-title">${translateStoredLabel(tag)}</div>`;
 
-            html += `<div class="group-title">${tag}</div>`;
-
-            Object.keys(grouped[tag]).forEach(subtag => {
-
+            Object.keys(grouped[tag]).forEach((subtag) => {
                 let subTotal = 0;
 
-                grouped[tag][subtag].forEach(item => {
-
+                grouped[tag][subtag].forEach((item) => {
                     const value = (item.plus || 0) - (item.minus || 0);
                     subTotal += value;
 
-                     
-                    html += `<div class="subtag-title">↳ ${subtag}</div>`;
-
-                    const plusText = item.plus > 0 ? `+${item.plus}` : "";
-                    const minusText = item.minus > 0 ? `-${item.minus}` : "";
+                    html += `<div class="subtag-title">↳ ${translateStoredLabel(subtag)}</div>`;
 
                     html += `
                         <div class="item-row">
@@ -380,26 +328,21 @@ function renderSimulation(entries) {
 
                 html += `
                     <div class="subtotal">
-                        Subtotal: ${subTotal >= 0 ? "+ " : "- "}${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(subTotal)} ${currencyFromUserGlobal}
+                        ${t("future.subtotal")}: ${subTotal >= 0 ? "+ " : "- "}${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(subTotal)} ${currencyFromUserGlobal}
                     </div>
                 `;
             });
 
-                html += `
-                    <div class="group-total">
-                        Total: ${groupTotal >= 0 ? "+ " : "- "}${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(groupTotal)} ${currencyFromUserGlobal}
-                    </div>
-                `;
+            html += `
+                <div class="group-total">
+                    ${t("future.total")}: ${groupTotal >= 0 ? "+ " : "- "}${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(groupTotal)} ${currencyFromUserGlobal}
+                </div>
+            `;
         });
 
         html += `
-            <div class="notes">
-                Notes: ${entry.notes || "-"}
-            </div>
-
-            <div class="final-total">
-                Total = ${getCurrencySymbol(currencyFromUserGlobal)} ${entry.total} ${currencyFromUserGlobal}
-            </div>
+            <div class="notes">${t("labels.notes")}: ${entry.notes || "-"}</div>
+            <div class="final-total">${t("future.totalEquals")}: ${getCurrencySymbol(currencyFromUserGlobal)} ${entry.total} ${currencyFromUserGlobal}</div>
         `;
 
         entryDiv.innerHTML = html;

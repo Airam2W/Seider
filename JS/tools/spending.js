@@ -6,6 +6,13 @@ import {
 import { getCurrencySymbol } from "../utils.js";
 
 import { currencyFromUserGlobal } from "../timeline.js";
+import {
+    initI18n,
+    t,
+    translateStoredLabel
+} from "../i18n.js";
+
+await initI18n();
 
 
 const timeSelect = document.getElementById("timeRange");
@@ -87,17 +94,17 @@ function renderPie(data) {
 }
 
 function getTrend(entries) {
-    if (entries.length < 2) return "Not enough data";
+    if (entries.length < 2) return t("status.notEnoughData");
 
     const sorted = [...entries].sort((a,b)=>a.date.seconds - b.date.seconds);
 
     const first = sorted[0].total;
     const last = sorted[sorted.length - 1].total;
 
-    if (last > first * 1.1) return "📈 Upward trend";
-    if (last < first * 0.9) return "📉 Downward trend";
+    if (last > first * 1.1) return t("status.upwardTrend");
+    if (last < first * 0.9) return t("status.downwardTrend");
 
-    return "➖ Stable trend";
+    return t("status.stableTrend");
 }
 
 
@@ -112,10 +119,10 @@ function generateStats(entries) {
     const min = Math.min(...totals);
 
     return `
-        <p>Average: ${getCurrencySymbol(currencyFromUserGlobal)} ${avg.toFixed(2)} ${currencyFromUserGlobal}</p>
-        <p>Max: ${getCurrencySymbol(currencyFromUserGlobal)} ${max} ${currencyFromUserGlobal}</p>
-        <p>Min: ${getCurrencySymbol(currencyFromUserGlobal)} ${min} ${currencyFromUserGlobal}</p>
-        <p>Trend: ${getTrend(entries)}</p>
+        <p>${t("analytics.average")}: ${getCurrencySymbol(currencyFromUserGlobal)} ${avg.toFixed(2)} ${currencyFromUserGlobal}</p>
+        <p>${t("analytics.max")}: ${getCurrencySymbol(currencyFromUserGlobal)} ${max} ${currencyFromUserGlobal}</p>
+        <p>${t("analytics.min")}: ${getCurrencySymbol(currencyFromUserGlobal)} ${min} ${currencyFromUserGlobal}</p>
+        <p>${t("analytics.trend")}: ${getTrend(entries)}</p>
     `;
 }
 
@@ -176,13 +183,13 @@ function loadTagSelector(entries) {
 
     const allOpt = document.createElement("option");
     allOpt.value = "ALL";
-    allOpt.textContent = "All Tags";
+    allOpt.textContent = t("analytics.allTags");
     select.appendChild(allOpt);
 
     tags.forEach(tag => {
         const opt = document.createElement("option");
         opt.value = tag;
-        opt.textContent = tag;
+        opt.textContent = translateStoredLabel(tag);
         select.appendChild(opt);
     });
 
@@ -218,7 +225,7 @@ function updateTagChart(entries) {
             const series = buildTimeSeries(entries, i => i.tag === t);
 
             return {
-                label: t,
+                label: translateStoredLabel(t),
                 data: series.data,
                 borderWidth: 2,
                 fill: false
@@ -255,13 +262,13 @@ function loadSubtagSelector(entries, tag) {
 
     const allOpt = document.createElement("option");
     allOpt.value = "ALL";
-    allOpt.textContent = "All Subtags";
+    allOpt.textContent = t("analytics.allSubtags");
     select.appendChild(allOpt);
 
     subs.forEach(sub => {
         const opt = document.createElement("option");
         opt.value = sub;
-        opt.textContent = sub;
+        opt.textContent = translateStoredLabel(sub);
         select.appendChild(opt);
     });
 
@@ -292,7 +299,7 @@ function updateSubtagChart(entries, tag) {
             const series = buildTimeSeries(entries, i => i.subtag === s);
 
             datasets.push({
-                label: s,
+                label: translateStoredLabel(s),
                 data: series.data,
                 borderWidth: 2,
                 fill: false
@@ -309,7 +316,7 @@ function updateSubtagChart(entries, tag) {
         return;
     }
 
-    // ALL SUBTAGS de un TAG
+    // ALL SUBTAGS of TAG
     if (sub === "ALL") {
 
         const subs = [...new Set(
@@ -327,7 +334,7 @@ function updateSubtagChart(entries, tag) {
             );
 
             datasets.push({
-                label: s,
+                label: translateStoredLabel(s),
                 data: series.data,
                 borderWidth: 2,
                 fill: false
@@ -354,9 +361,9 @@ function updateSubtagChart(entries, tag) {
     subChartInstance = new Chart(ctx, {
         type: "line",
         data: {
-            labels: series.labels,
+            labels: translateStoredLabel(series.labels),
             datasets: [{
-                label: sub,
+                label: translateStoredLabel(sub),
                 data: series.data
             }]
         }
@@ -391,7 +398,7 @@ function renderMultiLineChart(canvasId, labels, datasets) {
 function getGeneralAnalysis(entries) {
 
     if (!entries.length) {
-        return `<p>No data available</p>`;
+        return `<p>${t("status.noDataAvailable")}</p>`;
     }
 
     let total = 0;
@@ -466,34 +473,34 @@ function getGeneralAnalysis(entries) {
         <div class="insight-box">
 
             <br>
-            <p><strong>💰 Total Net:</strong> ${totalNetSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(total).toFixed(2)} ${currencyFromUserGlobal}</p>
-            <p><strong>📈 Income:</strong> + ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(income).toFixed(2)} ${currencyFromUserGlobal}</p>
-            <p><strong>📉 Expenses:</strong> - ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(expense).toFixed(2)} ${currencyFromUserGlobal}</p>
+            <p><strong>💰 ${t("analytics.totalNet")}</strong> ${totalNetSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(total).toFixed(2)} ${currencyFromUserGlobal}</p>
+            <p><strong>📈 ${t("analytics.income")}</strong> + ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(income).toFixed(2)} ${currencyFromUserGlobal}</p>
+            <p><strong>📉 ${t("analytics.expenses")}</strong> - ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(expense).toFixed(2)} ${currencyFromUserGlobal}</p>
 
             <br>
             <hr>
 
             <br>
-            <p><strong>📊 Average per Entry:</strong> ${averageSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(avg).toFixed(2)} ${currencyFromUserGlobal}</p>
+            <p><strong>📊 ${t("analytics.averagePerEntry")}</strong> ${averageSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(avg).toFixed(2)} ${currencyFromUserGlobal}</p>
 
-            <p><strong>🏆 Best Day:</strong> ${bestDay.date.toDate().toLocaleDateString()} ( + ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(bestDay.total).toFixed(2)} ${currencyFromUserGlobal})</p>
-            <p><strong>⚠️ Worst Day:</strong> ${worstDay.date.toDate().toLocaleDateString()} ( - ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(worstDay.total).toFixed(2)} ${currencyFromUserGlobal})</p>
-
-            <br>
-            <hr>
-
-            <br>
-            <p><strong>🥇 Top Performing Tag:</strong> ${maxTag?.[0]} ( ${maxTagSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(maxTag?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
-            <p><strong>💸 Most Costly Tag:</strong> ${minTag?.[0]} ( ${minTagSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(minTag?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
-
-            <p><strong>🥇 Top Subcategory:</strong> ${maxSub?.[0]} ( ${maxSubSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(maxSub?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
-            <p><strong>💸 Most Costly Subcategory:</strong> ${minSub?.[0]} ( ${minSubSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(minSub?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
+            <p><strong>🏆 ${t("analytics.bestDay")}</strong> ${bestDay.date.toDate().toLocaleDateString()} ( + ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(bestDay.total).toFixed(2)} ${currencyFromUserGlobal})</p>
+            <p><strong>⚠️ ${t("analytics.worstDay")}</strong> ${worstDay.date.toDate().toLocaleDateString()} ( - ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(worstDay.total).toFixed(2)} ${currencyFromUserGlobal})</p>
 
             <br>
             <hr>
 
             <br>
-            <p><strong>📊 Trend:</strong> ${getTrend(entries)}</p>
+            <p><strong>🥇 ${t("analytics.topPerformingTag")}</strong> ${translateStoredLabel(maxTag?.[0] || "")} ( ${maxTagSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(maxTag?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
+            <p><strong>💸 ${t("analytics.mostCostlyTag")}</strong> ${translateStoredLabel(minTag?.[0] || "")} ( ${minTagSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(minTag?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
+
+            <p><strong>🥇 ${t("analytics.topSubcategory")}</strong> ${translateStoredLabel(maxSub?.[0] || "")} ( ${maxSubSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(maxSub?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
+            <p><strong>💸 ${t("analytics.mostCostlySubcategory")}</strong> ${translateStoredLabel(minSub?.[0] || "")} ( ${minSubSymbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(minSub?.[1]).toFixed(2)} ${currencyFromUserGlobal})</p>
+
+            <br>
+            <hr>
+
+            <br>
+            <p><strong>📊 ${t("analytics.trend")}</strong> ${getTrend(entries)}</p>
 
         </div>
     `;

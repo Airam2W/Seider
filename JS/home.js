@@ -12,7 +12,8 @@ import {
     getFirestore,
     doc,
     setDoc,
-    getDoc
+    getDoc,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 import { GithubAuthProvider } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -20,6 +21,20 @@ import { GithubAuthProvider } from "https://www.gstatic.com/firebasejs/11.6.1/fi
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 import { encryptData } from "./encryption.js";
+import {
+    initI18n,
+    setLanguage,
+    getLanguage,
+    getStoredLanguageValue,
+    syncLanguageFromUser,
+    t,
+    translatePage
+} from "./i18n.js";
+
+await initI18n();
+translatePage();
+
+document.title = t("titles.home");
 
 const githubProvider = new GithubAuthProvider();
 
@@ -41,7 +56,10 @@ onAuthStateChanged(auth, async (user) => {
         const userRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userRef);
 
-        const userData = userSnap.data();
+        const userData = userSnap.data() || {};
+
+        await syncLanguageFromUser(userData);
+        updateLanguageToggle();
 
         // =======================
         // NEW USER
@@ -143,6 +161,18 @@ document.getElementById("googleBtn").onclick = async () => {
     }
 };
 
+document.getElementById("googleSignupBtn").onclick = async () => {
+
+    try {
+        await signInWithPopup(auth, provider);
+
+    } catch (error) {
+
+        console.error(error);
+        alert(error.message);
+    }
+};
+
 // =======================
 // GITHUB LOGIN
 // =======================
@@ -159,6 +189,14 @@ document.getElementById("githubBtn").onclick = async () => {
     }
 };
 
+document.getElementById("githubSignupBtn").onclick = async () => {
+    try {
+        await signInWithPopup(auth, githubProvider);
+    } catch (error) {
+        handleFirebaseError(error);
+    }
+};
+
 
 // =======================
 // LOGIN EMAIL
@@ -170,12 +208,12 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const password = loginPassword.value.trim();
 
     if (!validateEmail(email)) {
-        alert("Invalid email format");
+        alert(t("alerts.invalidEmailFormat"));
         return;
     }
 
     if (!validatePassword(password)) {
-        alert("Password must be at least 6 characters");
+        alert(t("alerts.passwordMinLength"));
         return;
     }
 
@@ -199,17 +237,17 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     const password = signupPassword.value.trim();
 
     if (!validateName(name)) {
-        alert("Name must be at least 2 characters");
+        alert(t("alerts.nameMinLength"));
         return;
     }
 
     if (!validateEmail(email)) {
-        alert("Invalid email format");
+        alert(t("alerts.invalidEmailFormat"));
         return;
     }
 
     if (!validatePassword(password)) {
-        alert("Password must be at least 6 characters");
+        alert(t("alerts.passwordMinLength"));
         return;
     }
 
@@ -220,7 +258,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
             displayName: name
         });
 
-        alert("Signup success");
+        alert(t("alerts.signupSuccess"));
 
     } catch (error) {
         handleFirebaseError(error);
@@ -257,6 +295,7 @@ async function createUserIfNotExists(user) {
 
             name: encryptData(user.displayName) || encryptData("No Name"),
             email: encryptData(user.email),
+            language: getStoredLanguageValue(),
 
             currency: "USD",
 
@@ -288,12 +327,12 @@ async function createUserIfNotExists(user) {
         // =======================
         const tags = [
 
-            { id: "electricity", name: "Electricity", color: "#FF5733" },
-            { id: "water", name: "Water", color: "#3399FF" },
-            { id: "food", name: "Food", color: "#33FF57" },
-            { id: "transport", name: "Transport", color: "#FF33A8" },
-            { id: "entertainment", name: "Entertainment", color: "#FF8C33" },
-            { id: "rent", name: "Rent", color: "#8C33FF" }
+            { id: "electricity", name: t("categories.electricity"), color: "#FF5733" },
+            { id: "water", name: t("categories.water"), color: "#3399FF" },
+            { id: "food", name: t("categories.food"), color: "#33FF57" },
+            { id: "transport", name: t("categories.transport"), color: "#FF33A8" },
+            { id: "entertainment", name: t("categories.entertainment"), color: "#FF8C33" },
+            { id: "rent", name: t("categories.rent"), color: "#8C33FF" }
 
         ];
 
@@ -317,27 +356,27 @@ async function createUserIfNotExists(user) {
             let subtags = [];
 
             if (tag.id === "food") {
-                subtags = ["Groceries", "Restaurant"];
+                subtags = [t("subcategories.groceries"), t("subcategories.restaurant")];
             }
 
             if (tag.id === "transport") {
-                subtags = ["Bus", "Car", "Taxi"];
+                subtags = [t("subcategories.bus"), t("subcategories.car"), t("subcategories.taxi")];
             }
 
             if (tag.id === "entertainment") {
-                subtags = ["Movies", "Games"];
+                subtags = [t("subcategories.movies"), t("subcategories.games")];
             }
 
             if (tag.id === "rent") {
-                subtags = ["House", "Apartment"];
+                subtags = [t("subcategories.house"), t("subcategories.apartment")];
             }
 
             if (tag.id === "water") {
-                subtags = ["Bill"];
+                subtags = [t("subcategories.bill")];
             }
 
             if (tag.id === "electricity") {
-                subtags = ["Bill"];
+                subtags = [t("subcategories.bill")];
             }
 
             for (let sub of subtags) {
@@ -386,26 +425,26 @@ function validateName(name) {
 }
 
 function handleFirebaseError(error) {
-    let message = "Something went wrong";
+    let message = t("alerts.somethingWentWrong");
 
     switch (error.code) {
         case "auth/email-already-in-use":
-            message = "Email already in use";
+            message = t("alerts.emailAlreadyInUse");
             break;
         case "auth/invalid-email":
-            message = "Invalid email";
+            message = t("alerts.invalidEmail");
             break;
         case "auth/user-not-found":
-            message = "User not found";
+            message = t("alerts.userNotFound");
             break;
         case "auth/wrong-password":
-            message = "Wrong password";
+            message = t("alerts.wrongPassword");
             break;
         case "auth/weak-password":
-            message = "Password should be at least 6 characters";
+            message = t("alerts.weakPassword");
             break;
         case "auth/popup-closed-by-user":
-            message = "Popup closed";
+            message = t("alerts.popupClosed");
             break;
     }
 
@@ -444,8 +483,8 @@ function updateDarkModeButton() {
 
     darkModeToggle.textContent =
         isDarkMode
-            ? "Light Mode"
-            : "Dark Mode";
+            ? t("common.lightMode")
+            : t("common.darkMode");
 }
 
 // INITIAL BUTTON STATE
@@ -469,3 +508,103 @@ darkModeToggle.onclick = () => {
 
     updateDarkModeButton();
 };
+
+const languageToggle =
+    document.getElementById("languageToggle");
+
+const languageMenu =
+    document.getElementById("languageMenu");
+
+const languageOptions =
+    document.querySelectorAll(".language-option");
+
+
+// =======================
+// UPDATE BUTTON
+// =======================
+function updateLanguageToggle() {
+
+    const current = getLanguage();
+
+    const labels = {
+        en: t("languages.english"),
+        es: t("languages.spanish"),
+        ja: t("languages.japanese"),
+        ko: t("languages.korean")
+    };
+
+    const arrow =
+        languageMenu.classList.contains("hidden")
+            ? "▾"
+            : "▴";
+
+    languageToggle.textContent =
+        `${labels[current]} 🌐 ${arrow}`;
+}
+
+
+// =======================
+// OPEN/CLOSE MENU
+// =======================
+languageToggle.onclick = () => {
+
+    languageMenu.classList.toggle("hidden");
+
+    updateLanguageToggle();
+};
+
+
+// =======================
+// SELECT LANGUAGE
+// =======================
+languageOptions.forEach(button => {
+
+    button.onclick = async () => {
+
+        const selectedLang =
+            button.dataset.lang;
+
+        await setLanguage(selectedLang);
+
+        translatePage();
+
+        updateDarkModeButton();
+
+        languageMenu.classList.add("hidden");
+
+        updateLanguageToggle();
+
+        const user = auth.currentUser;
+
+        if (user) {
+
+            await updateDoc(
+                doc(db, "users", user.uid),
+                {
+                    language: selectedLang
+                }
+            );
+        }
+    };
+});
+
+
+// =======================
+// CLOSE WHEN CLICK OUTSIDE
+// =======================
+document.addEventListener("click", (e) => {
+
+    const wrapper =
+        document.querySelector(".language-wrapper");
+
+    if (!wrapper.contains(e.target)) {
+
+        languageMenu.classList.add("hidden");
+
+        updateLanguageToggle();
+    }
+});
+
+
+// INITIAL
+updateLanguageToggle();

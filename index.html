@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Seider - Home</title>
+    <title data-i18n="titles.home">Seider - Home</title>
 
     <link rel="stylesheet" href="CSS/styles.css">
     <link rel="stylesheet" href="CSS/home.css">
@@ -11,14 +11,14 @@
 
 <body class="hidden">
 
-    <h1>Seider</h1>
+    <h1 data-i18n="app.name">Seider</h1>
 
-    Index Text
+    <p data-i18n="home.tagline">Your finance workspace, in one place.</p>
 
     <!-- BUTTONS -->
     <div class="auth-buttons">
-        <button id="btnLogin">Login</button>
-        <button id="btnSignup">Sign Up</button>
+        <button id="btnLogin" data-i18n="buttons.login">Login</button>
+        <button id="btnSignup" data-i18n="buttons.signup">Sign Up</button>
     </div>
 
     <!-- MODAL -->
@@ -27,99 +27,88 @@
         <!-- LOGIN -->
         <div id="loginBox" class="card hidden">
 
-            <h2>Welcome Back</h2>
-            <p class="auth-subtitle">
+            <h2 data-i18n="auth.welcomeBack">Welcome Back</h2>
+            <p class="auth-subtitle" data-i18n="auth.loginSubtitle">
                 Login to continue using Seider.
             </p>
 
             <form id="loginForm">
 
-                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="email" id="loginEmail" placeholder="Email" data-i18n-placeholder="placeholders.email"
+                    required>
 
-                <input type="password" minlength="6" id="loginPassword" placeholder="Password" required>
+                <input type="password" minlength="6" id="loginPassword" placeholder="Password"
+                    data-i18n-placeholder="placeholders.password" required>
 
-                <button type="submit">
-                    Login
-                </button>
+                <button type="submit" data-i18n="buttons.login">Login</button>
 
             </form>
 
             <!-- DIVIDER -->
             <div class="auth-divider">
-                <span>OR</span>
+                <span data-i18n="common.or">OR</span>
             </div>
 
             <!-- OAUTH -->
-            <button id="googleBtn" class="oauth-btn">
-                Continue with Google
-            </button>
+            <button id="googleBtn" class="oauth-btn" data-i18n="buttons.continueWithGoogle">Continue with
+                Google</button>
 
-            <button id="githubBtn" class="oauth-btn">
-                Continue with GitHub
-            </button>
+            <button id="githubBtn" class="oauth-btn" data-i18n="buttons.continueWithGitHub">Continue with
+                GitHub</button>
 
             <!-- SWITCH -->
             <p class="switch-auth">
-                Don't have an account?
-                <span id="goSignup">
-                    Sign Up
-                </span>
+                <span data-i18n="auth.noAccount" id="questionnaireLink">Don't have an account?</span>
+                <span id="goSignup" data-i18n="buttons.signup">Sign Up</span>
             </p>
 
-            <button class="close-btn" onclick="closeModal()">
-                Close
-            </button>
+            <button class="close-btn" onclick="closeModal()" data-i18n="common.close">Close</button>
 
         </div>
 
         <!-- SIGNUP -->
         <div id="signupBox" class="card hidden">
 
-            <h2>Create Account</h2>
+            <h2 data-i18n="auth.createAccountTitle">Create Account</h2>
 
-            <p class="auth-subtitle">
+            <p class="auth-subtitle" data-i18n="auth.signupSubtitle">
                 Start managing your finances smarter.
             </p>
 
             <form id="signupForm">
 
-                <input type="text" id="signupName" placeholder="Name" required>
+                <input type="text" id="signupName" placeholder="Name" data-i18n-placeholder="placeholders.name"
+                    required>
 
-                <input type="email" id="signupEmail" placeholder="Email" required>
+                <input type="email" id="signupEmail" placeholder="Email" data-i18n-placeholder="placeholders.email"
+                    required>
 
-                <input type="password" minlength="6" id="signupPassword" placeholder="Password" required>
+                <input type="password" minlength="6" id="signupPassword" placeholder="Password"
+                    data-i18n-placeholder="placeholders.password" required>
 
-                <button type="submit">
-                    Create Account
-                </button>
+                <button type="submit" data-i18n="buttons.createAccount">Create Account</button>
 
             </form>
 
             <!-- DIVIDER -->
             <div class="auth-divider">
-                <span>OR</span>
+                <span data-i18n="common.or">OR</span>
             </div>
 
             <!-- OAUTH -->
-            <button id="googleSignupBtn" class="oauth-btn">
-                Sign Up with Google
-            </button>
+            <button id="googleSignupBtn" class="oauth-btn" data-i18n="buttons.signupWithGoogle">Sign Up with
+                Google</button>
 
-            <button id="githubSignupBtn" class="oauth-btn">
-                Sign Up with GitHub
-            </button>
+            <button id="githubSignupBtn" class="oauth-btn" data-i18n="buttons.signupWithGitHub">Sign Up with
+                GitHub</button>
 
             <!-- SWITCH -->
             <p class="switch-auth">
-                Already have an account?
-                <span id="goLogin">
-                    Login
-                </span>
+                    <span data-i18n="auth.haveAccount" id="questionnaireLink">Already have an account?</span>
+                    <span id="goLogin" data-i18n="buttons.login">Login</span>
             </p>
 
-            <button class="close-btn" onclick="closeModal()">
-                Close
-            </button>
+            <button class="close-btn" onclick="closeModal()" data-i18n="common.close">Close</button>
 
         </div>
 
@@ -127,8 +116,41 @@
 
     <!-- SIDE BUTTONS LEFT -->
     <div class="side-buttons-left">
-        <button id="darkModeToggle" class="toggle-btn">Dark Mode</button>
+        <button id="darkModeToggle" class="toggle-btn" data-i18n="common.darkMode">Dark Mode</button>
     </div>
+
+    <!-- SIDE BUTTONS RIGHT TOP -->
+<div class="side-buttons-right-top">
+
+    <div class="language-wrapper">
+
+        <button id="languageToggle" class="toggle-btn language-toggle">
+            <span data-i18n="languages.selectorLabel">Language 🌐 ▾</span>
+        </button>
+
+        <div id="languageMenu" class="language-menu hidden">
+
+            <button class="language-option" data-lang="en" data-i18n="languages.english">
+                English
+            </button>
+
+            <button class="language-option" data-lang="es" data-i18n="languages.spanish">
+                Spanish
+            </button>
+
+            <button class="language-option" data-lang="ja" data-i18n="languages.japanese">
+                Japanese
+            </button>
+
+            <button class="language-option" data-lang="ko" data-i18n="languages.korean">
+                Korean
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
     <script>
         if (localStorage.getItem("darkMode") === "true") {

@@ -23,6 +23,17 @@ import { encryptData, decryptData } from "./encryption.js";
 import { getCurrencySymbol } from "./utils.js";
 
 import { currencies } from "./exchange.js";
+import {
+    initI18n,
+    translatePage,
+    t,
+    translateStoredLabel
+} from "./i18n.js";
+
+await initI18n();
+translatePage();
+
+document.title = t("titles.entry");
 
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -164,7 +175,10 @@ function updateTotal() {
     };
 
     // GLOBAL TOTAL
-    totalAmount.textContent = `Total: ${getCurrencySymbol(currencyFromUserGlobal)} ${totalGlobal} ${currencyFromUserGlobal}`;
+    totalAmount.dataset.rawTotal = String(totalGlobal);
+    totalAmount.textContent = t("labels.total", {
+        value: `${getCurrencySymbol(currencyFromUserGlobal)} ${totalGlobal} ${currencyFromUserGlobal}`
+    });
 }
 
 
@@ -238,9 +252,7 @@ document.getElementById("btnSave").onclick = async () => {
         };
     };
 
-    const totalText = totalAmount.textContent.replace(`Total: ${getCurrencySymbol(currencyFromUserGlobal)} `, "").trim();
-    const numberTotal = totalText.split(" ")[0].replace(/,/g, "");
-    const total = Number(numberTotal) || 0;
+    const total = Number(totalAmount.dataset.rawTotal || 0);
 
 
     const html = quill.root.innerHTML;
@@ -361,7 +373,7 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
     // ===== CONVERTER INPUT =====
     const convertInput = document.createElement("input");
     convertInput.type = "number";
-    convertInput.placeholder = "Foreign Amount";
+    convertInput.placeholder = t("entry.foreignAmount");
 
     // ===== CURRENCY SELECT =====
     const currencySelect = document.createElement("select");
@@ -374,7 +386,7 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
 
     // TITLE OF FOREIGN CURRENCY
     const titleOption = document.createElement("h4");
-    titleOption.textContent = "Convert to "+currencyFromUserGlobal+" from:";
+    titleOption.textContent = t("entry.convert", { currencyFromUserGlobal });
     titleOption.style.marginRight = "10px";
     
     
@@ -388,11 +400,11 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
 
     // ===== CONVERT BUTTON =====
     const btnConvertPlus = document.createElement("button");
-    btnConvertPlus.textContent = "Put in +";
+    btnConvertPlus.textContent = t("entry.putinPlus");
     btnConvertPlus.onclick = () => convertPlus(convertInput, inputPlus, convertInput.value, currencySelect.value);
 
     const btnConvertMinus = document.createElement("button");
-    btnConvertMinus.textContent = "Put in -";
+    btnConvertMinus.textContent = t("entry.putinMinus");
     btnConvertMinus.onclick = () => convertMinus(convertInput, inputMinus, convertInput.value, currencySelect.value);
 
     // ===== FILE INPUT (HIDDEN) =====
@@ -403,13 +415,13 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
 
     // ===== BUTTON SELECT FILE =====
     const btnUpload = document.createElement("button");
-    btnUpload.textContent = "Upload picture/PDF";
+    btnUpload.textContent = t("entry.upload");
     btnUpload.onclick = () => inputFile.click();
 
     // ===== FILE NAME =====
     const fileName = document.createElement("span");
     fileName.className = "file-name";
-    fileName.textContent = "No file";
+    fileName.textContent = t("entry.noFile");
 
     // ===== PREVIEW =====
     const preview = document.createElement("div");
@@ -417,7 +429,7 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
 
     // ===== DOWNLOAD BUTTON =====
     const btnDownload = document.createElement("button");
-    btnDownload.textContent = "Download";
+    btnDownload.textContent = t("entry.download");
     btnDownload.style.display = "none";
 
     btnDownload.onclick = () => {
@@ -622,14 +634,14 @@ function refreshAllSelects(newTagName = null) {
     tags.forEach(tag => {
       const option = document.createElement("option");
       option.value = tag.name;
-      option.textContent = tag.name;
+    option.textContent = translateStoredLabel(tag.name);
       select.appendChild(option);
     });
 
     // + New Tag option
     const createOption = document.createElement("option");
     createOption.value = "create";
-    createOption.textContent = "+ New Tag";
+    createOption.textContent = t("labels.newTag");
     select.appendChild(createOption);
 
     // Logic to determine which tag should be selected after refresh
@@ -640,7 +652,7 @@ function refreshAllSelects(newTagName = null) {
       // If user was on an existing tag → keep it (even if it was deleted, to avoid forcing them to switch to another tag)
       select.value = currentValue;
     } else {
-      // If user was on "create" option and didn't create a new tag → reset to default state (first tag or "+ New Tag" if no tags)
+    // If user was on "create" option and didn't create a new tag → reset to default state (first tag or localized new tag option if no tags)
       select.value = "create";
     }
   });
@@ -659,7 +671,7 @@ function createTagGroup(selectedTag = null) {
     tags.forEach(tag => {
         const option = document.createElement("option");
         option.value = tag.name;
-        option.textContent = tag.name;
+        option.textContent = translateStoredLabel(tag.name);
 
         if (tag.name === selectedTag) {
             option.selected = true;
@@ -671,7 +683,7 @@ function createTagGroup(selectedTag = null) {
     // + New Tag
     const createOption = document.createElement("option");
     createOption.value = "create";
-    createOption.textContent = "+ New Tag";
+    createOption.textContent = t("labels.newTag");
     select.appendChild(createOption);
 
     select.onchange = () => {
@@ -691,10 +703,10 @@ function createTagGroup(selectedTag = null) {
     };
 
     // ===== DELETE Group =====
-    const btnDeleteGroup = document.createElement("button");
-    btnDeleteGroup.textContent = "Delete Group";
-    btnDeleteGroup.onclick = () => {
-        if (!confirm("Delete this Group?")) return;
+    const btndeleteTag = document.createElement("button");
+    btndeleteTag.textContent = t("entry.delete");
+    btndeleteTag.onclick = () => {
+        if (!confirm(t("alerts.deleteCategory"))) return;
         group.remove();
         updateTotal();
     };
@@ -705,7 +717,7 @@ function createTagGroup(selectedTag = null) {
 
     // ===== ADD SUBTAG Group =====
     const btnAddSubtag = document.createElement("button");
-    btnAddSubtag.textContent = "+ Add Item";
+    btnAddSubtag.textContent = t("buttons.addSubcategory");
     btnAddSubtag.onclick = () => {
         createSubtagGroup(select, subtagsContainer);
     };
@@ -717,7 +729,7 @@ function createTagGroup(selectedTag = null) {
 
     // ===== APPEND =====
     header.appendChild(select);
-    header.appendChild(btnDeleteGroup);
+    header.appendChild(btndeleteTag);
     header.appendChild(totalTag);
 
     group.appendChild(header);
@@ -740,7 +752,7 @@ function createSubtagGroup(tagSelect, container, subtagName = null, items = []) 
     subs.forEach(sub => {
         const option = document.createElement("option");
         option.value = sub;
-        option.textContent = sub;
+        option.textContent = translateStoredLabel(sub);
 
         if (sub === subtagName) option.selected = true;
 
@@ -750,7 +762,7 @@ function createSubtagGroup(tagSelect, container, subtagName = null, items = []) 
     // + New Subtag option
     const createOption = document.createElement("option");
     createOption.value = "create_subtag";
-    createOption.textContent = "+ New Subtag";
+    createOption.textContent = t("buttonsaddSubcategory");
     subtagSelect.appendChild(createOption);
 
     subtagSelect.onchange = () => {
@@ -765,7 +777,7 @@ function createSubtagGroup(tagSelect, container, subtagName = null, items = []) 
 
     // ===== ADD SUB ITEM =====
     const btnAddSub = document.createElement("button");
-    btnAddSub.textContent = "+ Add SubItem";
+    btnAddSub.textContent = t("buttons.addLineItem");
     btnAddSub.onclick = () => createUIEntry(null, tagSelect, itemsDiv);
 
     // ===== DELETE SUBTAG =====
@@ -871,7 +883,7 @@ function refreshAllSubtagSelects(newSubtagName = null) {
         subs.forEach(sub => {
             const option = document.createElement("option");
             option.value = sub;
-            option.textContent = sub;
+            option.textContent = translateStoredLabel(sub);
             select.appendChild(option);
         });
 
@@ -975,7 +987,7 @@ document.getElementById("btnCancel").onclick = () => {
 // ======================
 const quill = new Quill('#editor', {
     theme: 'snow',
-    placeholder: 'Add any notes about this entry...',
+    placeholder: t("placeholders.notes"),
     modules: {
         toolbar: [
             ['bold', 'italic', 'underline'],
@@ -1017,8 +1029,8 @@ function updateDarkModeButton() {
 
     darkModeToggle.textContent =
         isDarkMode
-            ? "Light Mode"
-            : "Dark Mode";
+            ? t("common.lightMode")
+            : t("common.darkMode");
 }
 
 // INITIAL BUTTON STATE
