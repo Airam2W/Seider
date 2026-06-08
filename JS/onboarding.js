@@ -207,7 +207,7 @@ finishBtn.onclick = async () => {
             }
         );
 
-        window.location.href = "/HTML/timeline.html";
+        window.location.href = "/Seider/HTML/timeline.html";
 
     } catch (error) {
 

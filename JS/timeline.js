@@ -155,7 +155,7 @@ const koOption = document.getElementById("ko");
 // =======================
 document.getElementById("btnLogout").onclick = async () => {
     await signOut(auth);
-    window.location.href = "/index.html";
+    window.location.href = "/Seider/index.html";
 };
 
 
@@ -171,7 +171,7 @@ document.getElementById("btnAdd").onclick = async () => {
 
         await loadEntries(user.uid);
 
-        window.location.href = "/HTML/entry.html";
+        window.location.href = "/Seider/HTML/entry.html";
 
     } catch (error) {
         console.error(error);
@@ -607,7 +607,7 @@ saveSettingsBtn.onclick = async () => {
 goToOnboardingBtn.onclick = () => {
 
     window.location.href =
-        "/HTML/onboarding.html";
+        "/Seider/HTML/onboarding.html";
 };
 
 // =======================
@@ -1397,7 +1397,7 @@ async function deleteAccount() {
         // DELETE AUTH ACCOUNT
         await auth.currentUser.delete();
         customAlert(t("alerts.accountDeleted"), "Success", "✅");
-        window.location.href = "/index.html";
+        window.location.href = "/Seider/index.html";
     } catch (error) {
         console.error(error);
         customAlert(t("alerts.errorDeletingAccount"), "Alert", "⚠️");

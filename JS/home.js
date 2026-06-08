@@ -76,14 +76,14 @@ onAuthStateChanged(auth, async (user) => {
             !userData.onboardingCompleted
         ) {
 
-            window.location.href = "/HTML/onboarding.html";
+            window.location.href = "/Seider/HTML/onboarding.html";
             return;
         }
 
         // =======================
         // EXISTING USER
         // =======================
-        window.location.href = "/HTML/timeline.html";
+        window.location.href = "/Seider/HTML/timeline.html";
 
     } catch (error) {
         console.error(error);
