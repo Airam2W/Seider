@@ -30,6 +30,18 @@ import {
     translateStoredLabel
 } from "./i18n.js";
 
+import {
+    openCustomModal,
+    closeCustomModal,
+    customAlert,
+    customConfirm
+} from "./customModals.js";
+
+import {
+    showLoading,
+    hideLoading
+} from "./loading.js";
+
 await initI18n();
 translatePage();
 
@@ -57,6 +69,8 @@ let currencyFromUserGlobal = "...";
 
 import { exchangeRates, loadExchangeRates } from "./exchange.js";
 
+showLoading();
+
 
 // =======================
 // AUTH
@@ -77,6 +91,7 @@ onAuthStateChanged(auth, async (user) => {
         }
         addItem();
     }
+    hideLoading();
 });
 
 // =======================
@@ -116,7 +131,7 @@ async function loadTags(uid) {
     }
 
     updateTotal();
-    
+
 }
 
 
@@ -161,24 +176,23 @@ function updateTotal() {
 
             // SET SUBTAG TOTAL
             const subTotalSpan = sub.querySelector(".subtag-total");
-            
-            if (subTotalSpan) subTotalSpan.textContent = `${getCurrencySymbol(currencyFromUserGlobal)} ${totalSub} ${currencyFromUserGlobal}`;
+
+            if (subTotalSpan) subTotalSpan.textContent = t("labels.subtagTotal") + `${getCurrencySymbol(currencyFromUserGlobal)} ${totalSub} ${currencyFromUserGlobal}`;
 
             totalTag += totalSub;
         };
 
         // SET TAG TOTAL
         const tagTotalSpan = group.querySelector(".tag-total");
-        if (tagTotalSpan) tagTotalSpan.textContent = `${getCurrencySymbol(currencyFromUserGlobal)} ${totalTag} ${currencyFromUserGlobal}`;
+        if (tagTotalSpan) tagTotalSpan.textContent = t("labels.tagTotal") + `${getCurrencySymbol(currencyFromUserGlobal)} ${totalTag} ${currencyFromUserGlobal}`;
 
         totalGlobal += totalTag;
     };
 
     // GLOBAL TOTAL
     totalAmount.dataset.rawTotal = String(totalGlobal);
-    totalAmount.textContent = t("labels.total", {
-        value: `${getCurrencySymbol(currencyFromUserGlobal)} ${totalGlobal} ${currencyFromUserGlobal}`
-    });
+    totalAmount.textContent = t("labels.total") + ` ${getCurrencySymbol(currencyFromUserGlobal)} ${totalGlobal} ${currencyFromUserGlobal}`;
+
 }
 
 
@@ -186,6 +200,8 @@ function updateTotal() {
 // SAVE ENTRY
 // =======================
 document.getElementById("btnSave").onclick = async () => {
+
+    showLoading();
 
     if (!currentUser) return;
 
@@ -289,6 +305,8 @@ document.getElementById("btnSave").onclick = async () => {
     } catch (error) {
         console.error(error);
     }
+
+    hideLoading();
 };
 
 document.getElementById("btnAddGroup").onclick = () => {
@@ -356,6 +374,7 @@ async function loadEntry(id) {
 function createUIEntry(item = null, tagSelect = null, container = null) {
     const div = document.createElement("div");
     div.className = "item-row";
+    div.classList.add("modern-item");
 
     // ===== INPUTS =====
     const inputPlus = document.createElement("input");
@@ -385,11 +404,11 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
     }
 
     // TITLE OF FOREIGN CURRENCY
-    const titleOption = document.createElement("h4");
+    const titleOption = document.createElement("span");
     titleOption.textContent = t("entry.convert", { currencyFromUserGlobal });
     titleOption.style.marginRight = "10px";
-    
-    
+
+
 
     currencies.forEach(currency => {
         const option = document.createElement("option");
@@ -412,6 +431,18 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
     inputFile.type = "file";
     inputFile.accept = "image/*,application/pdf";
     inputFile.style.display = "none";
+
+    // ===== CAMERA CAPTURE (MOBILE) =====
+    const inputCamera = document.createElement("input");
+    inputCamera.type = "file";
+    inputCamera.accept = "image/*";
+    inputCamera.capture = "environment";
+    inputCamera.style.display = "none";
+
+    // ===== BUTTON TAKE PICTURE =====
+    const btnTake = document.createElement("button");
+    btnTake.textContent = t("entry.takePicture");
+    btnTake.onclick = () => inputCamera.click();
 
     // ===== BUTTON SELECT FILE =====
     const btnUpload = document.createElement("button");
@@ -510,23 +541,47 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
     inputMinus.oninput = updateTotal;
 
     // ===== APPEND =====
-    div.appendChild(inputPlus);
-    div.appendChild(inputMinus);
+    const inputBox = document.createElement("div");
+    inputBox.className = "input-box";
 
-    div.appendChild(btnUpload);
-    div.appendChild(inputFile);
+    inputBox.appendChild(inputPlus);
+    inputBox.appendChild(inputMinus);
 
-    div.appendChild(fileName);
-    div.appendChild(preview);
-    div.appendChild(btnDownload);
+    const converterBox = document.createElement("div");
+    converterBox.className = "converter-box";
 
-    div.appendChild(titleOption);
+    const converterInputContainer = document.createElement("div");
+    converterInputContainer.style.display = "flex";
+    converterInputContainer.style.alignItems = "center";
 
-    div.appendChild(convertInput);
-    div.appendChild(currencySelect);
+    converterBox.appendChild(titleOption);
+    converterInputContainer.appendChild(convertInput);
+    converterInputContainer.appendChild(currencySelect);
+    converterBox.appendChild(converterInputContainer);
+    converterBox.appendChild(btnConvertPlus);
+    converterBox.appendChild(btnConvertMinus);
 
-    div.appendChild(btnConvertPlus);
-    div.appendChild(btnConvertMinus);
+    const uploadBox = document.createElement("div");
+    uploadBox.className = "upload-box";
+
+
+    uploadBox.appendChild(fileName);
+    uploadBox.appendChild(btnTake);
+    uploadBox.appendChild(btnUpload);
+    uploadBox.appendChild(btnDownload);
+
+    const previewBox = document.createElement("div");
+    previewBox.className = "preview-box";
+
+    previewBox.appendChild(inputFile);
+    previewBox.appendChild(inputCamera);
+    previewBox.appendChild(preview);
+
+
+    div.appendChild(inputBox);
+    div.appendChild(converterBox);
+    div.appendChild(uploadBox);
+    div.appendChild(previewBox);
 
     div.appendChild(btnDelete);
 
@@ -593,23 +648,23 @@ function convertMinus(convertInput, inputMinus, amount, fromCurrency) {
 // TAG
 // =======================
 document.getElementById("btnCreateTag").onclick = async () => {
-  const tagName = document.getElementById("newTagName").value.trim();
-  if (!tagName || !currentUser) return;
+    const tagName = document.getElementById("newTagName").value.trim();
+    if (!tagName || !currentUser) return;
 
-  try {
-    await addDoc(collection(db, "users", currentUser.uid, "tags"), { name: tagName });
+    try {
+        await addDoc(collection(db, "users", currentUser.uid, "tags"), { name: tagName });
 
-    await loadTags(currentUser.uid);
+        await loadTags(currentUser.uid);
 
-    // Refresh all selects with the new tag and select it
-    refreshAllSelects(tagName);
+        // Refresh all selects with the new tag and select it
+        refreshAllSelects(tagName);
 
-    // Close modal and reset input
-    document.getElementById("newTagModal").classList.add("hidden");
-    document.getElementById("newTagName").value = "";
-  } catch (error) {
-    console.error(error);
-  }
+        // Close modal and reset input
+        document.getElementById("newTagModal").classList.add("hidden");
+        document.getElementById("newTagName").value = "";
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 
@@ -623,39 +678,39 @@ document.getElementById("btnCancelTag").onclick = () => {
 };
 
 function refreshAllSelects(newTagName = null) {
-  const selects = document.querySelectorAll(".tag-group .tag-header select");
+    const selects = document.querySelectorAll(".tag-group .tag-header select");
 
-  selects.forEach(select => {
-    const currentValue = select.value;
+    selects.forEach(select => {
+        const currentValue = select.value;
 
-    select.innerHTML = "";
+        select.innerHTML = "";
 
-    // Load tags again
-    tags.forEach(tag => {
-      const option = document.createElement("option");
-      option.value = tag.name;
-    option.textContent = translateStoredLabel(tag.name);
-      select.appendChild(option);
+        // Load tags again
+        tags.forEach(tag => {
+            const option = document.createElement("option");
+            option.value = tag.name;
+            option.textContent = translateStoredLabel(tag.name);
+            select.appendChild(option);
+        });
+
+        // + New Tag option
+        const createOption = document.createElement("option");
+        createOption.value = "create";
+        createOption.textContent = t("labels.newTag");
+        select.appendChild(createOption);
+
+        // Logic to determine which tag should be selected after refresh
+        if (currentValue === "create" && newTagName) {
+            // If user just created a new tag → select it
+            select.value = newTagName;
+        } else if (currentValue !== "create") {
+            // If user was on an existing tag → keep it (even if it was deleted, to avoid forcing them to switch to another tag)
+            select.value = currentValue;
+        } else {
+            // If user was on "create" option and didn't create a new tag → reset to default state (first tag or localized new tag option if no tags)
+            select.value = "create";
+        }
     });
-
-    // + New Tag option
-    const createOption = document.createElement("option");
-    createOption.value = "create";
-    createOption.textContent = t("labels.newTag");
-    select.appendChild(createOption);
-
-    // Logic to determine which tag should be selected after refresh
-    if (currentValue === "create" && newTagName) {
-      // If user just created a new tag → select it
-      select.value = newTagName;
-    } else if (currentValue !== "create") {
-      // If user was on an existing tag → keep it (even if it was deleted, to avoid forcing them to switch to another tag)
-      select.value = currentValue;
-    } else {
-    // If user was on "create" option and didn't create a new tag → reset to default state (first tag or localized new tag option if no tags)
-      select.value = "create";
-    }
-  });
 }
 
 
@@ -706,7 +761,12 @@ function createTagGroup(selectedTag = null) {
     const btndeleteTag = document.createElement("button");
     btndeleteTag.textContent = t("entry.delete");
     btndeleteTag.onclick = () => {
-        if (!confirm(t("alerts.deleteCategory"))) return;
+        if (!customConfirm({
+            title: t("alerts.deleteCategory"),
+            message: t("alerts.deleteCategoryMessage"),
+            confirmText: t("buttons.delete"),
+            cancelText: t("buttons.cancel")
+        })) return;
         group.remove();
         updateTotal();
     };
@@ -725,16 +785,17 @@ function createTagGroup(selectedTag = null) {
     // ===== TOTAL TAG =====
     const totalTag = document.createElement("span");
     totalTag.className = "tag-total";
-    totalTag.textContent = getCurrencySymbol(currencyFromUserGlobal) + " 0 " + currencyFromUserGlobal;
+    totalTag.textContent = t("labels.tagTotal") + getCurrencySymbol(currencyFromUserGlobal) + " 0 " + currencyFromUserGlobal;
 
     // ===== APPEND =====
     header.appendChild(select);
     header.appendChild(btndeleteTag);
-    header.appendChild(totalTag);
+
 
     group.appendChild(header);
     group.appendChild(subtagsContainer);
     group.appendChild(btnAddSubtag);
+    group.appendChild(totalTag);
 
     itemsContainer.appendChild(group);
 }
@@ -742,6 +803,9 @@ function createTagGroup(selectedTag = null) {
 function createSubtagGroup(tagSelect, container, subtagName = null, items = []) {
     const subGroup = document.createElement("div");
     subGroup.className = "subtag-Group";
+
+    const subtagHeader = document.createElement("div");
+    subtagHeader.className = "subtag-header";
 
     // ===== SELECT SUBTAG =====
     const subtagSelect = document.createElement("select");
@@ -762,7 +826,7 @@ function createSubtagGroup(tagSelect, container, subtagName = null, items = []) 
     // + New Subtag option
     const createOption = document.createElement("option");
     createOption.value = "create_subtag";
-    createOption.textContent = t("buttonsaddSubcategory");
+    createOption.textContent = t("buttons.addSubcategory");
     subtagSelect.appendChild(createOption);
 
     subtagSelect.onchange = () => {
@@ -791,14 +855,17 @@ function createSubtagGroup(tagSelect, container, subtagName = null, items = []) 
     // ===== TOTAL SUBTAG =====
     const totalSubtag = document.createElement("span");
     totalSubtag.className = "subtag-total";
-    totalSubtag.textContent = getCurrencySymbol(currencyFromUserGlobal) + " 0 " + currencyFromUserGlobal;
+    totalSubtag.textContent = t("labels.subtagTotal") + getCurrencySymbol(currencyFromUserGlobal) + " 0 " + currencyFromUserGlobal;
 
     // ===== APPEND =====
-    subGroup.appendChild(subtagSelect);
-    subGroup.appendChild(btnDeleteSub);
-    subGroup.appendChild(totalSubtag);
+    subtagHeader.appendChild(subtagSelect);
+    subtagHeader.appendChild(btnDeleteSub);
+
+
+    subGroup.appendChild(subtagHeader);
     subGroup.appendChild(itemsDiv);
     subGroup.appendChild(btnAddSub);
+    subGroup.appendChild(totalSubtag);
 
     container.appendChild(subGroup);
 
@@ -991,7 +1058,7 @@ const quill = new Quill('#editor', {
     modules: {
         toolbar: [
             ['bold', 'italic', 'underline'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
             [{ 'color': [] }, { 'background': [] }],
             [{ 'align': [] }],
             ['clean']

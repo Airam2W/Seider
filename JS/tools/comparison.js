@@ -32,24 +32,24 @@ export async function loadComparison() {
 
         const grouped = buildGrouped(entries, type);
 
-        // ✅ SUMMARY
+        // SUMMARY
         document.getElementById("comparisonSummary").innerHTML =
             getComparisonSummary(current, previous);
 
-        // ✅ WHY (usa grouped)
+        // WHY
         document.getElementById("comparisonWhy").innerHTML =
             getWhyChanged(grouped);
 
-        // ✅ TAG HISTORY
+        // TAG HISTORY
         renderTagHistory(grouped);
 
-        // ✅ SUBTAG HISTORY
+        // SUBTAG HISTORY
         updateSubtagComparison(entries);
 
-        // ✅ HISTORY
+        // HISTORY
         renderMonthlyHistory(entries);
 
-        // ✅ TREND
+        // TREND
         document.getElementById("trendPrediction").innerHTML =
             getTrendPrediction(grouped);
     }
@@ -178,7 +178,7 @@ function sumEntries(entries) {
             const val = (i.plus || 0) - (i.minus || 0);
             return sum + val;
         }
-        , 0);
+            , 0);
         return total + entryTotal;
     }, 0);
 }
@@ -239,9 +239,9 @@ function getWhyChanged(grouped) {
         changes.push({ tag, diff });
     });
 
-    changes.sort((a,b)=>Math.abs(b.diff) - Math.abs(a.diff));
+    changes.sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff));
 
-    const top3 = changes.slice(0,3);
+    const top3 = changes.slice(0, 3);
 
     let diffSimbol = "+";
     if (top3[0].diff < 0) diffSimbol = "-";
@@ -249,17 +249,17 @@ function getWhyChanged(grouped) {
     return `
         ${top3.map(c => {
 
-            const type = c.diff < 0 
-                ? t("analytics.higherSpending") 
-                : t("analytics.lowerSpending");
+        const type = c.diff < 0
+            ? t("analytics.higherSpending")
+            : t("analytics.lowerSpending");
 
-            return `
+        return `
                 <p>
                 <b>${c.tag}</b>: ${type} 
                 ( ${diffSimbol} ${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(c.diff).toFixed(2)} ${currencyFromUserGlobal})
                 </p>
             `;
-        }).join("")}
+    }).join("")}
 
         <p>${t("analytics.strongestImpact")}</p>
     `;
@@ -326,7 +326,16 @@ function renderTagHistory(grouped) {
 
     tagChart = new Chart(ctx, {
         type: "line",
-        data: { labels, datasets }
+        data: { labels, datasets },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            }
+        }
     });
 }
 
@@ -402,6 +411,7 @@ function renderMultiLineChart(canvasId, labels, datasets) {
             datasets
         },
         options: {
+            maintainAspectRatio: false,
             responsive: true,
             plugins: {
                 legend: {
@@ -427,7 +437,7 @@ function renderMonthlyHistory(entries) {
 
     entries.forEach(e => {
         const d = e.date.toDate();
-        const key = `${d.getFullYear()}-${d.getMonth()+1}`;
+        const key = `${d.getFullYear()}-${d.getMonth() + 1}`;
 
         if (!map[key]) map[key] = 0;
         map[key] += e.total || 0;
@@ -450,7 +460,7 @@ function renderMonthlyHistory(entries) {
 
 function getPeriodKey(date, type) {
     if (type === "month") {
-        return `${date.getFullYear()}-${date.getMonth()+1}`;
+        return `${date.getFullYear()}-${date.getMonth() + 1}`;
     }
 
     if (type === "week") {
@@ -474,7 +484,7 @@ function renderTrendPrediction(entries) {
     const container = document.getElementById("trendPrediction");
 
     const values = entries
-        .sort((a,b)=>a.date.seconds - b.date.seconds)
+        .sort((a, b) => a.date.seconds - b.date.seconds)
         .map(e => e.total || 0);
 
     if (values.length < 2) {
@@ -532,5 +542,5 @@ function getTrendPrediction(grouped) {
 }
 
 function sumValues(obj) {
-    return Object.values(obj).reduce((a,b)=>a+b,0);
+    return Object.values(obj).reduce((a, b) => a + b, 0);
 }

@@ -31,6 +31,13 @@ import {
     translatePage
 } from "./i18n.js";
 
+import {
+    openCustomModal,
+    closeCustomModal,
+    customAlert,
+    customConfirm
+} from "./customModals.js";
+
 await initI18n();
 translatePage();
 
@@ -108,6 +115,46 @@ function closeModal() {
 document.getElementById("btnLogin").onclick = () => openModal("login");
 document.getElementById("btnSignup").onclick = () => openModal("signup");
 
+document.getElementById("heroLoginBtn")?.addEventListener("click", () => {
+    document.getElementById("btnLogin").click();
+});
+
+document.getElementById("ctaSignupBtn")?.addEventListener("click", () => {
+    document.getElementById("btnSignup").click();
+});
+
+document.getElementById("ctaLoginBtn")?.addEventListener("click", () => {
+    document.getElementById("btnLogin").click();
+});
+
+// =======================
+// SCROLL TO TOP
+// =======================
+document.getElementById("btnScrollTop").onclick = () => {
+    scrollToTop(true);
+};
+
+const btnScroll = document.getElementById("btnScrollTop");
+
+if (btnScroll) {
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 1) {
+            btnScroll.style.display = "block";
+        }
+        else {
+            btnScroll.style.display = "none";
+        }
+    });
+}
+
+function scrollToTop(smooth = true) {
+    window.scrollTo({
+        top: 0,
+        behavior: smooth ? "smooth" : "auto"
+    });
+}
+
+
 // CLICK
 modal.addEventListener("click", (e) => {
     if (e.target === modal) closeModal();
@@ -156,7 +203,7 @@ document.getElementById("googleBtn").onclick = async () => {
     } catch (error) {
 
         console.error(error);
-        alert(error.message);
+        customAlert(error.message, "Alert", "⚠️");
 
     }
 };
@@ -169,7 +216,7 @@ document.getElementById("googleSignupBtn").onclick = async () => {
     } catch (error) {
 
         console.error(error);
-        alert(error.message);
+        customAlert(error.message, "Alert", "⚠️");
     }
 };
 
@@ -208,12 +255,12 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const password = loginPassword.value.trim();
 
     if (!validateEmail(email)) {
-        alert(t("alerts.invalidEmailFormat"));
+        customAlert(t("alerts.invalidEmailFormat"), "Alert", "⚠️");
         return;
     }
 
     if (!validatePassword(password)) {
-        alert(t("alerts.passwordMinLength"));
+        customAlert(t("alerts.passwordMinLength"), "Alert", "⚠️");
         return;
     }
 
@@ -237,17 +284,17 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     const password = signupPassword.value.trim();
 
     if (!validateName(name)) {
-        alert(t("alerts.nameMinLength"));
+        customAlert(t("alerts.nameMinLength"), "Alert", "⚠️");
         return;
     }
 
     if (!validateEmail(email)) {
-        alert(t("alerts.invalidEmailFormat"));
+        customAlert(t("alerts.invalidEmailFormat"), "Alert", "⚠️");
         return;
     }
 
     if (!validatePassword(password)) {
-        alert(t("alerts.passwordMinLength"));
+        customAlert(t("alerts.passwordMinLength"), "Alert", "⚠️");
         return;
     }
 
@@ -258,7 +305,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
             displayName: name
         });
 
-        alert(t("alerts.signupSuccess"));
+        customAlert(t("alerts.signupSuccess"), "Success", "✅");
 
     } catch (error) {
         handleFirebaseError(error);
@@ -448,7 +495,7 @@ function handleFirebaseError(error) {
             break;
     }
 
-    alert(message);
+    customAlert(message, "Alert", "⚠️");
 }
 
 
@@ -608,3 +655,23 @@ document.addEventListener("click", (e) => {
 
 // INITIAL
 updateLanguageToggle();
+
+// =======================
+// NAV SCROLL BEHAVIOR
+// =======================
+const siteNav = document.getElementById("siteNav");
+if (siteNav) {
+    const onNavScroll = () => {
+        siteNav.classList.toggle("nav-scrolled", window.scrollY > 20);
+    };
+    window.addEventListener("scroll", onNavScroll, { passive: true });
+    onNavScroll(); // run once on load
+}
+
+// =======================
+// HERO SIGN UP BUTTON
+// Clicks the primary #btnSignup trigger
+// =======================
+document.getElementById("heroSignupBtn")?.addEventListener("click", () => {
+    document.getElementById("btnSignup").click();
+});

@@ -38,7 +38,8 @@
         "saveMoney": "貯金する",
         "trackExpenses": "支出を追跡する",
         "reduceDebt": "負債を減らす",
-        "improveHabits": "習慣を改善する"
+        "improveHabits": "習慣を改善する",
+        "loading": "読み込み中..."
     },
     "buttons": {
         "login": "ログイン",
@@ -59,7 +60,8 @@
         "settings": "設定 ⚙︎",
         "logout": "ログアウト ➜]",
         "exchangeTable": "為替レート表",
-        "smartTools": "スマートツール",
+        "smartTools": "スマートツール ▾",
+        "smartToolsClose": "スマートツール ▴",
         "newBadge": "NEW!",
         "deleteAccount": "アカウント削除",
         "viewEdit": "表示 / 編集",
@@ -67,6 +69,8 @@
         "hideTotal": "非表示 ⌣",
         "createTag": "作成",
         "cancelTag": "キャンセル",
+        "cancel": "キャンセル",
+        "confirm": "確認",
         "closeIcon": "✕",
         "darkMode": "ダークモード ☾",
         "lightMode": "ライトモード ☀︎",
@@ -83,7 +87,131 @@
     },
     "home": {
         "tagline": "あなたのお金のワークスペースを、これひとつに。",
-        "indexText": "お金の流れを、より明確に管理。"
+        "indexText": "お金の流れを、より明確に管理。",
+        "heroEyebrow": "わかりやすいパーソナルファイナンス",
+        "heroTitle": "ひとつの安全なワークスペースで、お金を記録し、守り、理解する。",
+        "heroLead": "Seider は、記録・カテゴリ・インサイト・個人設定をまとめ、細部を見失わずに全体像を把握できるようにします。",
+        "livePreview": "ライブプレビュー",
+        "previewTitle": "家計を見やすく整理した画面",
+        "previewText": "タイムライン、初期設定、スマートツールが初回ログインから連携します。",
+        "featurePillFast": "すばやい設定",
+        "featurePillEncrypted": "暗号化データ",
+        "featurePillMultiLang": "多言語対応",
+        "metricWorkspace": "ワークスペース",
+        "metricLanguages": "言語",
+        "metricInsights": "スマートツール",
+        "metricEncrypted": "暗号化された項目",
+        "benefitsKicker": "Seider が選ばれる理由",
+        "benefitsTitle": "Seider が選ばれる理由",
+        "benefitsIntro": "お金の記録をより整理しやすくし、体験を自分用に整え、より良い判断をしやすくするための設計です。",
+        "benefitOneTitle": "すべてを一本のタイムラインに",
+        "benefitOneText": "メモ、カテゴリ、サブカテゴリ、レシート付きで記録し、家計の履歴を整理できます。",
+        "benefitTwoTitle": "パターンが見える分析",
+        "benefitTwoText": "将来予測、支出分析、検索、比較で、問題になる前に傾向を把握できます。",
+        "benefitThreeTitle": "初日からあなた向けに",
+        "benefitThreeText": "初期設定で基準通貨、残高、収入の頻度、目標を取得し、画面をあなたに合わせます。",
+        "securityKicker": "セキュリティとプライバシー",
+        "securityTitle": "セキュリティとプライバシー",
+        "securityIntro": "Seider は、家計データを個人的に、読みやすく、そしてあなたの管理下に保つよう設計されています。",
+        "securityOneTitle": "機密データの暗号化",
+        "securityOneText": "個人情報は保存前に暗号化されるため、平文のまま見えることはありません。",
+        "securityTwoTitle": "個別のアカウント管理",
+        "securityTwoText": "認証と Firestore のデータはユーザーごとに分かれ、各ワークスペースを分離します。",
+        "securityThreeTitle": "言語を選択",
+        "securityThreeText": "UI は英語、スペイン語、日本語、韓国語に対応し、選択した言語を保存します。",
+        "howItWorksKicker": "使い方",
+        "howItWorksTitle": "使い方",
+        "howItWorksIntro": "登録から日常利用まで、シンプルな流れです。",
+        "stepOneTitle": "1. アカウントを作成",
+        "stepOneText": "メール、Google、GitHub で素早く始められます。",
+        "stepTwoTitle": "2. Seider を自分用に設定",
+        "stepTwoText": "初期設定で通貨、残高、収入の頻度、財務目標を入力します。",
+        "stepThreeTitle": "3. 記録して改善",
+        "stepThreeText": "タイムライン、ツール、設定を使って支出を追跡し、習慣を調整できます。",
+        "closingKicker": "始める準備はできましたか？",
+        "closingTitle": "家計に明確さをもたらす準備はできていますか？",
+        "closingText": "Seider から始めて、日々のお金の管理をプライベートで多言語なワークスペースに変えましょう。",
+        "footerNote": "Seider は、家計の記録をシンプルかつプライベートに保ちます。",
+        "hero": {
+            "badge": "簡単な設定 • 暗号化されたデータ • 多言語対応",
+            "title": {
+                "line1": "個人の財務を、",
+                "line2": "わかりやすく。"
+            },
+            "description": "1つの安全なワークスペースで、あなたのお金を追跡・保護・把握。Seiderは、全体の状況を見失うことなく詳細まで管理できるよう、収支入力、カテゴリー、インサイト、そして個人に合わせた設定を1つにまとめます。"
+        },
+        "preview": {
+            "languages": "言語",
+            "tools": "スマートツール",
+            "encryption": "暗号化",
+            "workspace": "ワークスペース",
+            "title": "ライブプレビュー",
+            "text": {
+                "balance": "残高",
+                "month": "今月",
+                "groceries": "食費",
+                "salary": "給与",
+                "transport": "交通費"
+            }
+        },
+        "features": {
+            "tag": "特徴",
+            "title": "Seiderが選ばれる理由",
+            "subtitle": "よりクリーンな方法でお金を記録し、体験をカスタマイズして、より良い決断を下したい人のために作られました。",
+            "one": {
+                "title": "すべてを1つのタイムラインで",
+                "description": "メモ、カテゴリー、サブカテゴリー、レシートを付けて各収支を記録できるため、お金の履歴を常に整理された状態に保てます。"
+            },
+            "two": {
+                "title": "パターンが見えるインサイト",
+                "description": "将来の予測、支出インサイト、検索、比較機能を活用し、問題になる前にトレンドを察知できます。"
+            },
+            "three": {
+                "title": "初日からあなた専用に",
+                "description": "初期設定（オンボーディング）でベース通貨、残高、収入のサイクル、目標を回収し、ワークスペースをあなたに合わせて最適化します。"
+            }
+        },
+        "security": {
+            "tag": "セキュリティ",
+            "title": "セキュリティとプライバシー",
+            "subtitle": "Seiderは、あなたの財務データをプライベートに、分かりやすく、そしてあなた自身のコントロール下に置けるよう設計されています。",
+            "encryption": {
+                "title": "機密データの暗号化",
+                "description": "個人情報フィールドは保存前に暗号化され、重要な情報をしっかりと保護します。"
+            },
+            "accounts": {
+                "title": "プライベートなユーザーアカウント",
+                "description": "認証情報と保存された記録は、ユーザーごとに完全に隔離されています。"
+            },
+            "language": {
+                "title": "言語を選択",
+                "description": "英語、スペイン語、日本語、韓国語に対応しています。"
+            }
+        },
+        "steps": {
+            "tag": "プロセス",
+            "title": "使い方",
+            "one": {
+                "title": "アカウントを作成する",
+                "description": "メールアドレス、Google、またはGitHubを使ってすぐに始められます。"
+            },
+            "two": {
+                "title": "Seiderをカスタマイズする",
+                "description": "初期設定（オンボーディング）の段階で、通貨、残高、収入のサイクル、目標を設定します。"
+            },
+            "three": {
+                "title": "追跡して改善する",
+                "description": "タイムライン、スマートツール、設定を活用して進捗を監視し、習慣を改善します。"
+            }
+        },
+        "cta": {
+            "tag": "始める",
+            "title": "財務をよりクリアにする準備はできましたか？",
+            "description": "Seiderを始めて、毎日のマネー管理をプライベートで多言語対応のワークスペースに変えましょう。"
+        },
+        "footer": {
+            "copy": "© 2026 Seider. 個人の財務を、わかりやすく。"
+        }
     },
     "placeholders": {
         "email": "メールアドレス",
@@ -98,13 +226,15 @@
         "notes": "この記録に関するメモを追加..."
     },
     "settings": {
-        "save": "保存"
+        "save": "🗐"
     },
     "labels": {
         "date": "日付:",
         "notes": "メモ:",
         "items": "項目:",
         "total": "合計:",
+        "tagTotal": "カテゴリ合計: ",
+        "subtagTotal": "サブカテゴリ合計: ",
         "totalAmount": "合計金額:",
         "baseCurrency": "基準通貨",
         "initialBalance": "初期残高",
@@ -130,9 +260,10 @@
         "currencyExchangeTable": "為替レート表",
         "exchangeRate": "為替レート",
         "currency": "通貨",
-        "newTag": "新しいカテゴリ",
-        "newSubtag": "新しいサブカテゴリ",
-        "language": "言語"
+        "newTag": "+ 新しいカテゴリ",
+        "newSubtag": "+ 新しいサブカテゴリ",
+        "language": "言語",
+        "simulationPeriod": "シミュレーション期間"
     },
     "onboarding": {
         "welcome": "Seiderへようこそ",
@@ -161,15 +292,20 @@
     },
     "timeline": {
         "welcome": "Seiderへおかえりなさい — あなたの賢い財務パートナー。",
-        "totalAmount": "合計金額: {value}",
+        "start": "Seiderでのあなたの財務の旅の始まり。",
+        "totalAmount": "{value}",
+        "totalAmountTitle": "合計金額:",
         "entryTotal": "合計: {value}",
         "noNotes": "メモなし",
         "viewEdit": "表示 / 編集",
         "delete": "削除",
         "totalAmountWaiting": "合計金額: 待機中...",
         "totalWaiting": "合計: 待機中...",
-        "smartTools": "スマートツール",
+        "smartTools": "スマートツール ▾",
         "futureInsights": "未来のインサイト",
+        "futureSubtitle": "将来の財務動向を予測し、情報に基づいた意思決定を行いましょう。",
+        "noPrediction": "利用可能な予測がありません",
+        "selectSimulationPeriod": "シミュレーション期間を選択し、将来のインサイトを生成してください。",
         "insightSearch": "インサイト検索",
         "spendingInsights": "支出インサイト",
         "insightsComparison": "インサイト比較",
@@ -224,13 +360,14 @@
         "deleteAccount": "アカウント削除",
         "currencyExchangeTable": "為替レート表",
         "currencyExchangeProvidedBy": "為替レート提供：exchangerate-api.com",
-        "balanceHidden": "合計金額: {symbol} ***** {currency}",
+        "balanceHidden": "{symbol} ***** {currency}",
         "show": "表示",
         "hide": "非表示"
     },
     "entry": {
         "delete": "削除",
         "save": "保存",
+        "takePicture": "写真を撮る",
         "upload": "写真/PDFをアップロード",
         "noFile": "ファイルが選択されていません",
         "convert": "以下から {currencyFromUserGlobal} に換算:",
@@ -260,8 +397,11 @@
         "userDataNotFound": "ユーザーデータが見つかりません",
         "insufficientEntries": "エントリー数が不足しています。現在: {count}（最小必要数: {minEntries}）",
         "deleteEntry": "このエントリーを削除しますか？",
+        "deleteEntryMessage": "これにより、エントリーが完全に削除されます。本当によろしいですか？",
         "deleteCategory": "このカテゴリを削除しますか？",
+        "deleteCategoryMessage": "これにより、カテゴリとそのすべてのサブカテゴリとエントリーが削除されます。本当によろしいですか？",
         "deleteAccount": "アカウントとすべてのデータが削除されます。本当によろしいですか？",
+        "deleteAccountMessage": "これにより、アカウントとすべてのデータが削除されます。本当によろしいですか？",
         "currencyChange": "基準通貨が {prevCurrency} から {newCurrency} に変更されます。\n\nCurrent exchange rate:\n1 {prevCurrency} = {rateForward} {newCurrency}\n1 {newCurrency} = {rateBackward} {prevCurrency}\n\n保存されているすべての金額は新しい基準通貨に換算されます。\n\n続行してもよろしいですか？"
     },
     "status": {

@@ -12,6 +12,13 @@ import {
     t
 } from "./i18n.js";
 
+import {
+    openCustomModal,
+    closeCustomModal,
+    customAlert,
+    customConfirm
+} from "./customModals.js";
+
 await initI18n();
 translatePage();
 
@@ -205,7 +212,7 @@ finishBtn.onclick = async () => {
     } catch (error) {
 
         console.error(error);
-        alert(t("alerts.errorSavingOnboarding"));
+        customAlert(t("alerts.errorSavingOnboarding"), "Alert", "⚠️");
     }
 };
 

@@ -38,7 +38,8 @@
     "saveMoney": "Ahorrar dinero",
     "trackExpenses": "Controlar gastos",
     "reduceDebt": "Reducir deudas",
-    "improveHabits": "Mejorar hábitos"
+    "improveHabits": "Mejorar hábitos",
+    "loading": "Cargando..."
   },
   "buttons": {
     "login": "Iniciar sesión",
@@ -56,10 +57,11 @@
     "addCategory": "+ Categoría",
     "addLineItem": "+ Registro de gasto",
     "addSubcategory": "+ Subcategoría",
-    "settings": "Configuración ⚙︎",
+    "settings": "Ajustes ⚙︎",
     "logout": "Cerrar sesión ➜]",
-    "exchangeTable": "Tabla de cambio de divisas",
-    "smartTools": "Herramientas inteligentes",
+    "exchangeTable": "Cambio de divisas",
+    "smartTools": "Hta. inteligentes ▾",
+    "smartToolsClose": "Hta. inteligentes ▴",
     "newBadge": "¡NUEVO!",
     "deleteAccount": "Eliminar cuenta",
     "viewEdit": "Ver / Editar",
@@ -67,6 +69,8 @@
     "hideTotal": "Ocultar ⌣",
     "createTag": "Crear",
     "cancelTag": "Cancelar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
     "closeIcon": "✕",
     "darkMode": "Modo oscuro ☾",
     "lightMode": "Modo claro ☀︎",
@@ -83,7 +87,131 @@
   },
   "home": {
     "tagline": "Tu espacio de trabajo financiero, en un solo lugar.",
-    "indexText": "Administra tu dinero con claridad."
+    "indexText": "Administra tu dinero con claridad.",
+    "heroEyebrow": "Finanzas personales, presentadas con claridad",
+    "heroTitle": "Registra, protege y entiende tu dinero en un solo espacio seguro.",
+    "heroLead": "Seider reúne entradas, categorías, análisis y configuración personal para que veas el panorama completo sin perder control de los detalles.",
+    "livePreview": "Vista previa en vivo",
+    "previewTitle": "Una vista enfocada de tus finanzas",
+    "previewText": "La línea de tiempo, la configuración inicial y las herramientas inteligentes trabajan juntas desde el primer inicio de sesión.",
+    "featurePillFast": "Configuración rápida",
+    "featurePillEncrypted": "Datos cifrados",
+    "featurePillMultiLang": "Multilenguaje",
+    "metricWorkspace": "Espacio de trabajo",
+    "metricLanguages": "Idiomas",
+    "metricInsights": "Herramientas inteligentes",
+    "metricEncrypted": "Campos cifrados",
+    "benefitsKicker": "Por qué la gente usa Seider",
+    "benefitsTitle": "Por qué la gente usa Seider",
+    "benefitsIntro": "Creado para quienes quieren una forma más limpia de registrar dinero, personalizar la experiencia y tomar mejores decisiones.",
+    "benefitOneTitle": "Una línea de tiempo para todo",
+    "benefitOneText": "Registra cada movimiento con notas, categorías, subcategorías y recibos para mantener ordenada tu historia financiera.",
+    "benefitTwoTitle": "Análisis que muestran patrones",
+    "benefitTwoText": "Usa proyecciones futuras, análisis de gastos, búsqueda y comparaciones para detectar tendencias antes de que se vuelvan un problema.",
+    "benefitThreeTitle": "Personalizado desde el primer día",
+    "benefitThreeText": "La configuración inicial recoge tu moneda base, saldo, ritmo de ingresos y metas para adaptar el espacio a ti.",
+    "securityKicker": "Seguridad y privacidad",
+    "securityTitle": "Seguridad y privacidad",
+    "securityIntro": "Seider está diseñado para mantener tus datos financieros personales, legibles y bajo tu control.",
+    "securityOneTitle": "Datos sensibles cifrados",
+    "securityOneText": "Los campos personales se cifran antes de guardarse, para que la app no exponga los valores en texto plano.",
+    "securityTwoTitle": "Cuentas privadas",
+    "securityTwoText": "La autenticación y los registros de Firestore están separados por usuario, manteniendo espacios de trabajo aislados.",
+    "securityThreeTitle": "Elige tu idioma",
+    "securityThreeText": "La interfaz está localizada en inglés, español, japonés y coreano, y guarda tu preferencia.",
+    "howItWorksKicker": "Cómo funciona",
+    "howItWorksTitle": "Cómo funciona",
+    "howItWorksIntro": "Un flujo simple desde el registro hasta el uso diario.",
+    "stepOneTitle": "1. Crea tu cuenta",
+    "stepOneText": "Usa correo electrónico, Google o GitHub para empezar rápido.",
+    "stepTwoTitle": "2. Personaliza Seider",
+    "stepTwoText": "Indica tu moneda, saldo, ritmo de ingresos y meta financiera durante la configuración inicial.",
+    "stepThreeTitle": "3. Registra y mejora",
+    "stepThreeText": "Usa la línea de tiempo, las herramientas y la configuración para seguir gastos y ajustar hábitos con el tiempo.",
+    "closingKicker": "¿Listo para empezar?",
+    "closingTitle": "¿Listo para dar claridad a tus finanzas?",
+    "closingText": "Empieza con Seider y convierte la gestión diaria del dinero en un espacio privado y multilingüe.",
+    "footerNote": "Seider mantiene el seguimiento financiero simple y privado.",
+    "hero": {
+      "badge": "Configuración rápida • Datos encriptados • Multilingüe",
+      "title": {
+        "line1": "Finanzas personales,",
+        "line2": "presentadas de forma clara"
+      },
+      "description": "Rastrea, protege y entiende tu dinero en un espacio de trabajo seguro. Seider reúne entradas, categorías, análisis y configuración personal para que puedas ver el panorama completo sin perder el control de los detalles."
+    },
+    "preview": {
+      "languages": "Idiomas",
+      "tools": "Herramientas inteligentes",
+      "workspace": "Espacio de trabajo",
+      "encryption": "Encriptación",
+      "title": "Vista previa en vivo",
+      "text": {
+        "balance": "Saldo actual",
+        "month": "este mes",
+        "groceries": "Farmacia",
+        "salary": "Salario",
+        "transport": "Transporte"
+      }
+    },
+    "features": {
+      "tag": "Características",
+      "title": "Por qué la gente usa Seider",
+      "subtitle": "Creado para personas que quieren una forma más limpia de registrar su dinero, personalizar la experiencia y tomar mejores decisiones.",
+      "one": {
+        "title": "Una línea de tiempo para todo",
+        "description": "Registra cada entrada con notas, categorías, subcategorías y recibos para que tu historial financiero se mantenga organizado."
+      },
+      "two": {
+        "title": "Análisis que muestran patrones",
+        "description": "Utiliza proyecciones futuras, análisis de gastos, búsquedas y comparaciones para detectar tendencias antes de que se conviertan en problemas."
+      },
+      "three": {
+        "title": "Personalizado desde el primer día",
+        "description": "El proceso de configuración inicial recopila tu moneda base, saldo, ritmo de ingresos y objetivos para adaptar el espacio de trabajo a ti."
+      }
+    },
+    "security": {
+      "tag": "Seguridad",
+      "title": "Seguridad y privacidad",
+      "subtitle": "Seider está diseñado para mantener tus datos financieros privados, legibles y bajo tu control.",
+      "encryption": {
+        "title": "Datos sensibles encriptados",
+        "description": "Los campos personales se encriptan antes de ser almacenados, manteniendo protegida la información importante."
+      },
+      "accounts": {
+        "title": "Cuentas de usuario privadas",
+        "description": "La autenticación y los registros almacenados permanecen aislados para cada usuario."
+      },
+      "language": {
+        "title": "Elige tu idioma",
+        "description": "Disponible en inglés, español, japonés y coreano."
+      }
+    },
+    "steps": {
+      "tag": "Proceso",
+      "title": "Cómo funciona",
+      "one": {
+        "title": "Crea tu cuenta",
+        "description": "Usa tu correo electrónico, Google o GitHub para empezar rápidamente."
+      },
+      "two": {
+        "title": "Personaliza Seider",
+        "description": "Configura tu moneda, saldo, ritmo de ingresos y objetivos durante la configuración inicial."
+      },
+      "three": {
+        "title": "Rastrea y mejora",
+        "description": "Utiliza la línea de tiempo, las herramientas inteligentes y los ajustes para monitorear tu progreso y mejorar tus hábitos."
+      }
+    },
+    "cta": {
+      "tag": "Empezar",
+      "title": "¿Listo para darle claridad a tus finanzas?",
+      "description": "Comienza con Seider y convierte la gestión diaria del dinero en un espacio de trabajo privado y multilingüe."
+    },
+    "footer": {
+      "copy": "© 2026 Seider. Finanzas personales, presentadas con claridad."
+    }
   },
   "placeholders": {
     "email": "Correo electrónico",
@@ -98,13 +226,15 @@
     "notes": "Añade notas sobre esta entrada..."
   },
   "settings": {
-    "save": "Guardar"
+    "save": "🗐"
   },
   "labels": {
     "date": "Fecha:",
     "notes": "Notas:",
     "items": "Registros:",
     "total": "Total:",
+    "tagTotal": "Total de categoría: ",
+    "subtagTotal": "Total de subcategoría: ",
     "totalAmount": "Monto total:",
     "baseCurrency": "Divisa base",
     "initialBalance": "Saldo inicial",
@@ -130,9 +260,10 @@
     "currencyExchangeTable": "Tabla de cambio de divisas",
     "exchangeRate": "Tipo de cambio",
     "currency": "Divisa",
-    "newTag": "Nueva categoría",
-    "newSubtag": "Nueva subcategoría",
-    "language": "Idioma"
+    "newTag": "+ Nueva categoría",
+    "newSubtag": "+ Nueva subcategoría",
+    "language": "Idioma",
+    "simulationPeriod": "Periodo de simulación"
   },
   "onboarding": {
     "welcome": "Te damos la bienvenida a Seider",
@@ -161,15 +292,20 @@
   },
   "timeline": {
     "welcome": "Te damos la bienvenida de nuevo a Seider, tu compañero financiero inteligente.",
-    "totalAmount": "Monto total: {value}",
+    "start": "Inicio de tu viaje financiero en Seider.",
+    "totalAmount": "{value}",
+    "totalAmountTitle": "Monto total:",
     "entryTotal": "Total: {value}",
     "noNotes": "Sin notas",
     "viewEdit": "Ver / Editar",
     "delete": "Eliminar",
     "totalAmountWaiting": "Monto total: Esperando...",
     "totalWaiting": "Total: Esperando...",
-    "smartTools": "Herramientas inteligentes",
+    "smartTools": "Herramientas inteligentes ▾",
     "futureInsights": "Perspectivas futuras",
+    "futureSubtitle": "Predice tus tendencias financieras futuras y toma decisiones informadas.",
+    "noPrediction": "No hay predicción disponible",
+    "selectSimulationPeriod": "Selecciona un periodo de simulación y genera tus perspectivas futuras.",
     "insightSearch": "Búsqueda de análisis",
     "spendingInsights": "Análisis de gastos",
     "insightsComparison": "Comparación de análisis",
@@ -206,7 +342,7 @@
     "tagTrends": "Tendencias de categorías",
     "subtagTrends": "Tendencias de subcategorías",
     "historicalEvolution": "Evolución histórica",
-    "settings": "Configuración",
+    "settings": "Ajustes",
     "manageYourPersonalInformation": "Administra tu información personal",
     "personalInformation": "Información personal",
     "yourName": "Tu nombre",
@@ -224,13 +360,14 @@
     "deleteAccount": "Eliminar cuenta",
     "currencyExchangeTable": "Tabla de tipo de cambio",
     "currencyExchangeProvidedBy": "Tipos de cambio proporcionados por exchangerate-api.com",
-    "balanceHidden": "Monto total: {symbol} ***** {currency}",
+    "balanceHidden": "{symbol} ***** {currency}",
     "show": "Mostrar",
     "hide": "Ocultar"
   },
   "entry": {
     "delete": "Eliminar",
     "save": "Guardar",
+    "takePicture": "Tomar foto",
     "upload": "Subir foto/PDF",
     "noFile": "Ningún archivo seleccionado",
     "convert": "Convertir a {currencyFromUserGlobal} desde:",
@@ -260,8 +397,11 @@
     "userDataNotFound": "Datos de usuario no encontrados",
     "insufficientEntries": "No tienes suficientes entradas {count} (mínimo: {minEntries})",
     "deleteEntry": "¿Eliminar esta entrada?",
+    "deleteEntryMessage": "Esto eliminará la entrada permanentemente. ¿Estás seguro?",
     "deleteCategory": "¿Eliminar esta categoría?",
+    "deleteCategoryMessage": "Esto eliminará la categoría y todas sus subcategorías y entradas. ¿Estás seguro?",
     "deleteAccount": "Esto eliminará tu cuenta y todos tus datos. ¿Estás seguro?",
+    "deleteAccountMessage": "Esto eliminará tu cuenta y todos tus datos. ¿Estás seguro?",
     "currencyChange": "Tu moneda base cambiará de {prevCurrency} a {newCurrency}.\n\nTipo de cambio actual:\n1 {prevCurrency} = {rateForward} {newCurrency}\n1 {newCurrency} = {rateBackward} {prevCurrency}\n\nTodos los montos guardados se convertirán a la nueva moneda base.\n\n¿Estás seguro de que deseas continuar?"
   },
   "status": {

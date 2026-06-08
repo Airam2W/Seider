@@ -1,184 +1,767 @@
-/* SCROLL CONTENT */
-.insights-content {
-    flex: 1;
-    overflow-y: auto;
+/* =========================
+   SPENDING INSIGHTS MODAL
+========================= */
 
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+#modalContentSpending {
+
+    width: min(1450px, 94vw);
+
+    height: 92vh;
+
+    padding: 0;
+
+    border-radius: 32px;
+
+    overflow: hidden;
+
+    background:
+        rgba(255, 255, 255, 0.82);
+
+    backdrop-filter: blur(22px);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.25);
+
+    animation:
+        modalIn .25s ease;
 }
 
-/* PANEL */
-.panel {
-    background: #2a2a2a;
-    padding: 15px;
-    border-radius: 10px;
-}
+body.dark-mode #modalContentSpending {
 
-/* GENERAL */
-.panel.full {
-    width: 100%;
-}
+    background:
+        rgba(15, 23, 42, 0.86);
 
-/* CANVAS */
-.panel canvas {
-    width: 100% !important;
-    height: 300px !important;
-}
+    border:
+        1px solid rgba(255, 255, 255, 0.06);
 
-#modalContentSpending{
-    width: 80vw;
-    height: 60vh;
+    color:
+        #f8fafc;
 }
-
 
 /* =========================
    MAIN LAYOUT
 ========================= */
 
-.insights-layout{
-    width: 90vw;
-    max-width:1400px;
-    height:90vh;
+.insights-layout {
 
-    background: #1e1e1e;
+    display: flex;
 
-    border-radius:20px;
+    flex-direction: column;
 
-    padding:20px;
-
-    display:flex;
-    flex-direction:column;
-
-    gap:20px;
-
-    overflow:hidden;
+    height: 100%;
 }
 
 /* =========================
    HEADER
 ========================= */
 
-.insights-header{
-    display:flex;
+.insights-header {
 
-    justify-content:space-between;
-    align-items:center;
+    display: flex;
 
-    gap:20px;
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding:
+        26px 30px;
+
+    border-bottom:
+        1px solid rgba(148, 163, 184, 0.14);
+
+    background:
+        rgba(255, 255, 255, 0.45);
+
+    backdrop-filter: blur(18px);
 }
 
-.insights-controls{
-    display:flex;
-    gap:10px;
-    align-items:center;
+body.dark-mode .insights-header {
+
+    background:
+        rgba(15, 23, 42, 0.45);
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.05);
+}
+
+.insights-header h2 {
+
+    font-size: 32px;
+
+    font-weight: 700;
+}
+
+.insights-controls {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+/* =========================
+   SELECTS
+========================= */
+
+.insights-controls select,
+.chart-header select {
+
+    padding:
+        12px 16px;
+
+    border-radius: 16px;
+
+    border:
+        1px solid rgba(148, 163, 184, 0.18);
+
+    background:
+        rgba(255, 255, 255, 0.75);
+
+    backdrop-filter: blur(12px);
+
+    font-size: 14px;
+
+    color:
+        #0f172a;
+
+    outline: none;
+
+    transition:
+        .22s ease;
+}
+
+.insights-controls select:focus,
+.chart-header select:focus {
+
+    border-color:
+        #60a5fa;
+
+    box-shadow:
+        0 0 0 4px rgba(96, 165, 250, 0.14);
+}
+
+body.dark-mode .insights-controls select,
+body.dark-mode .chart-header select {
+
+    background:
+        rgba(15, 23, 42, 0.78);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.06);
+
+    color:
+        #f8fafc;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.insights-controls button {
+
+    border: none;
+
+    padding:
+        12px 18px;
+
+    border-radius: 16px;
+
+    background:
+        rgba(148, 163, 184, 0.12);
+
+    color:
+        #334155;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform .22s ease,
+        opacity .22s ease,
+        background .22s ease;
+}
+
+.insights-controls button:hover {
+
+    background:
+        rgba(148, 163, 184, 0.16);
+}
+
+body.dark-mode .insights-controls button {
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    color:
+        #e2e8f0;
 }
 
 /* =========================
    BODY
 ========================= */
 
-.insights-body{
-    flex:1;
+.insights-body {
 
-    display:grid;
+    flex: 1;
 
-    grid-template-columns: 380px 1fr;
+    display: grid;
 
-    gap:20px;
+    grid-template-columns: 390px 1fr;
 
-    overflow:hidden;
+    gap: 22px;
+
+    overflow: hidden;
+
+    padding: 24px;
 }
 
 /* =========================
-   LEFT PANEL
+   ANALYSIS PANEL
 ========================= */
 
-.analysis-panel{
-    background: #2a2a2a;
+.analysis-panel {
 
-    border-radius:16px;
+    overflow-y: auto;
 
-    padding:20px;
+    padding: 24px;
 
-    overflow-y:auto;
+    border-radius: 28px;
 
-    border:1px solid rgba(255,255,255,0.08);
+    background:
+        rgba(255, 255, 255, 0.62);
+
+    backdrop-filter: blur(16px);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+        0 12px 35px rgba(15, 23, 42, 0.08);
+}
+
+body.dark-mode .analysis-panel {
+
+    background:
+        rgba(15, 23, 42, 0.76);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.05);
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.35);
+}
+
+.analysis-panel h3 {
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    margin-bottom: 20px;
 }
 
 /* =========================
-   RIGHT PANEL
+   ANALYSIS BOX
 ========================= */
 
-.charts-panel{
-    display:flex;
+.insight-box {
 
-    flex-direction:column;
+    display: flex;
 
-    gap:20px;
+    flex-direction: column;
 
-    overflow-y:auto;
+    gap: 14px;
+}
+
+.insight-box p {
+
+    margin: 0;
+
+    padding:
+        14px 16px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(236, 236, 236, 0.72);
+
+    border:
+        1px solid rgba(148, 163, 184, 0.12);
+
+    line-height: 1.55;
+
+    font-size: 14px;
+
+    color:
+        #1e293b;
+}
+
+body.dark-mode .insight-box p {
+
+    background:
+        rgba(255, 255, 255, 0.04);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.05);
+
+    color:
+        #e2e8f0;
+}
+
+.insight-box strong {
+
+    color:
+        #0f172a;
+}
+
+body.dark-mode .insight-box strong {
+
+    color:
+        #f8fafc;
+}
+
+.insight-box hr {
+
+    border: none;
+
+    height: 1px;
+
+    background:
+        rgba(0, 0, 0, 0.4);
+
+    margin:
+        6px 0;
+}
+
+/* =========================
+   CHARTS PANEL
+========================= */
+
+.charts-panel {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+
+    overflow-y: auto;
+
+    padding-right: 4px;
 }
 
 /* =========================
    CHART CARD
 ========================= */
 
-.chart-card{
-    background: #2a2a2a;
+.chart-card {
 
-    border-radius:16px;
+    padding: 24px;
 
-    padding:20px;
+    padding-bottom: 50%;
 
-    border:1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
 
-    min-height:320px;
+    background:
+        rgba(255, 255, 255, 0.64);
+
+    backdrop-filter: blur(16px);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+        0 12px 35px rgba(15, 23, 42, 0.08);
+
+    min-height: 360px;
+
+    transition:
+        transform .22s ease,
+        border-color .22s ease,
+        box-shadow .22s ease;
+}
+
+.chart-card:hover {
+
+    border-color:
+        rgba(96, 165, 250, 0.34);
+
+    box-shadow:
+        0 22px 45px rgba(59, 130, 246, 0.12);
+}
+
+body.dark-mode .chart-card {
+
+    background:
+        rgba(15, 23, 42, 0.76);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.05);
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.35);
 }
 
 /* =========================
    CHART HEADER
 ========================= */
 
-.chart-header{
-    display:flex;
+.chart-header {
 
-    justify-content:space-between;
-    align-items:center;
+    display: flex;
 
-    margin-bottom:15px;
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 16px;
+
+    margin-bottom: 20px;
 }
 
-/* =========================
-   ANALYSIS TEXT
-========================= */
+.chart-header h3 {
 
-.insight-box p{
-    margin:10px 0;
+    font-size: 20px;
 
-    line-height:1.5;
+    font-weight: 700;
 }
 
 /* =========================
    CANVAS
 ========================= */
 
-.chart-card canvas{
-    width:100% !important;
-    height:260px !important;
+.chart-card canvas {
+
+    width: 100% !important;
+
+    height: 300px !important;
 }
 
 /* =========================
-   MOBILE
+   SCROLLBAR
 ========================= */
 
-@media(max-width: 1000px){
+.analysis-panel::-webkit-scrollbar,
+.charts-panel::-webkit-scrollbar {
 
-    .insights-body{
-        grid-template-columns:1fr;
+    width: 10px;
+}
+
+.analysis-panel::-webkit-scrollbar-thumb,
+.charts-panel::-webkit-scrollbar-thumb {
+
+    background:
+        rgba(148, 163, 184, 0.35);
+
+    border-radius: 999px;
+}
+
+
+
+
+
+
+
+/* =========================
+   DARK MODE IMPROVEMENTS
+   SPENDING INSIGHTS MODAL
+========================= */
+
+/* =========================
+   MAIN MODAL
+========================= */
+
+body.dark-mode #modalContentSpending {
+
+    background:
+        linear-gradient(180deg,
+            rgba(15, 23, 42, 0.96),
+            rgba(2, 6, 23, 0.96));
+
+    border:
+        1px solid rgba(148, 163, 184, 0.10);
+
+    box-shadow:
+        0 35px 90px rgba(0, 0, 0, 0.55);
+
+    color:
+        #f8fafc;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+body.dark-mode .insights-header {
+
+    background:
+        linear-gradient(180deg,
+            rgba(15, 23, 42, 0.82),
+            rgba(2, 6, 23, 0.78));
+
+    border-bottom:
+        1px solid rgba(148, 163, 184, 0.10);
+
+    backdrop-filter:
+        blur(20px);
+}
+
+body.dark-mode .insights-header h2 {
+
+    color:
+        #f8fafc;
+}
+
+/* =========================
+   SELECTS
+========================= */
+
+body.dark-mode .insights-controls select,
+body.dark-mode .chart-header select {
+
+    background:
+        rgba(30, 41, 59, 0.72);
+
+    border:
+        1px solid rgba(148, 163, 184, 0.12);
+
+    color:
+        #f8fafc;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+body.dark-mode .insights-controls select:focus,
+body.dark-mode .chart-header select:focus {
+
+    border-color:
+        rgba(96, 165, 250, 0.65);
+
+    box-shadow:
+        0 0 0 4px rgba(59, 130, 246, 0.16),
+        0 10px 24px rgba(37, 99, 235, 0.16);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+body.dark-mode .insights-controls button {
+
+    background:
+        rgba(30, 41, 59, 0.78);
+
+    border:
+        1px solid rgba(148, 163, 184, 0.10);
+
+    color:
+        #e2e8f0;
+
+    box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+body.dark-mode .insights-controls button:hover {
+
+    background:
+        rgba(51, 65, 85, 0.90);
+}
+
+/* =========================
+   BODY BACKGROUND
+========================= */
+
+body.dark-mode .insights-body {
+
+    background:
+        linear-gradient(180deg,
+            rgba(2, 6, 23, 0.14),
+            rgba(15, 23, 42, 0.06));
+}
+
+/* =========================
+   ANALYSIS PANEL
+========================= */
+
+body.dark-mode .analysis-panel {
+
+    background:
+        linear-gradient(180deg,
+            rgba(30, 41, 59, 0.88),
+            rgba(15, 23, 42, 0.92));
+
+    border:
+        1px solid rgba(148, 163, 184, 0.10);
+
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.35);
+
+    backdrop-filter:
+        blur(18px);
+}
+
+body.dark-mode .analysis-panel h3 {
+
+    color:
+        #f8fafc;
+}
+
+/* =========================
+   INSIGHT BOX
+========================= */
+
+body.dark-mode .insight-box p {
+
+    background:
+        rgba(15, 23, 42, 0.72);
+
+    border:
+        1px solid rgba(148, 163, 184, 0.08);
+
+    color:
+        #cbd5e1;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+body.dark-mode .insight-box strong {
+
+    color:
+        #f8fafc;
+}
+
+body.dark-mode .insight-box hr {
+
+    background:
+        rgba(148, 163, 184, 0.10);
+}
+
+/* =========================
+   CHARTS PANEL
+========================= */
+
+body.dark-mode .charts-panel {
+
+    background:
+        transparent;
+}
+
+/* =========================
+   CHART CARD
+========================= */
+
+body.dark-mode .chart-card {
+
+    background:
+        linear-gradient(180deg,
+            rgba(30, 41, 59, 0.88),
+            rgba(15, 23, 42, 0.92));
+
+    border:
+        1px solid rgba(148, 163, 184, 0.10);
+
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.35);
+
+    backdrop-filter:
+        blur(18px);
+}
+
+body.dark-mode .chart-card:hover {
+
+    border-color:
+        rgba(96, 165, 250, 0.28);
+
+    box-shadow:
+        0 24px 52px rgba(37, 99, 235, 0.18);
+}
+
+/* =========================
+   CHART HEADER
+========================= */
+
+body.dark-mode .chart-header h3 {
+
+    color:
+        #f8fafc;
+}
+
+/* =========================
+   CANVAS CONTAINER FEEL
+========================= */
+
+body.dark-mode .chart-card canvas {
+
+    filter:
+        brightness(1.02);
+}
+
+/* =========================
+   SCROLLBARS
+========================= */
+
+body.dark-mode .analysis-panel::-webkit-scrollbar-thumb,
+body.dark-mode .charts-panel::-webkit-scrollbar-thumb {
+
+    background:
+        rgba(148, 163, 184, 0.22);
+}
+
+body.dark-mode .analysis-panel::-webkit-scrollbar-thumb:hover,
+body.dark-mode .charts-panel::-webkit-scrollbar-thumb:hover {
+
+    background:
+        rgba(148, 163, 184, 0.34);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .insights-body {
+        display: grid;
+        grid-template-columns: 1fr;
+        row-gap: 22px;
     }
 
-    .analysis-panel{
-        max-height:300px;
+    .analysis-panel {
+        padding: 18px;
     }
+
+    .analysis-panel p {
+        font-size: 18px;
+    }
+
+    .insights-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .chart-card {
+        position: relative;
+    }
+
+    .chart-card canvas {
+        width: 250px !important;
+        height: 230px !important;
+    }
+
 }

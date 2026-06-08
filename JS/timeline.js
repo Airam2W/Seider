@@ -35,6 +35,20 @@ import {
     setLanguage
 } from "./i18n.js";
 
+import {
+    openCustomModal,
+    closeCustomModal,
+    customAlert,
+    customConfirm
+} from "./customModals.js";
+
+import {
+    showLoading,
+    hideLoading
+} from "./loading.js";
+
+showLoading();
+
 await initI18n();
 translatePage();
 
@@ -121,6 +135,7 @@ onAuthStateChanged(auth, async (user) => {
 
     await loadEntries(user.uid);
     scrollToBottom(true);
+    hideLoading();
 });
 
 // =======================
@@ -258,7 +273,7 @@ async function loadEntries(uid) {
                 </div>
 
                 <div class="detail-section">
-                    <strong data-i18n="labels.items">Items:</strong>
+                    <strong data-i18n="labels.items">Line Items:</strong>
 
                     ${data.items.map(item => `
                             <div class="item-row">
@@ -361,8 +376,20 @@ window.viewEntry = (id) => {
 // DELETE
 // =======================
 window.deleteEntry = async (id) => {
-    if (!confirm(t("alerts.deleteEntry"))) return;
+    if(!customConfirm({
+        title: t("alerts.deleteEntry"),
+        message: t("alerts.deleteEntryMessage"),
+        icon: "⚠️",
+        confirmText: t("buttons.confirm"),
+        cancelText: t("buttons.cancel"),
+        danger: false,
+        onConfirm: () => deleteEntry(id),
+        onCancel: () => {}
+    })) return;
 
+};
+
+async function deleteEntry(id) {
     try {
         await deleteDoc(
             doc(db, "users", currentUser.uid, "entries", id)
@@ -375,17 +402,19 @@ window.deleteEntry = async (id) => {
     } catch (error) {
         console.error(error);
     }
-};
+}
 
 // =======================
 // NAVIGATION
 // =======================
 
 document.getElementById("settings").onclick = async () => {
+    showLoading("loadingOverlaySettings");
+    openModal(0);
     let currentLanguage = getLanguage();
     languageSelect.value = currentLanguage;
-    openModal(0);
     await loadUserSettings();
+    hideLoading("loadingOverlaySettings");
 };
 
 async function loadUserSettings() {
@@ -453,6 +482,7 @@ async function loadUserSettings() {
 }
 
 saveSettingsBtn.onclick = async () => {
+    showLoading("loadingOverlaySettings");
 
     try {
 
@@ -491,7 +521,7 @@ saveSettingsBtn.onclick = async () => {
 
     } catch (error) {
         console.error(error);
-        alert(t("alerts.errorSavingSettings"));
+        customAlert(t("alerts.errorSavingSettings"), "Alert", "⚠️");
     }
 
     // CHANGE LANGUAGE IF NEEDED
@@ -567,11 +597,11 @@ saveSettingsBtn.onclick = async () => {
     } catch (error) {
 
         console.error(error);
-        alert(t("alerts.errorUpdatingSettings"));
+        customAlert(t("alerts.errorUpdatingSettings"), "Alert", "⚠️");
     }
 
 
-
+    hideLoading("loadingOverlaySettings");
 };
 
 goToOnboardingBtn.onclick = () => {
@@ -602,26 +632,49 @@ const NZD = document.getElementById("NZD")
 let currencyButtons = [USD, MXN, JPY, KRW, CAD, CNY, EUR, GBP, AUD, CHF, SEK, NZD];
 
 settingsCurrency.onchange = () => {
+
     const prevCurrency = currencyFromUserGlobal;
     const newCurrency = settingsCurrency.value;
-    if (confirm(t("alerts.currencyChange", {
-        prevCurrency,
-        newCurrency,
-        rateForward: (exchangeRates[newCurrency] / exchangeRates[prevCurrency]).toFixed(4),
-        rateBackward: (exchangeRates[prevCurrency] / exchangeRates[newCurrency]).toFixed(4)
-    }))) {
-    } else {
-        currencyButtons.forEach(btn => {
-            if (btn.value === prevCurrency) {
-                settingsCurrency.value = prevCurrency;
-            }
-        });
-    }
+
+    customConfirm({
+
+        message: t("alerts.currencyChange", {
+            prevCurrency,
+            newCurrency,
+            rateForward: (
+                exchangeRates[newCurrency] /
+                exchangeRates[prevCurrency]
+            ).toFixed(4),
+
+            rateBackward: (
+                exchangeRates[prevCurrency] /
+                exchangeRates[newCurrency]
+            ).toFixed(4)
+        }),
+
+        onConfirm: () => {
+
+        },
+
+        onCancel: () => {
+
+            currencyButtons.forEach(btn => {
+
+                if (btn.value === prevCurrency) {
+
+                    settingsCurrency.value =
+                        prevCurrency;
+                }
+            });
+        }
+    });
 };
 
 async function openExchangeTable() {
+    showLoading("loadingOverlayExchange");
     openModal(5);
     await loadExchangeTable();
+    hideLoading("loadingOverlayExchange");
 };
 
 window.openExchangeTable = openExchangeTable;
@@ -644,6 +697,8 @@ async function loadExchangeTable() {
     // ===== TITLE =====
     const title =
         document.createElement("p");
+
+        title.className = "exchange-base-card";
 
     title.innerHTML =
         `
@@ -748,7 +803,9 @@ async function loadExchangeTable() {
     note.style.marginTop = "12px";
     note.style.fontSize = "12px";
     note.style.color = "gray";
+    note.className = "exchange-note";
     note.textContent = t("timeline.currencyExchangeProvidedBy");
+    
 
     exchangeTable.appendChild(note);
     exchangeTable.appendChild(table);
@@ -991,7 +1048,7 @@ async function saveTag(tagId) {
             }
         );
 
-        alert(t("alerts.tagUpdated"));
+        customAlert(t("alerts.tagUpdated"), "Success", "✅");
 
     } catch (error) {
 
@@ -1006,11 +1063,25 @@ async function deleteTag(tagId) {
     try {
 
         const confirmed =
-            confirm(t("alerts.deleteTag"));
+            customConfirm({
+                title: t("alerts.deleteCategory"),
+                message: t("alerts.deleteCategoryMessage"),
+                icon: "⚠️",
+                confirmText: t("buttons.confirm"),
+                cancelText: t("buttons.cancel"),
+                danger: true,
+                onConfirm: () => { deleteTagConfirmed(tagId); },
+                onCancel: () => {}
+            });
+    } catch (error) {
 
-        if (!confirmed) return;
+        console.error(error);
+    }
 
-        const user = auth.currentUser;
+}
+
+async function deleteTagConfirmed(tagId) {
+    const user = auth.currentUser;
 
         await deleteDoc(
             doc(
@@ -1023,11 +1094,6 @@ async function deleteTag(tagId) {
         );
 
         await loadTagsSettings();
-
-    } catch (error) {
-
-        console.error(error);
-    }
 }
 
 addTagBtn.onclick = () => {
@@ -1077,10 +1143,19 @@ async function deleteSubtag(
 window.removeTag = async (index) => {
 
     const confirmed =
-        confirm(t("alerts.deleteTag"));
+        customConfirm({
+            title: t("alerts.deleteCategory"),
+            message: t("alerts.deleteCategoryMessage"),
+            icon: "⚠️",
+            confirmText: t("buttons.confirm"),
+            cancelText: t("buttons.cancel"),
+            danger: true,
+            onConfirm: () => { removeTag(index); },
+            onCancel: () => {}
+        });
+};
 
-    if (!confirmed) return;
-
+async function removeTag(index) {
     const tag = tagsData[index];
 
     try {
@@ -1120,7 +1195,7 @@ window.removeTag = async (index) => {
 
         console.error(error);
     }
-};
+}
 
 window.addSubtag = (index) => {
 
@@ -1299,10 +1374,21 @@ function renderTags() {
 deleteAccountBtn.onclick = async () => {
 
     const confirmed =
-        confirm(t("alerts.deleteAccount"));
+        customConfirm({
+            title: t("alerts.deleteAccount"),
+            message: t("alerts.deleteAccountMessage"),
+            icon: "⚠️",
+            confirmText: t("buttons.confirm"),
+            cancelText: t("buttons.cancel"),
+            danger: true,
+            onConfirm: () => {
+                deleteAccount();
+            },
+            onCancel: () => {}
+        });
+};
 
-    if (!confirmed) return;
-
+async function deleteAccount() {
     try {
         // DELETE USER DOC
         await deleteDoc(
@@ -1310,12 +1396,13 @@ deleteAccountBtn.onclick = async () => {
         );
         // DELETE AUTH ACCOUNT
         await auth.currentUser.delete();
-        alert(t("alerts.accountDeleted"));
+        customAlert(t("alerts.accountDeleted"), "Success", "✅");
         window.location.href = "/index.html";
     } catch (error) {
         console.error(error);
-        alert(t("alerts.errorDeletingAccount"));
+        customAlert(t("alerts.errorDeletingAccount"), "Alert", "⚠️");
     }
+
 };
 
 
@@ -1406,14 +1493,14 @@ toggleBtn.onclick = () => {
     menu.classList.toggle("active");
 
     toggleBtn.textContent = menu.classList.contains("active")
-        ? `${t("buttons.smartTools")} ▴`
-        : `${t("buttons.smartTools")} ▾`;
+        ? `${t("buttons.smartToolsClose")}`
+        : `${t("buttons.smartTools")}`;
 };
 
 document.addEventListener("click", (e) => {
     if (!menu.contains(e.target) && !toggleBtn.contains(e.target)) {
         menu.classList.remove("active");
-        toggleBtn.textContent = `${t("buttons.smartTools")} ▾`;
+        toggleBtn.textContent = `${t("buttons.smartTools")}`;
     }
 });
 
@@ -1641,11 +1728,11 @@ async function verificationForSimulation(uid, minEntries = 3) {
     if (count >= minEntries) return true;
 
     if (count === -1) {
-        alert(t("alerts.userDataNotFound"));
+        customAlert(t("alerts.userDataNotFound"), "Alert", "⚠️");
         return false;
     }
 
-    alert(t("alerts.insufficientEntries", { count, minEntries }));
+    customAlert(t("alerts.insufficientEntries", { count, minEntries }), "Alert", "⚠️");
     return false;
 }
 
@@ -1653,12 +1740,14 @@ async function verificationForSimulation(uid, minEntries = 3) {
 // SIMULATE THE FUTURE
 // =======================
 async function openFuture() {
+    showLoading("loadingOverlayFuture");
+    openModal(1);
     const simulationOK = await verificationForSimulation(currentUser.uid, 5);
     if (!simulationOK) {
         closeModal();
     } else {
-        openModal(1);
     }
+    hideLoading("loadingOverlayFuture");
 }
 
 window.openFuture = openFuture;
@@ -1672,14 +1761,16 @@ document.getElementById("simulationDuration").onchange = (e) => {
 // SEARCH
 // =======================
 async function openSearch() {
+    showLoading("loadingOverlaySearch");
+    openModal(2);
     const simulationOK = await verificationForSimulation(currentUser.uid, 1);
     if (!simulationOK) {
         closeModal();
     } else {
-        openModal(2);
         setupSearchInput();
-        loadTagFilters();
+        await loadTagFilters();
     }
+    hideLoading("loadingOverlaySearch");
 }
 
 window.openSearch = openSearch;
@@ -1688,13 +1779,15 @@ window.openSearch = openSearch;
 // Spending Insights
 // =======================
 async function openSpending() {
+    showLoading("loadingOverlaySpending");
+    openModal(3);
     const simulationOK = await verificationForSimulation(currentUser.uid, 3);
     if (!simulationOK) {
         closeModal();
     } else {
-        openModal(3);
-        loadInsights();
+        await loadInsights();
     }
+    hideLoading("loadingOverlaySpending");
 }
 
 window.openSpending = openSpending;
@@ -1703,13 +1796,15 @@ window.openSpending = openSpending;
 // Insights Comparison
 // =======================
 async function openComparison() {
+    showLoading("loadingOverlayComparison");
+    openModal(4);
     const simulationOK = await verificationForSimulation(currentUser.uid, 3);
     if (!simulationOK) {
         closeModal();
     } else {
-        openModal(4);
-        loadComparison();
+        await loadComparison();
     }
+    hideLoading("loadingOverlayComparison");
 }
 
 window.openComparison = openComparison;

@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="titles.timeline">Seider - Timeline</title>
 
     <link rel="stylesheet" href="/CSS/styles.css">
@@ -13,605 +14,921 @@
     <link rel="stylesheet" href="/CSS/settings.css">
     <link rel="stylesheet" href="/CSS/exchange.css">
     <link rel="stylesheet" href="/CSS/tools/comparison.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png" href="/IMG/logo.png">
 </head>
 
 <body>
 
-    <main class="timeline" id="timeline">
+    <div class="content-container">
 
-        <!-- BUTTONS -->
+        <!-- LOADING OVERLAY -->
 
-        <!-- SIDE BUTTONS RIGHT -->
-        <div class="side-buttons-right">
-            <button id="btnAdd" class="add-bottom" data-i18n="buttons.addEntry"></button>
-            <button id="btnScrollBottom" class="scroll-bottom">↓</button>
-        </div>
+        <div id="loadingOverlay" class="loading-overlay hidden">
 
-        <!-- SIDE BUTTONS RIGHT TOP-->
-        <div class="side-buttons-right-top">
+            <div class="loading-box">
 
+                <div class="loading-spinner"></div>
 
+                <h2 data-i18n="common.loading">
+                    Loading...
+                </h2>
 
+                <div class="loading-dots">
 
-            <div class="one-line">
-
-                <button id="btnSmartToggle" class="main-btn" data-i18n="buttons.smartTools">
-                    Smart Tools ▾
-
-                    <div class="new-stamp">
-                        <span data-i18n="buttons.newBadge">NEW!</span>
-                    </div>
-                </button>
-                <button id="settings" data-i18n="buttons.settings">Settings ⚙︎</button>
-            </div>
-            <div id="smartMenu" class="submenu">
-
-                <button onclick="openFuture()">
-                    <span data-i18n="timeline.futureInsights">Future Insights</span>
-
-                    <div class="new-stamp">
-                        <span data-i18n="buttons.newBadge">NEW!</span>
-                    </div>
-                </button>
-                <button onclick="openSearch()">
-                    <span data-i18n="timeline.insightSearch">Insight Search</span>
-
-                    <div class="new-stamp">
-                        <span data-i18n="buttons.newBadge">NEW!</span>
-                    </div>
-                </button>
-                <button onclick="openSpending()">
-                    <span data-i18n="timeline.spendingInsights">Spending Insights</span>
-
-                    <div class="new-stamp">
-                        <span data-i18n="buttons.newBadge">NEW!</span>
-                    </div>
-                </button>
-                <button onclick="openComparison()">
-                    <span data-i18n="timeline.insightsComparison">Insights Comparison</span>
-
-                    <div class="new-stamp">
-                        <span data-i18n="buttons.newBadge">NEW!</span>
-                    </div>
-                </button>
-
-            </div>
-        </div>
-
-        <!-- SIDE BUTTONS LEFT -->
-        <div class="side-buttons-left">
-            <button id="darkModeToggle" class="toggle-btn"></button>
-        </div>
-
-        <script>
-            if (localStorage.getItem("darkMode") === "true") {
-                document.documentElement.classList.add("dark-mode");
-            }
-        </script>
-
-        <!-- SIDE BUTTONS LEFT TOP-->
-        <div class="side-buttons-left-top">
-            <button id="btnExchangeTable" onclick="openExchangeTable()" data-i18n="buttons.exchangeTable">Currency
-                Exchange Table</button>
-            <button id="btnLogout" data-i18n="buttons.logout">Logout ➜]</button>
-        </div>
-
-
-        <!-- OPTIONAL INFORMATION -->
-        <div id="modalExchange" class="modal hidden">
-            <div class="modal-content" id="modalContentExchange">
-                <h2 data-i18n="labels.currencyExchangeTable">Currency Exchange Table</h2>
-
-                <div id="exchangeTable"></div>
-
-                <button onclick="closeModal()" data-i18n="common.close">Close</button>
-            </div>
-        </div>
-
-
-
-
-        <!-- SMART TOOLS-->
-
-        <!-- SECTION: Future Insights -->
-        <div id="modalFuture" class="modal hidden">
-            <div class="modal-content" id="modalContentFuture">
-                <h2 data-i18n="timeline.futureInsights">Future Insights</h2>
-
-                <select id="simulationDuration">
-                    <option value="0" data-i18n="timeline.today">Today</option>
-                    <option value="1" data-i18n="timeline.tomorrow">Tomorrow</option>
-                    <option value="7" data-i18n="timeline.nextWeek">Next Week</option>
-                    <option value="30" data-i18n="timeline.nextMonth">Next Month</option>
-                    <option value="60" data-i18n="timeline.next2Months">Next 2 Months</option>
-                    <option value="90" data-i18n="timeline.next3Months">Next 3 Months</option>
-                    <option value="180" data-i18n="timeline.next6Months">Next 6 Months</option>
-                    <option value="365" data-i18n="timeline.nextYear">Next Year</option>
-                </select>
-
-                <div id="simulationResult"></div>
-
-                <button onclick="predictFuture()" data-i18n="buttons.predict">Predict</button>
-
-                <button onclick="closeModal()" data-i18n="common.close">Close</button>
-            </div>
-        </div>
-
-        <!-- SECTION: Insight Search -->
-        <div id="modalSearch" class="modal hidden">
-            <div class="modal-content search-layout" id="modalContentSearch">
-
-                <!-- LEFT PANEL -->
-                <div class="search-left">
-
-                    <h2 data-i18n="timeline.insightSearch">Insight Search</h2>
-
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Type and press Enter..."
-                            data-i18n-placeholder="timeline.typeAndEnter">
-                    </div>
-
-                    <div id="searchTags" class="search-tags"></div>
-
-                    <div class="filter-group">
-                        <p data-i18n="timeline.tags">Tags</p>
-                        <div id="tagFilter" class="filter-pills"></div>
-                    </div>
-
-                    <div class="filter-group">
-                        <p data-i18n="timeline.subtags">Subtags</p>
-                        <div id="subtagFilter" class="filter-pills"></div>
-                    </div>
-
-                    <button onclick="closeModal()" data-i18n="common.close">Close</button>
+                    <span></span>
+                    <span></span>
+                    <span></span>
 
                 </div>
 
-                <!-- RIGHT PANEL -->
-                <div class="search-right">
-                    <div id="searchResults" class="results-container">
-                        <p style="opacity:0.6;" data-i18n="timeline.noFiltersApplied">No filters applied</p>
-                    </div>
-                </div>
-
             </div>
+
         </div>
 
-        <!-- SECTION: Spending Insights -->
-        <div id="modalSpending" class="modal hidden">
+        <!-- REAL CONTENT -->
 
-            <div class="insights-layout" id="modalContentSpending">
+        <main class="timeline content" id="timeline">
 
-                <!-- HEADER -->
-                <div class="insights-header">
+            <!-- BUTTONS -->
 
-                    <h2 data-i18n="timeline.spendingInsights">Spending Insights</h2>
+            <!-- SIDE BUTTONS RIGHT -->
+            <div class="side-buttons-right">
+                <button id="btnAdd" class="add-bottom" data-i18n="buttons.addEntry"></button>
+                <button id="btnScrollBottom" class="scroll-bottom">↓</button>
+            </div>
 
-                    <div class="insights-controls">
+            <!-- SIDE BUTTONS RIGHT TOP-->
+            <div class="side-buttons-right-top">
 
-                        <select id="timeRange">
-                            <option value="7" data-i18n="timeline.oneWeek">1 Week</option>
-                            <option value="30" data-i18n="timeline.oneMonth">1 Month</option>
-                            <option value="90" data-i18n="timeline.threeMonths">3 Months</option>
-                            <option value="180" data-i18n="timeline.sixMonths">6 Months</option>
-                            <option value="365" data-i18n="timeline.oneYear">1 Year</option>
-                            <option value="all" data-i18n="timeline.allTime">All Time</option>
-                        </select>
+
+
+
+                <div class="one-line">
+
+                    <button id="btnSmartToggle" class="main-btn" data-i18n="buttons.smartTools">
+                        Smart Tools ▾
+
+                        <div class="new-stamp">
+                            <span data-i18n="buttons.newBadge">NEW!</span>
+                        </div>
+                    </button>
+                    <button id="settings" data-i18n="buttons.settings">Settings ⚙︎</button>
+                </div>
+                <div id="smartMenu" class="submenu">
+
+                    <button onclick="openFuture()">
+                        <span data-i18n="timeline.futureInsights">Future Insights</span>
+
+                        <div class="new-stamp">
+                            <span data-i18n="buttons.newBadge">NEW!</span>
+                        </div>
+                    </button>
+                    <button onclick="openSearch()">
+                        <span data-i18n="timeline.insightSearch">Insight Search</span>
+
+                        <div class="new-stamp">
+                            <span data-i18n="buttons.newBadge">NEW!</span>
+                        </div>
+                    </button>
+                    <button onclick="openSpending()">
+                        <span data-i18n="timeline.spendingInsights">Spending Insights</span>
+
+                        <div class="new-stamp">
+                            <span data-i18n="buttons.newBadge">NEW!</span>
+                        </div>
+                    </button>
+                    <button onclick="openComparison()">
+                        <span data-i18n="timeline.insightsComparison">Insights Comparison</span>
+
+                        <div class="new-stamp">
+                            <span data-i18n="buttons.newBadge">NEW!</span>
+                        </div>
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- SIDE BUTTONS LEFT BOTTOM-->
+            <div class="side-buttons-left">
+                <button id="darkModeToggle" class="toggle-btn"></button>
+            </div>
+
+            <script>
+                if (localStorage.getItem("darkMode") === "true") {
+                    document.documentElement.classList.add("dark-mode");
+                }
+            </script>
+
+            <!-- SIDE BUTTONS LEFT TOP-->
+            <div class="side-buttons-left-top">
+                <button id="btnExchangeTable" onclick="openExchangeTable()" data-i18n="buttons.exchangeTable">Currency
+                    Exchange Table</button>
+                <button id="btnLogout" data-i18n="buttons.logout">Logout ➜]</button>
+            </div>
+
+
+            <!-- OPTIONAL INFORMATION -->
+            <div id="modalExchange" class="modal hidden">
+                <div class="content-container">
+                    <!-- LOADING OVERLAY -->
+                    <div id="loadingOverlayExchange" class="loading-overlay">
+                        <div class="loading-box">
+                            <div class="loading-spinner"></div>
+                            <h2 data-i18n="common.loading">
+                                Loading...
+                            </h2>
+                            <div class="loading-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- REAL CONTENT -->
+                    <div class="modal-content content" id="modalContentExchange">
+                        <h2 data-i18n="labels.currencyExchangeTable">Currency Exchange Table</h2>
+
+                        <div id="exchangeTable"></div>
 
                         <button onclick="closeModal()" data-i18n="common.close">Close</button>
-
                     </div>
-
                 </div>
-
-                <!-- BODY -->
-                <div class="insights-body">
-
-                    <!-- LEFT PANEL -->
-                    <div class="analysis-panel">
-
-                        <h3 data-i18n="timeline.spendingAnalysis">Spending Analysis</h3>
-
-                        <div id="generalAnalysis"></div>
-
-                    </div>
-
-                    <!-- RIGHT PANEL -->
-                    <div class="charts-panel">
-
-                        <!-- TAG CHART -->
-                        <div class="chart-card">
-
-                            <div class="chart-header">
-                                <h3 data-i18n="timeline.tagEvolution">Tag Evolution</h3>
-                                <select id="tagSelect"></select>
-                            </div>
-
-                            <canvas id="tagLineChart"></canvas>
-
-                        </div>
-
-                        <!-- SUBTAG CHART -->
-                        <div class="chart-card">
-
-                            <div class="chart-header">
-                                <h3 data-i18n="timeline.subtagEvolution">Subtag Evolution</h3>
-                                <select id="subtagSelect"></select>
-                            </div>
-
-                            <canvas id="subtagLineChart"></canvas>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
             </div>
 
-        </div>
 
-        <!-- SECTION: Insights Comparison -->
-        <div id="modalComparison" class="modal hidden">
 
-            <div class="comparison-layout" id="modalContentComparison">
+            <!-- SMART TOOLS-->
 
-                <!-- HEADER -->
-                <div class="comparison-header">
+            <!-- SECTION: Future Insights -->
+            <div id="modalFuture" class="modal hidden">
 
-                    <h2 data-i18n="timeline.insightsComparison">Insights Comparison</h2>
-
-                    <div class="comparison-controls">
-
-                        <select id="compareType">
-                            <option value="month" data-i18n="timeline.monthlyComparison">Monthly Comparison</option>
-                            <option value="week" data-i18n="timeline.weeklyComparison">Weekly Comparison</option>
-                            <option value="year" data-i18n="timeline.yearlyComparison">Yearly Comparison</option>
-                        </select>
-
-                        <button onclick="closeModal()" data-i18n="common.close">Close</button>
-
+                <div class="content-container">
+                    <!-- LOADING OVERLAY -->
+                    <div id="loadingOverlayFuture" class="loading-overlay">
+                        <div class="loading-box">
+                            <div class="loading-spinner"></div>
+                            <h2 data-i18n="common.loading">
+                                Loading...
+                            </h2>
+                            <div class="loading-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
                     </div>
+                    <!-- REAL CONTENT -->
 
-                </div>
+                    <div class="modal-content future-modal content" id="modalContentFuture">
 
-                <!-- BODY -->
-                <div class="comparison-body">
+                        <!-- HEADER -->
+                        <div class="future-header">
 
-                    <!-- LEFT PANEL -->
-                    <div class="comparison-analysis">
+                            <div>
 
-                        <div class="comparison-card">
+                                <h2 data-i18n="timeline.futureInsights">
+                                    Future Insights
+                                </h2>
 
-                            <h3 data-i18n="timeline.overview">Overview</h3>
+                                <span class="future-subtitle" data-i18n="timeline.futureSubtitle">
+                                    AI-powered financial prediction based on your habits
+                                </span>
 
-                            <div id="comparisonSummary"></div>
-
-                        </div>
-
-                        <div class="comparison-card">
-
-                            <h3 data-i18n="timeline.mainDriversOfChange">Main Drivers of Change</h3>
-
-                            <div id="comparisonWhy"></div>
-
-                        </div>
-
-                        <div class="comparison-card">
-
-                            <h3 data-i18n="timeline.futureTrend">Future Trend</h3>
-
-                            <div id="trendPrediction"></div>
-
-                        </div>
-
-                    </div>
-
-                    <!-- RIGHT PANEL -->
-                    <div class="comparison-charts">
-
-                        <div class="comparison-chart-card">
-
-                            <h3 data-i18n="timeline.tagTrends">Tag Trends</h3>
-
-                            <canvas id="tagCompareChart"></canvas>
-
-                        </div>
-
-                        <div class="comparison-chart-card">
-
-                            <h3 data-i18n="timeline.subtagTrends">Subtag Trends</h3>
-
-                            <canvas id="subtagCompareChart"></canvas>
-
-                        </div>
-
-                        <div class="comparison-chart-card">
-
-                            <h3 data-i18n="timeline.historicalEvolution">Historical Evolution</h3>
-
-                            <canvas id="historyChart"></canvas>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- Settings -->
-        <div id="modalSettings" class="modal hidden">
-            <div class="modal-content" id="modalContentSettings">
-                <div class="settings-header">
-
-                    <div>
-                        <h2 data-i18n="timeline.settings">Settings</h2>
-                        <p data-i18n="labels.managePersonalInformation">Manage your personal information</p>
-                    </div>
-
-                    <div class="settings-buttons">
-
-                        <button id="saveSettingsBtn" class="save-settings-btn" data-i18n="settings.save">Save</button>
-
-                        <button class="close-settings-btn" onclick="closeModal()"
-                            data-i18n="buttons.closeIcon">✕</button>
-
-                    </div>
-
-                </div>
-
-                <!-- CONTENT -->
-                <div class="settings-body">
-
-                    <!-- PERSONAL INFO -->
-                    <div class="settings-section">
-
-                        <h3 data-i18n="labels.personalInformation">Personal Information</h3>
-
-                        <div class="settings-grid">
-
-                            <!-- NAME -->
-                            <div class="settings-field">
-                                <label data-i18n="labels.name">Name</label>
-
-                                <input type="text" id="settingsName" placeholder="Your name"
-                                    data-i18n-placeholder="placeholders.yourName">
                             </div>
 
-                            <!-- EMAIL -->
-                            <div class="settings-field">
-                                <label data-i18n="labels.email">Email</label>
-
-                                <input type="email" id="settingsEmail" disabled>
-                            </div>
-
-                            <!-- GENDER -->
-                            <div class="settings-field">
-                                <label data-i18n="labels.gender">Gender</label>
-
-                                <select id="settingsGender">
-
-                                    <option value="no" data-i18n="timeline.selectPreferNotToSay">Select / Prefer not to
-                                        say</option>
-
-                                    <option value="Male" data-i18n="common.male">Male</option>
-                                    <option value="Female" data-i18n="common.female">Female</option>
-                                    <option value="Other" data-i18n="common.other">Other</option>
-
-
-                                </select>
-                            </div>
-
-                            <!-- AGE -->
-                            <div class="settings-field">
-                                <label data-i18n="labels.ageRange">Age Range</label>
-
-                                <select id="settingsAgeRange">
-
-                                    <option value="no" data-i18n="timeline.selectPreferNotToSay">Select / Prefer not to
-                                        say</option>
-
-                                    <option value="13-17">13 - 17</option>
-                                    <option value="18-24">18 - 24</option>
-                                    <option value="25-34">25 - 34</option>
-                                    <option value="35-44">35 - 44</option>
-                                    <option value="45-54">45 - 54</option>
-                                    <option value="55+">55+</option>
-
-                                </select>
-                            </div>
-
-                            <!-- CURRENCY -->
-                            <div class="settings-field">
-                                <label data-i18n="labels.baseCurrency">Base Currency</label>
-
-                                <select id="settingsCurrency">
-
-                                    <option id="USD" value="USD" data-i18n="currencies.USD">USD - US Dollar</option>
-                                    <option id="AUD" value="AUD" data-i18n="currencies.AUD">AUD - Australian Dollar
-                                    </option>
-                                    <option id="CAD" value="CAD" data-i18n="currencies.CAD">CAD - Canadian Dollar
-                                    </option>
-                                    <option id="CHF" value="CHF" data-i18n="currencies.CHF">CHF - Swiss Franc</option>
-                                    <option id="CNY" value="CNY" data-i18n="currencies.CNY">CNY - Chinese Yuan</option>
-                                    <option id="EUR" value="EUR" data-i18n="currencies.EUR">EUR - Euro</option>
-                                    <option id="GBP" value="GBP" data-i18n="currencies.GBP">GBP - British Pound</option>
-                                    <option id="JPY" value="JPY" data-i18n="currencies.JPY">JPY - Japanese Yen</option>
-                                    <option id="KRW" value="KRW" data-i18n="currencies.KRW">KRW - Korean Won</option>
-                                    <option id="MXN" value="MXN" data-i18n="currencies.MXN">MXN - Mexican Peso</option>
-                                    <option id="NZD" value="NZD" data-i18n="currencies.NZD">NZD - New Zealand Dollar
-                                    </option>
-                                    <option id="SEK" value="SEK" data-i18n="currencies.SEK">SEK - Swedish Krona</option>
-
-
-                                </select>
-                            </div>
-
-                            <!-- BALANCE -->
-                            <div class="settings-field">
-                                <label data-i18n="labels.initialBalance">Initial Balance</label>
-
-                                <input type="password" id="settingsBalance" placeholder="0" disabled>
-                            </div>
-
-                            <!-- INCOME -->
-                            <div class="settings-field">
-                                <label data-i18n="labels.incomeFrequency">Income Frequency</label>
-
-                                <select id="settingsIncome">
-
-                                    <option value="no" data-i18n="timeline.selectPreferNotToSay">Select / Prefer not to
-                                        say</option>
-
-                                    <option value="Weekly" data-i18n="common.weekly">Weekly</option>
-                                    <option value="Biweekly" data-i18n="common.biweekly">Biweekly</option>
-                                    <option value="Monthly" data-i18n="common.monthly">Monthly</option>
-
-                                </select>
-                            </div>
-
-                            <!-- GOAL -->
-                            <div class="settings-field">
-                                <label data-i18n="labels.financialGoal">Financial Goal</label>
-
-                                <select id="settingsGoal">
-
-                                    <option value="no" data-i18n="timeline.selectPreferNotToSay">Select / Prefer not to
-                                        say</option>
-
-                                    <option value="Save Money" data-i18n="common.saveMoney">Save Money</option>
-                                    <option value="Track Expenses" data-i18n="common.trackExpenses">Track Expenses
-                                    </option>
-                                    <option value="Reduce Debt" data-i18n="common.reduceDebt">Reduce Debt</option>
-                                    <option value="Improve Habits" data-i18n="common.improveHabits">Improve Habits
-                                    </option>
-
-                                </select>
-                            </div>
-
-                        </div>
-
-                        <!-- ONBOARDING WARNING -->
-                        <div id="onboardingWarning" class="onboarding-warning hidden">
-
-                            <p>
-                                Your onboarding is incomplete.
-                            </p>
-
-                            <button id="goToOnboardingBtn">
-                                Complete Setup
+                            <button class="future-close-btn" onclick="closeModal()" data-i18n="buttons.closeIcon">
+                                ✕
                             </button>
 
                         </div>
 
-                    </div>
+                        <label for="simulationDuration" data-i18n="labels.simulationPeriod">
+                            Simulation Period
+                        </label>
 
-                    <!-- User Settings -->
-                    <br>
+                        <br>
 
-                    <div class="settings-section">
+                        <!-- CONTROLS -->
+                        <div class="future-controls">
 
-                        <h3 data-i18n="labels.userSettings">User Settings</h3>
 
-                        <div class="settings-grid">
 
-                            <!-- NAME -->
-                            <div class="settings-field">
-                                <label data-i18n="labels.language">Language</label>
+                            <div class="future-select-group">
 
-                                <select id="settingsLanguage">
+                                <select id="simulationDuration">
 
-                                    <option id="en" value="en" data-i18n="languages.english">English</option>
-                                    <option id="es" value="es" data-i18n="languages.spanish">Spanish</option>
-                                    <option id="ja" value="ja" data-i18n="languages.japanese">Japanese</option>
-                                    <option id="ko" value="ko" data-i18n="languages.korean">Korean</option>
+                                    <option value="0" data-i18n="timeline.today">
+                                        Today
+                                    </option>
+
+                                    <option value="1" data-i18n="timeline.tomorrow">
+                                        Tomorrow
+                                    </option>
+
+                                    <option value="7" data-i18n="timeline.nextWeek">
+                                        Next Week
+                                    </option>
+
+                                    <option value="30" data-i18n="timeline.nextMonth">
+                                        Next Month
+                                    </option>
+
+                                    <option value="60" data-i18n="timeline.next2Months">
+                                        Next 2 Months
+                                    </option>
+
+                                    <option value="90" data-i18n="timeline.next3Months">
+                                        Next 3 Months
+                                    </option>
+
+                                    <option value="180" data-i18n="timeline.next6Months">
+                                        Next 6 Months
+                                    </option>
+
+                                    <option value="365" data-i18n="timeline.nextYear">
+                                        Next Year
+                                    </option>
 
                                 </select>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- TAGS & SUBTAGS -->
-                    <br>
+                                <button class="future-predict-btn" onclick="predictFuture()"
+                                    data-i18n="buttons.predict">
+                                    Predict Future
+                                </button>
 
-                    <div class="settings-section">
-
-                        <div class="section-header">
-
-                            <div>
-                                <h3 data-i18n="labels.tagsAndSubtags">Tags & Subtags</h3>
-
-                                <p data-i18n="labels.organizeCategories">Organize your categories</p>
                             </div>
 
-                            <button id="addTagBtn" class="primary-settings-btn" data-i18n="buttons.addCategory">+ Add
-                                Category</button>
+
 
                         </div>
 
-                        <!-- TABLE -->
-                        <div class="tags-table">
+                        <!-- RESULTS -->
+                        <div id="simulationResult" class="future-results">
 
-                            <!-- HEADER -->
-                            <div class="tags-row tags-header">
+                            <div class="future-empty">
 
-                                <span data-i18n="labels.tag">Tag</span>
-                                <span data-i18n="labels.color">Color</span>
-                                <span data-i18n="labels.subtags">Subtags</span>
-                                <span data-i18n="labels.actions">Actions</span>
+                                <div class="future-empty-icon">
+                                    ✦
+                                </div>
+
+                                <h3 data-i18n="timeline.noPrediction">
+                                    No prediction generated
+                                </h3>
+
+                                <p data-i18n="timeline.selectSimulationPeriod">
+                                    Select a simulation period and generate your future insights.
+                                </p>
 
                             </div>
-
-                            <!-- GENERATED -->
-                            <div id="tagsContainer"></div>
 
                         </div>
 
                     </div>
+                </div>
+            </div>
 
-                    <!-- Danger Zone -->
-                    <br>
-                    <div class="settings-section">
 
-                        <div class="section-header">
-                            <h3 data-i18n="labels.dangerZone">Danger Zone</h3>
-                            <p data-i18n="labels.warning">Warning: This action cannot be undone.</p>
+            <!-- SECTION: Insight Search -->
+            <div id="modalSearch" class="modal hidden">
+                <div class="content-container">
+                    <!-- LOADING OVERLAY -->
+                    <div id="loadingOverlaySearch" class="loading-overlay">
+                        <div class="loading-box">
+                            <div class="loading-spinner"></div>
+                            <h2 data-i18n="common.loading">
+                                Loading...
+                            </h2>
+                            <div class="loading-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- REAL CONTENT -->
+
+                    <div class="modal-content search-layout content" id="modalContentSearch">
+
+                        <!-- LEFT PANEL -->
+                        <div class="search-left">
+
+                            <h2 data-i18n="timeline.insightSearch">Insight Search</h2>
+
+                            <div class="search-box">
+                                <input type="text" id="searchInput" placeholder="Type and press Enter..."
+                                    data-i18n-placeholder="timeline.typeAndEnter">
+                            </div>
+
+                            <div id="searchTags" class="search-tags"></div>
+
+                            <div class="filter-group">
+                                <p data-i18n="timeline.tags">Tags</p>
+                                <div id="tagFilter" class="filter-pills"></div>
+                            </div>
+
+                            <div class="filter-group">
+                                <p data-i18n="timeline.subtags">Subtags</p>
+                                <div id="subtagFilter" class="filter-pills"></div>
+                            </div>
+
+                            <button onclick="closeModal()" data-i18n="common.close">Close</button>
+
                         </div>
 
-                        <button id="deleteAccountBtn" class="danger-btn" data-i18n="buttons.deleteAccount">Delete
-                            Account</button>
+                        <!-- RIGHT PANEL -->
+                        <div class="search-right">
+                            <div id="searchResults" class="results-container">
+                                <p style="opacity:0.6;" data-i18n="timeline.noFiltersApplied">No filters applied</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Spending Insights -->
+            <div id="modalSpending" class="modal hidden">
+                <div class="content-container">
+                    <!-- LOADING OVERLAY -->
+                    <div id="loadingOverlaySpending" class="loading-overlay">
+                        <div class="loading-box">
+                            <div class="loading-spinner"></div>
+                            <h2 data-i18n="common.loading">
+                                Loading...
+                            </h2>
+                            <div class="loading-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- REAL CONTENT -->
+
+                    <div class="insights-layout content" id="modalContentSpending">
+
+                        <!-- HEADER -->
+                        <div class="insights-header">
+
+                            <h2 data-i18n="timeline.spendingInsights">Spending Insights</h2>
+
+                            <div class="insights-controls">
+
+                                <select id="timeRange">
+                                    <option value="7" data-i18n="timeline.oneWeek">1 Week</option>
+                                    <option value="30" data-i18n="timeline.oneMonth">1 Month</option>
+                                    <option value="90" data-i18n="timeline.threeMonths">3 Months</option>
+                                    <option value="180" data-i18n="timeline.sixMonths">6 Months</option>
+                                    <option value="365" data-i18n="timeline.oneYear">1 Year</option>
+                                    <option value="all" data-i18n="timeline.allTime">All Time</option>
+                                </select>
+
+                                <button onclick="closeModal()" data-i18n="common.close">Close</button>
+
+                            </div>
+
+                        </div>
+
+                        <!-- BODY -->
+                        <div class="insights-body">
+
+                            <!-- LEFT PANEL -->
+                            <div class="analysis-panel">
+
+                                <h3 data-i18n="timeline.spendingAnalysis">Spending Analysis</h3>
+
+                                <div id="generalAnalysis"></div>
+
+                            </div>
+
+                            <!-- RIGHT PANEL -->
+                            <div class="charts-panel">
+
+                                <!-- TAG CHART -->
+                                <div class="chart-card">
+
+                                    <div class="chart-header">
+                                        <h3 data-i18n="timeline.tagEvolution">Tag Evolution</h3>
+                                        <select id="tagSelect"></select>
+                                    </div>
+
+                                    <canvas id="tagLineChart"></canvas>
+
+                                </div>
+
+                                <!-- SUBTAG CHART -->
+                                <div class="chart-card">
+
+                                    <div class="chart-header">
+                                        <h3 data-i18n="timeline.subtagEvolution">Subtag Evolution</h3>
+                                        <select id="subtagSelect"></select>
+                                    </div>
+
+                                    <canvas id="subtagLineChart"></canvas>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
 
                 </div>
             </div>
-        </div>
+
+            <!-- SECTION: Insights Comparison -->
+            <div id="modalComparison" class="modal hidden">
+                <div class="content-container">
+                    <!-- LOADING OVERLAY -->
+                    <div id="loadingOverlayComparison" class="loading-overlay">
+                        <div class="loading-box">
+                            <div class="loading-spinner"></div>
+                            <h2 data-i18n="common.loading">
+                                Loading...
+                            </h2>
+                            <div class="loading-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- REAL CONTENT -->
+
+                    <div class="comparison-layout content" id="modalContentComparison">
+
+                        <!-- HEADER -->
+                        <div class="comparison-header">
+
+                            <h2 data-i18n="timeline.insightsComparison">Insights Comparison</h2>
+
+                            <div class="comparison-controls">
+
+                                <select id="compareType">
+                                    <option value="month" data-i18n="timeline.monthlyComparison">Monthly Comparison
+                                    </option>
+                                    <option value="week" data-i18n="timeline.weeklyComparison">Weekly Comparison
+                                    </option>
+                                    <option value="year" data-i18n="timeline.yearlyComparison">Yearly Comparison
+                                    </option>
+                                </select>
+
+                                <button onclick="closeModal()" data-i18n="common.close">Close</button>
+
+                            </div>
+
+                        </div>
+
+                        <!-- BODY -->
+                        <div class="comparison-body">
+
+                            <!-- LEFT PANEL -->
+                            <div class="comparison-analysis">
+
+                                <div class="comparison-card">
+
+                                    <h3 data-i18n="timeline.overview">Overview</h3>
+
+                                    <div id="comparisonSummary"></div>
+
+                                </div>
+
+                                <div class="comparison-card">
+
+                                    <h3 data-i18n="timeline.mainDriversOfChange">Main Drivers of Change</h3>
+
+                                    <div id="comparisonWhy"></div>
+
+                                </div>
+
+                                <div class="comparison-card">
+
+                                    <h3 data-i18n="timeline.futureTrend">Future Trend</h3>
+
+                                    <div id="trendPrediction"></div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- RIGHT PANEL -->
+                            <div class="comparison-charts">
+
+                                <div class="comparison-chart-card">
+
+                                    <h3 data-i18n="timeline.tagTrends">Tag Trends</h3>
+
+                                    <canvas id="tagCompareChart"></canvas>
+
+                                </div>
+
+                                <div class="comparison-chart-card">
+
+                                    <h3 data-i18n="timeline.subtagTrends">Subtag Trends</h3>
+
+                                    <canvas id="subtagCompareChart"></canvas>
+
+                                </div>
+
+                                <div class="comparison-chart-card">
+
+                                    <h3 data-i18n="timeline.historicalEvolution">Historical Evolution</h3>
+
+                                    <canvas id="historyChart"></canvas>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
 
 
 
-        <!-- TIMELINE -->
+            <!-- Settings -->
+            <div id="modalSettings" class="modal hidden">
+                <div class="content-container">
+                    <!-- LOADING OVERLAY -->
+                    <div id="loadingOverlaySettings" class="loading-overlay">
+                        <div class="loading-box">
+                            <div class="loading-spinner"></div>
+                            <h2 data-i18n="common.loading">
+                                Loading...
+                            </h2>
+                            <div class="loading-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- REAL CONTENT -->
+                    <div class="modal-content content" id="modalContentSettings">
+                        <div class="settings-header">
 
-        <!-- Dynamic entries -->
-        <div id="entriesContainer"></div>
+                            <div>
+                                <h2 data-i18n="timeline.settings">Settings</h2>
+                                <p data-i18n="labels.managePersonalInformation">Manage your personal information</p>
+                            </div>
 
-        <!-- Welcome message -->
-        <div class="entry entry-header fixed">
-            <h3 data-i18n="timeline.welcome">Welcome back to Seider — your smart finance companion.</h3>
-        </div>
+                            <div class="settings-buttons">
 
-        <!-- Fixed entries -->
-        <div class="entry entry-header fixed fixed-bottom" id="totalAmountContainer">
-            <h3 id="totalAmount" data-i18n="timeline.totalAmountWaiting">Total Amount: Waiting...</h3>
-            <button id="toggleTotalAmount" class="toggle-btn" data-i18n="buttons.showTotal">Show</button>
-        </div>
+                                <button id="saveSettingsBtn" class="save-settings-btn"
+                                    data-i18n="settings.save">Save</button>
 
-        <br>
+                                <button class="close-settings-btn" onclick="closeModal()"
+                                    data-i18n="buttons.closeIcon">✕</button>
 
-    </main>
+                            </div>
+
+                        </div>
+
+                        <!-- CONTENT -->
+                        <div class="settings-body">
+
+                            <!-- PERSONAL INFO -->
+                            <div class="settings-section">
+
+                                <h3 data-i18n="labels.personalInformation">Personal Information</h3>
+
+                                <div class="settings-grid">
+
+                                    <!-- NAME -->
+                                    <div class="settings-field">
+                                        <label data-i18n="labels.name">Name</label>
+
+                                        <input type="text" id="settingsName" placeholder="Your name"
+                                            data-i18n-placeholder="placeholders.yourName">
+                                    </div>
+
+                                    <!-- EMAIL -->
+                                    <div class="settings-field">
+                                        <label data-i18n="labels.email">Email</label>
+
+                                        <input type="email" id="settingsEmail" disabled>
+                                    </div>
+
+                                    <!-- GENDER -->
+                                    <div class="settings-field">
+                                        <label data-i18n="labels.gender">Gender</label>
+
+                                        <select id="settingsGender">
+
+                                            <option value="no" data-i18n="timeline.selectPreferNotToSay">Select /
+                                                Prefer
+                                                not
+                                                to
+                                                say</option>
+
+                                            <option value="Male" data-i18n="common.male">Male</option>
+                                            <option value="Female" data-i18n="common.female">Female</option>
+                                            <option value="Other" data-i18n="common.other">Other</option>
+
+
+                                        </select>
+                                    </div>
+
+                                    <!-- AGE -->
+                                    <div class="settings-field">
+                                        <label data-i18n="labels.ageRange">Age Range</label>
+
+                                        <select id="settingsAgeRange">
+
+                                            <option value="no" data-i18n="timeline.selectPreferNotToSay">Select /
+                                                Prefer
+                                                not
+                                                to
+                                                say</option>
+
+                                            <option value="13-17">13 - 17</option>
+                                            <option value="18-24">18 - 24</option>
+                                            <option value="25-34">25 - 34</option>
+                                            <option value="35-44">35 - 44</option>
+                                            <option value="45-54">45 - 54</option>
+                                            <option value="55+">55+</option>
+
+                                        </select>
+                                    </div>
+
+                                    <!-- CURRENCY -->
+                                    <div class="settings-field">
+                                        <label data-i18n="labels.baseCurrency">Base Currency</label>
+
+                                        <select id="settingsCurrency">
+
+                                            <option id="USD" value="USD" data-i18n="currencies.USD">USD - US Dollar
+                                            </option>
+                                            <option id="AUD" value="AUD" data-i18n="currencies.AUD">AUD - Australian
+                                                Dollar
+                                            </option>
+                                            <option id="CAD" value="CAD" data-i18n="currencies.CAD">CAD - Canadian
+                                                Dollar
+                                            </option>
+                                            <option id="CHF" value="CHF" data-i18n="currencies.CHF">CHF - Swiss
+                                                Franc
+                                            </option>
+                                            <option id="CNY" value="CNY" data-i18n="currencies.CNY">CNY - Chinese
+                                                Yuan
+                                            </option>
+                                            <option id="EUR" value="EUR" data-i18n="currencies.EUR">EUR - Euro
+                                            </option>
+                                            <option id="GBP" value="GBP" data-i18n="currencies.GBP">GBP - British
+                                                Pound
+                                            </option>
+                                            <option id="JPY" value="JPY" data-i18n="currencies.JPY">JPY - Japanese
+                                                Yen
+                                            </option>
+                                            <option id="KRW" value="KRW" data-i18n="currencies.KRW">KRW - Korean Won
+                                            </option>
+                                            <option id="MXN" value="MXN" data-i18n="currencies.MXN">MXN - Mexican
+                                                Peso
+                                            </option>
+                                            <option id="NZD" value="NZD" data-i18n="currencies.NZD">NZD - New
+                                                Zealand
+                                                Dollar
+                                            </option>
+                                            <option id="SEK" value="SEK" data-i18n="currencies.SEK">SEK - Swedish
+                                                Krona
+                                            </option>
+
+
+                                        </select>
+                                    </div>
+
+                                    <!-- BALANCE -->
+                                    <div class="settings-field">
+                                        <label data-i18n="labels.initialBalance">Initial Balance</label>
+
+                                        <input type="password" id="settingsBalance" placeholder="0" disabled>
+                                    </div>
+
+                                    <!-- INCOME -->
+                                    <div class="settings-field">
+                                        <label data-i18n="labels.incomeFrequency">Income Frequency</label>
+
+                                        <select id="settingsIncome">
+
+                                            <option value="no" data-i18n="timeline.selectPreferNotToSay">Select /
+                                                Prefer
+                                                not
+                                                to
+                                                say</option>
+
+                                            <option value="Weekly" data-i18n="common.weekly">Weekly</option>
+                                            <option value="Biweekly" data-i18n="common.biweekly">Biweekly</option>
+                                            <option value="Monthly" data-i18n="common.monthly">Monthly</option>
+
+                                        </select>
+                                    </div>
+
+                                    <!-- GOAL -->
+                                    <div class="settings-field">
+                                        <label data-i18n="labels.financialGoal">Financial Goal</label>
+
+                                        <select id="settingsGoal">
+
+                                            <option value="no" data-i18n="timeline.selectPreferNotToSay">Select /
+                                                Prefer
+                                                not
+                                                to
+                                                say</option>
+
+                                            <option value="Save Money" data-i18n="common.saveMoney">Save Money
+                                            </option>
+                                            <option value="Track Expenses" data-i18n="common.trackExpenses">Track
+                                                Expenses
+                                            </option>
+                                            <option value="Reduce Debt" data-i18n="common.reduceDebt">Reduce Debt
+                                            </option>
+                                            <option value="Improve Habits" data-i18n="common.improveHabits">Improve
+                                                Habits
+                                            </option>
+
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <!-- ONBOARDING WARNING -->
+                                <div id="onboardingWarning" class="onboarding-warning hidden">
+
+                                    <p>
+                                        Your onboarding is incomplete.
+                                    </p>
+
+                                    <button id="goToOnboardingBtn">
+                                        Complete Setup
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <!-- User Settings -->
+                            <br>
+
+                            <div class="settings-section">
+
+                                <h3 data-i18n="labels.userSettings">User Settings</h3>
+
+                                <div class="settings-grid">
+
+                                    <!-- NAME -->
+                                    <div class="settings-field">
+                                        <label data-i18n="labels.language">Language</label>
+
+                                        <select id="settingsLanguage">
+
+                                            <option id="en" value="en" data-i18n="languages.english">English
+                                            </option>
+                                            <option id="es" value="es" data-i18n="languages.spanish">Spanish
+                                            </option>
+                                            <option id="ja" value="ja" data-i18n="languages.japanese">Japanese
+                                            </option>
+                                            <option id="ko" value="ko" data-i18n="languages.korean">Korean</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TAGS & SUBTAGS -->
+                            <br>
+
+                            <div class="settings-section">
+
+                                <div class="section-header">
+
+                                    <div>
+                                        <h3 data-i18n="labels.tagsAndSubtags">Tags & Subtags</h3>
+
+                                        <p data-i18n="labels.organizeCategories">Organize your categories</p>
+                                    </div>
+
+                                    <button id="addTagBtn" class="primary-settings-btn"
+                                        data-i18n="buttons.addCategory">+
+                                        Add
+                                        Category</button>
+
+                                </div>
+
+                                <!-- TABLE -->
+                                <div class="tags-table">
+
+                                    <!-- HEADER -->
+                                    <div class="tags-row tags-header">
+
+                                        <span data-i18n="labels.tag">Tag</span>
+                                        <span data-i18n="labels.color">Color</span>
+                                        <span data-i18n="labels.subtags">Subtags</span>
+                                        <span data-i18n="labels.actions">Actions</span>
+
+                                    </div>
+
+                                    <!-- GENERATED -->
+                                    <div id="tagsContainer"></div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Danger Zone -->
+                            <br>
+                            <div class="settings-section">
+
+                                <div class="section-header">
+                                    <h3 data-i18n="labels.dangerZone">Danger Zone</h3>
+                                    <p data-i18n="labels.warning">Warning: This action cannot be undone.</p>
+                                </div>
+
+                                <button id="deleteAccountBtn" class="danger-btn"
+                                    data-i18n="buttons.deleteAccount">Delete
+                                    Account</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- TIMELINE -->
+
+            <!-- Start message -->
+            <div class="entry entry-header">
+                <h3 data-i18n="timeline.start">Start of your financial journey in Seider.</h3>
+            </div>
+
+            <!-- Dynamic entries -->
+            <div id="entriesContainer"></div>
+
+            <!-- Welcome message -->
+            <div class="entry entry-header">
+                <h3 data-i18n="timeline.welcome">Welcome back to Seider — your smart finance companion.</h3>
+            </div>
+
+            <!-- Fixed entries -->
+            <div class="entry entry-header" id="totalAmountContainer">
+                <div class="totalTimeline">
+                    <h3 id="totalAmountTitle" data-i18n="timeline.totalAmountTitle">Total Amount:</h3>
+                    <h3 id="totalAmount" data-i18n="timeline.totalAmountWaiting"> Waiting... </h3>
+                </div>
+                <button id="toggleTotalAmount" class="toggle-btn" data-i18n="buttons.showTotal">Show</button>
+            </div>
+
+            <br>
+
+
+            <!-- CUSTOM ALERT/CONFIRM-->
+            <div id="customModalOverlay" class="custom-modal-overlay">
+
+                <div class="custom-modal">
+
+                    <div class="custom-modal-header">
+
+                        <div id="customModalIcon" class="custom-modal-icon">
+                            ⚡
+                        </div>
+
+                        <div id="customModalTitle" class="custom-modal-title">
+                            Alert
+                        </div>
+
+                    </div>
+
+                    <div id="customModalMessage" class="custom-modal-message">
+                        Message here...
+                    </div>
+
+                    <div class="custom-modal-actions">
+
+                        <button id="customModalCancel" class="custom-modal-btn cancel">
+                            Cancel
+                        </button>
+
+                        <button id="customModalConfirm" class="custom-modal-btn confirm">
+                            OK
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

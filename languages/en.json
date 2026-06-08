@@ -38,7 +38,8 @@
     "saveMoney": "Save Money",
     "trackExpenses": "Track Expenses",
     "reduceDebt": "Reduce Debt",
-    "improveHabits": "Improve Habits"
+    "improveHabits": "Improve Habits",
+    "loading": "Loading..."
   },
   "buttons": {
     "login": "Login",
@@ -59,7 +60,8 @@
     "settings": "Settings ⚙︎",
     "logout": "Logout ➜]",
     "exchangeTable": "Currency Exchange Table",
-    "smartTools": "Smart Tools",
+    "smartTools": "Smart Tools ▾",
+    "smartToolsClose": "Smart Tools ▴",
     "newBadge": "NEW!",
     "deleteAccount": "Delete Account",
     "viewEdit": "View / Edit",
@@ -67,6 +69,8 @@
     "hideTotal": "Hide ⌣",
     "createTag": "Create",
     "cancelTag": "Cancel",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
     "closeIcon": "✕",
     "darkMode": "Dark Mode ☾",
     "lightMode": "Light Mode ☀︎",
@@ -83,7 +87,131 @@
   },
   "home": {
     "tagline": "Your finance workspace, in one place.",
-    "indexText": "Manage money with clarity."
+    "indexText": "Manage money with clarity.",
+    "heroEyebrow": "Personal finance, presented clearly",
+    "heroTitle": "Track, protect, and understand your money in one secure workspace.",
+    "heroLead": "Seider brings entries, categories, insights, and personal setup together so you can see the full picture without losing control of the details.",
+    "livePreview": "Live preview",
+    "previewTitle": "A focused view of your finances",
+    "previewText": "Timeline, onboarding, and smart tools work together from the first sign-in.",
+    "featurePillFast": "Fast setup",
+    "featurePillEncrypted": "Encrypted data",
+    "featurePillMultiLang": "Multi-language",
+    "metricWorkspace": "Workspace",
+    "metricLanguages": "Languages",
+    "metricInsights": "Smart tools",
+    "metricEncrypted": "Encrypted fields",
+    "benefitsKicker": "Why people use Seider",
+    "benefitsTitle": "Why people use Seider",
+    "benefitsIntro": "Built for people who want a cleaner way to log money, personalize the experience, and make better decisions.",
+    "benefitOneTitle": "One timeline for everything",
+    "benefitOneText": "Log each entry with notes, categories, subcategories, and receipts so your money history stays organized.",
+    "benefitTwoTitle": "Insights that show patterns",
+    "benefitTwoText": "Use future projections, spending insights, search, and comparisons to spot trends before they become problems.",
+    "benefitThreeTitle": "Personalized from day one",
+    "benefitThreeText": "Onboarding collects your base currency, balance, income rhythm, and goals to tailor the workspace to you.",
+    "securityKicker": "Security and privacy",
+    "securityTitle": "Security and privacy",
+    "securityIntro": "Seider is designed to keep your financial data personal, readable, and under your control.",
+    "securityOneTitle": "Encrypted sensitive data",
+    "securityOneText": "Personal fields are encrypted before storage, so the app keeps the raw values out of plain view.",
+    "securityTwoTitle": "Private user accounts",
+    "securityTwoText": "Authentication and Firestore records are scoped to each user, keeping workspaces separated.",
+    "securityThreeTitle": "Choose your language",
+    "securityThreeText": "The interface is localized in English, Spanish, Japanese, and Korean and stores your preference.",
+    "howItWorksKicker": "How it works",
+    "howItWorksTitle": "How it works",
+    "howItWorksIntro": "A simple flow from sign-up to everyday use.",
+    "stepOneTitle": "1. Create your account",
+    "stepOneText": "Use email, Google, or GitHub to get in quickly.",
+    "stepTwoTitle": "2. Personalize Seider",
+    "stepTwoText": "Share your currency, balance, income rhythm, and financial goal during onboarding.",
+    "stepThreeTitle": "3. Track and improve",
+    "stepThreeText": "Use the timeline, tools, and settings to monitor spending and adjust your habits over time.",
+    "closingKicker": "Ready to get started?",
+    "closingTitle": "Ready to bring clarity to your finances?",
+    "closingText": "Start with Seider and turn everyday money management into a private, multilingual workspace.",
+    "footerNote": "Seider keeps personal finance tracking simple and private.",
+    "hero": {
+      "badge": "Fast setup • Encrypted data • Multi-language",
+      "title": {
+        "line1": "Personal finance,",
+        "line2": "presented clearly."
+      },
+      "description": "Track, protect, and understand your money in one secure workspace. Seider brings entries, categories, insights, and personal setup together so you can see the full picture without losing control of the details."
+    },
+    "preview": {
+      "languages": "Languages",
+      "tools": "Smart tools",
+      "encryption": "Encryption",
+      "workspace": "Workspace",
+      "title": "Live Preview",
+      "text": {
+        "balance": "Total Balance",
+        "month": "this month",
+        "groceries": "Groceries",
+        "salary": "Salary",
+        "transport": "Transport"
+      }
+    },
+    "features": {
+      "tag": "Features",
+      "title": "Why people use Seider",
+      "subtitle": "Built for people who want a cleaner way to log money, personalize the experience, and make better decisions.",
+      "one": {
+        "title": "One timeline for everything",
+        "description": "Log each entry with notes, categories, subcategories, and receipts so your money history stays organized."
+      },
+      "two": {
+        "title": "Insights that show patterns",
+        "description": "Use future projections, spending insights, search, and comparisons to spot trends before they become problems."
+      },
+      "three": {
+        "title": "Personalized from day one",
+        "description": "Onboarding collects your base currency, balance, income rhythm, and goals to tailor the workspace to you."
+      }
+    },
+    "security": {
+      "tag": "Security",
+      "title": "Security and privacy",
+      "subtitle": "Seider is designed to keep your financial data personal, readable, and under your control.",
+      "encryption": {
+        "title": "Encrypted sensitive data",
+        "description": "Personal fields are encrypted before storage, keeping important information protected."
+      },
+      "accounts": {
+        "title": "Private user accounts",
+        "description": "Authentication and stored records remain isolated for every user."
+      },
+      "language": {
+        "title": "Choose your language",
+        "description": "Available in English, Spanish, Japanese, and Korean."
+      }
+    },
+    "steps": {
+      "tag": "Process",
+      "title": "How it works",
+      "one": {
+        "title": "Create your account",
+        "description": "Use email, Google, or GitHub to get started quickly."
+      },
+      "two": {
+        "title": "Personalize Seider",
+        "description": "Configure currency, balance, income rhythm, and goals during onboarding."
+      },
+      "three": {
+        "title": "Track and improve",
+        "description": "Use the timeline, smart tools, and settings to monitor progress and improve habits."
+      }
+    },
+    "cta": {
+      "tag": "Get started",
+      "title": "Ready to bring clarity to your finances?",
+      "description": "Start with Seider and turn everyday money management into a private, multilingual workspace."
+    },
+    "footer": {
+      "copy": "© 2026 Seider. Personal finance, presented clearly."
+    }
   },
   "placeholders": {
     "email": "Email",
@@ -98,13 +226,15 @@
     "notes": "Add any notes about this entry..."
   },
   "settings": {
-    "save": "Save"
+    "save": "🗐"
   },
   "labels": {
     "date": "Date:",
     "notes": "Notes:",
     "items": "Items:",
     "total": "Total:",
+    "tagTotal": "Category Total: ",
+    "subtagTotal": "Subcategory Total: ",
     "totalAmount": "Total Amount:",
     "baseCurrency": "Base Currency",
     "initialBalance": "Initial Balance",
@@ -130,9 +260,10 @@
     "currencyExchangeTable": "Currency Exchange Table",
     "exchangeRate": "Exchange Rate",
     "currency": "Currency",
-    "newTag": "New Category",
-    "newSubtag": "New Subcategory",
-    "language": "Language"
+    "newTag": "+ New Category",
+    "newSubtag": "+ New Subcategory",
+    "language": "Language",
+    "simulationPeriod": "Simulation Period"
   },
   "onboarding": {
     "welcome": "Welcome to Seider",
@@ -161,15 +292,20 @@
   },
   "timeline": {
     "welcome": "Welcome back to Seider - your smart finance companion.",
-    "totalAmount": "Total Amount: {value}",
+    "start": "Start of your financial journey in Seider.",
+    "totalAmount": "{value}",
+    "totalAmountTitle": "Total Amount:",
     "entryTotal": "Total: {value}",
     "noNotes": "No notes",
     "viewEdit": "View / Edit",
     "delete": "Delete",
     "totalAmountWaiting": "Total Amount: Waiting...",
     "totalWaiting": "Total: Waiting...",
-    "smartTools": "Smart Tools",
+    "smartTools": "Smart Tools  ▾",
     "futureInsights": "Future Insights",
+    "futureSubtitle": "Predict your future financial trends and make informed decisions.",
+    "noPrediction": "No prediction available",
+    "selectSimulationPeriod": "Select a simulation period and generate your future insights.",
     "insightSearch": "Insight Search",
     "spendingInsights": "Spending Insights",
     "insightsComparison": "Insights Comparison",
@@ -224,13 +360,14 @@
     "deleteAccount": "Delete Account",
     "currencyExchangeTable": "Currency Exchange Table",
     "currencyExchangeProvidedBy": "Exchange rates provided by exchangerate-api.com",
-    "balanceHidden": "Total Amount: {symbol} ***** {currency}",
+    "balanceHidden": "{symbol} ***** {currency}",
     "show": "Show",
     "hide": "Hide"
   },
   "entry": {
     "delete": "Delete",
     "save": "Save",
+    "takePicture": "Take picture",
     "upload": "Upload picture/PDF",
     "noFile": "No file selected",
     "convert": "Convert to {currencyFromUserGlobal} from:",
@@ -260,8 +397,11 @@
     "userDataNotFound": "User data not found",
     "insufficientEntries": "You don't have enough entries {count} (min: {minEntries})",
     "deleteEntry": "Delete this entry?",
+    "deleteEntryMessage": "This will delete the entry permanently. Are you sure?",
     "deleteCategory": "Delete this category?",
+    "deleteCategoryMessage": "This will delete the category and all its subcategories and entries. Are you sure?",
     "deleteAccount": "This will delete your account and all your data. Are you sure?",
+    "deleteAccountMessage": "This will delete your account and all your data. Are you sure?",
     "currencyChange": "Your Base Currency will be changed from {prevCurrency} to {newCurrency}.\n\nCurrent exchange rate:\n1 {prevCurrency} = {rateForward} {newCurrency}\n1 {newCurrency} = {rateBackward} {prevCurrency}\n\nAll stored amounts will be converted to the new Base Currency.\n\nAre you sure you want to continue?"
   },
   "status": {

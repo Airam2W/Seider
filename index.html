@@ -3,158 +3,437 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="titles.home">Seider - Home</title>
 
     <link rel="stylesheet" href="CSS/styles.css">
     <link rel="stylesheet" href="CSS/home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/IMG/logo.png">
 </head>
 
 <body class="hidden">
 
-    <h1 data-i18n="app.name">Seider</h1>
-
-    <p data-i18n="home.tagline">Your finance workspace, in one place.</p>
-
-    <!-- BUTTONS -->
-    <div class="auth-buttons">
-        <button id="btnLogin" data-i18n="buttons.login">Login</button>
-        <button id="btnSignup" data-i18n="buttons.signup">Sign Up</button>
-    </div>
-
-    <!-- MODAL -->
+    <!-- =========================================
+         MODAL
+    ========================================= -->
     <div id="modal" class="modal hidden">
 
         <!-- LOGIN -->
-        <div id="loginBox" class="card hidden">
+        <div id="loginBox" class="auth-card hidden">
 
-            <h2 data-i18n="auth.welcomeBack">Welcome Back</h2>
-            <p class="auth-subtitle" data-i18n="auth.loginSubtitle">
-                Login to continue using Seider.
-            </p>
-
-            <form id="loginForm">
-
-                <input type="email" id="loginEmail" placeholder="Email" data-i18n-placeholder="placeholders.email"
-                    required>
-
-                <input type="password" minlength="6" id="loginPassword" placeholder="Password"
-                    data-i18n-placeholder="placeholders.password" required>
-
-                <button type="submit" data-i18n="buttons.login">Login</button>
-
-            </form>
-
-            <!-- DIVIDER -->
-            <div class="auth-divider">
-                <span data-i18n="common.or">OR</span>
+            <div class="auth-card-header">
+                <h2 data-i18n="auth.welcomeBack">Welcome Back</h2>
+                <p class="auth-subtitle" data-i18n="auth.loginSubtitle">Login to continue using Seider.</p>
             </div>
 
-            <!-- OAUTH -->
-            <button id="googleBtn" class="oauth-btn" data-i18n="buttons.continueWithGoogle">Continue with
-                Google</button>
+            <form id="loginForm" class="auth-form">
+                <div class="form-field">
+                    <input type="email" id="loginEmail" placeholder="Email"
+                        data-i18n-placeholder="placeholders.email" required>
+                </div>
+                <div class="form-field">
+                    <input type="password" minlength="6" id="loginPassword" placeholder="Password"
+                        data-i18n-placeholder="placeholders.password" required>
+                </div>
+                <button type="submit" class="btn-submit" data-i18n="buttons.login">Login</button>
+            </form>
 
-            <button id="githubBtn" class="oauth-btn" data-i18n="buttons.continueWithGitHub">Continue with
-                GitHub</button>
+            <div class="auth-divider"><span data-i18n="common.or">OR</span></div>
 
-            <!-- SWITCH -->
+            <div class="oauth-group">
+                <button id="googleBtn" class="oauth-btn">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+                    <span data-i18n="buttons.continueWithGoogle">Continue with Google</span>
+                </button>
+                <button id="githubBtn" class="oauth-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    <span data-i18n="buttons.continueWithGitHub">Continue with GitHub</span>
+                </button>
+            </div>
+
             <p class="switch-auth">
-                <span data-i18n="auth.noAccount" id="questionnaireLink">Don't have an account?</span>
-                <span id="goSignup" data-i18n="buttons.signup">Sign Up</span>
+                <span class="switch-label" data-i18n="auth.noAccount">Don't have an account?</span>
+                <span id="goSignup" class="switch-link" data-i18n="buttons.signup">Sign Up</span>
             </p>
 
-            <button class="close-btn" onclick="closeModal()" data-i18n="common.close">Close</button>
-
+            <button class="btn-close" onclick="closeModal()" data-i18n="common.close">Close</button>
         </div>
 
         <!-- SIGNUP -->
-        <div id="signupBox" class="card hidden">
+        <div id="signupBox" class="auth-card hidden">
 
-            <h2 data-i18n="auth.createAccountTitle">Create Account</h2>
-
-            <p class="auth-subtitle" data-i18n="auth.signupSubtitle">
-                Start managing your finances smarter.
-            </p>
-
-            <form id="signupForm">
-
-                <input type="text" id="signupName" placeholder="Name" data-i18n-placeholder="placeholders.name"
-                    required>
-
-                <input type="email" id="signupEmail" placeholder="Email" data-i18n-placeholder="placeholders.email"
-                    required>
-
-                <input type="password" minlength="6" id="signupPassword" placeholder="Password"
-                    data-i18n-placeholder="placeholders.password" required>
-
-                <button type="submit" data-i18n="buttons.createAccount">Create Account</button>
-
-            </form>
-
-            <!-- DIVIDER -->
-            <div class="auth-divider">
-                <span data-i18n="common.or">OR</span>
+            <div class="auth-card-header">
+                <h2 data-i18n="auth.createAccountTitle">Create Account</h2>
+                <p class="auth-subtitle" data-i18n="auth.signupSubtitle">Start managing your finances smarter.</p>
             </div>
 
-            <!-- OAUTH -->
-            <button id="googleSignupBtn" class="oauth-btn" data-i18n="buttons.signupWithGoogle">Sign Up with
-                Google</button>
+            <form id="signupForm" class="auth-form">
+                <div class="form-field">
+                    <input type="text" id="signupName" placeholder="Name"
+                        data-i18n-placeholder="placeholders.name" required>
+                </div>
+                <div class="form-field">
+                    <input type="email" id="signupEmail" placeholder="Email"
+                        data-i18n-placeholder="placeholders.email" required>
+                </div>
+                <div class="form-field">
+                    <input type="password" minlength="6" id="signupPassword" placeholder="Password"
+                        data-i18n-placeholder="placeholders.password" required>
+                </div>
+                <button type="submit" class="btn-submit" data-i18n="buttons.createAccount">Create Account</button>
+            </form>
 
-            <button id="githubSignupBtn" class="oauth-btn" data-i18n="buttons.signupWithGitHub">Sign Up with
-                GitHub</button>
+            <div class="auth-divider"><span data-i18n="common.or">OR</span></div>
 
-            <!-- SWITCH -->
+            <div class="oauth-group">
+                <button id="googleSignupBtn" class="oauth-btn">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+                    <span data-i18n="buttons.signupWithGoogle">Sign Up with Google</span>
+                </button>
+                <button id="githubSignupBtn" class="oauth-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    <span data-i18n="buttons.signupWithGitHub">Sign Up with GitHub</span>
+                </button>
+            </div>
+
             <p class="switch-auth">
-                    <span data-i18n="auth.haveAccount" id="questionnaireLink">Already have an account?</span>
-                    <span id="goLogin" data-i18n="buttons.login">Login</span>
+                <span class="switch-label" data-i18n="auth.haveAccount">Already have an account?</span>
+                <span id="goLogin" class="switch-link" data-i18n="buttons.login">Login</span>
             </p>
 
-            <button class="close-btn" onclick="closeModal()" data-i18n="common.close">Close</button>
-
+            <button class="btn-close" onclick="closeModal()" data-i18n="common.close">Close</button>
         </div>
 
     </div>
 
-    <!-- SIDE BUTTONS LEFT -->
-    <div class="side-buttons-left">
-        <button id="darkModeToggle" class="toggle-btn" data-i18n="common.darkMode">Dark Mode</button>
-    </div>
+    <!-- =========================================
+         NAV
+    ========================================= -->
+    <nav class="site-nav" id="siteNav">
+        <div class="nav-inner">
 
-    <!-- SIDE BUTTONS RIGHT TOP -->
-<div class="side-buttons-right-top">
+            <a class="nav-brand" href="">
+                <img src="IMG/largeLogo.png" id="homeLargeLogo" class="nav-logo-img" alt="Seider logo">
+            </a>
 
-    <div class="language-wrapper">
+            <div class="nav-right">
 
-        <button id="languageToggle" class="toggle-btn language-toggle">
-            <span data-i18n="languages.selectorLabel">Language 🌐 ▾</span>
-        </button>
+                <div class="language-wrapper">
+                    <button id="languageToggle" class="nav-lang-btn">
+                        <span data-i18n="languages.selectorLabel">Language 🌐 ▾</span>
+                    </button>
+                    <div id="languageMenu" class="language-menu hidden">
+                        <button class="language-option" data-lang="en" data-i18n="languages.english">English</button>
+                        <button class="language-option" data-lang="es" data-i18n="languages.spanish">Spanish</button>
+                        <button class="language-option" data-lang="ja" data-i18n="languages.japanese">Japanese</button>
+                        <button class="language-option" data-lang="ko" data-i18n="languages.korean">Korean</button>
+                    </div>
+                </div>
 
-        <div id="languageMenu" class="language-menu hidden">
+                <button id="darkModeToggle" class="nav-theme-btn" data-i18n="common.darkMode" title="Toggle theme">
+                    <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
 
-            <button class="language-option" data-lang="en" data-i18n="languages.english">
-                English
-            </button>
+                <button id="btnLogin" class="nav-btn-login">
+                    <span data-i18n="buttons.login">Login</span>
+                </button>
 
-            <button class="language-option" data-lang="es" data-i18n="languages.spanish">
-                Spanish
-            </button>
+                <button id="btnSignup" class="nav-btn-signup">
+                    <span data-i18n="buttons.signup">Sign Up</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
 
-            <button class="language-option" data-lang="ja" data-i18n="languages.japanese">
-                Japanese
-            </button>
+            </div>
+        </div>
+    </nav>
 
-            <button class="language-option" data-lang="ko" data-i18n="languages.korean">
-                Korean
-            </button>
+    <!-- =========================================
+         HERO
+    ========================================= -->
+    <section class="hero-section">
 
+        <div class="hero-bg">
+            <div class="hero-orb hero-orb-1"></div>
+            <div class="hero-orb hero-orb-2"></div>
+            <div class="hero-grid"></div>
         </div>
 
+        <div class="hero-inner">
+
+            <div class="hero-content">
+
+                <span class="hero-badge" data-i18n="home.hero.badge">
+                    Fast setup · Encrypted data · Multi-language
+                </span>
+
+                <h1 class="hero-title">
+                    <span data-i18n="home.hero.title.line1">Personal finance,</span><br>
+                    <span class="hero-title-accent" data-i18n="home.hero.title.line2">presented clearly.</span>
+                </h1>
+
+                <p class="hero-desc" data-i18n="home.hero.description">
+                    Track, protect, and understand your money in one secure workspace.
+                </p>
+
+                <div class="hero-actions">
+                    <button id="heroSignupBtn" class="btn-primary btn-lg">
+                        <span data-i18n="buttons.signup">Sign Up Free</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                    <button id="heroLoginBtn" class="btn-ghost btn-lg" data-i18n="buttons.login">
+                        Sign in
+                    </button>
+                </div>
+
+                <div class="hero-meta">
+                    <div class="hero-meta-item">
+                        <span class="meta-num">4</span>
+                        <span class="meta-label" data-i18n="home.preview.languages">Languages</span>
+                    </div>
+                    <div class="hero-meta-divider"></div>
+                    <div class="hero-meta-item">
+                        <span class="meta-num">4</span>
+                        <span class="meta-label" data-i18n="home.preview.tools">Smart Tools</span>
+                    </div>
+                    <div class="hero-meta-divider"></div>
+                    <div class="hero-meta-item">
+                        <span class="meta-num">AES</span>
+                        <span class="meta-label" data-i18n="home.preview.encryption">Encryption</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="hero-visual">
+                <div class="preview-card">
+
+                    <div class="preview-header">
+                        <div class="preview-header-left">
+                            <div class="preview-status-dot"></div>
+                            <span class="preview-header-title" data-i18n="home.preview.title">Dashboard</span>
+                        </div>
+                        <span class="preview-badge-chip">AES-256</span>
+                    </div>
+
+                    <div class="preview-balance-block">
+                        <div class="preview-balance-label" data-i18n="home.preview.text.balance">Total Balance</div>
+                        <div class="preview-balance-amount">$12,480<span class="preview-cents">.50</span></div>
+                        <div class="preview-balance-change">
+                            <span class="preview-up">↑ 4.2%</span>
+                            <span class="preview-period" data-i18n="home.preview.text.month">this month</span>
+                        </div>
+                    </div>
+
+                    <div class="preview-chart-area">
+                        <div class="preview-chart">
+                            <div class="chart-bar" style="--h:55%"></div>
+                            <div class="chart-bar" style="--h:75%"></div>
+                            <div class="chart-bar" style="--h:42%"></div>
+                            <div class="chart-bar" style="--h:88%"></div>
+                            <div class="chart-bar active" style="--h:65%"></div>
+                            <div class="chart-bar" style="--h:72%"></div>
+                            <div class="chart-bar" style="--h:50%"></div>
+                        </div>
+                    </div>
+
+                    <div class="preview-transactions">
+                        <div class="preview-txn">
+                            <div class="txn-icon" style="background:rgba(59,130,246,0.15);color:#3b82f6">🛒</div>
+                            <span class="txn-name" data-i18n="home.preview.text.groceries">Groceries</span>
+                            <span class="txn-amount txn-out">-$48.00</span>
+                        </div>
+                        <div class="preview-txn">
+                            <div class="txn-icon" style="background:rgba(16,185,129,0.15);color:#10b981">💼</div>
+                            <span class="txn-name" data-i18n="home.preview.text.salary">Salary</span>
+                            <span class="txn-amount txn-in">+$3,200</span>
+                        </div>
+                        <div class="preview-txn">
+                            <div class="txn-icon" style="background:rgba(245,158,11,0.15);color:#f59e0b">🚌</div>
+                            <span class="txn-name" data-i18n="home.preview.text.transport">Transport</span>
+                            <span class="txn-amount txn-out">-$22.50</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- =========================================
+         FEATURES
+    ========================================= -->
+    <section class="page-section" id="features">
+
+        <div class="section-header">
+            <div class="section-tag" data-i18n="home.features.tag">Features</div>
+            <h2 data-i18n="home.features.title">Why people use Seider</h2>
+            <p data-i18n="home.features.subtitle">Built for people who want a cleaner way to manage money.</p>
+        </div>
+
+        <div class="cards-grid">
+
+            <div class="feature-card">
+                <div class="feature-number">01</div>
+                <h3 data-i18n="home.features.one.title">One timeline for everything</h3>
+                <p data-i18n="home.features.one.description">Log entries, notes, categories and receipts in one place.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-number">02</div>
+                <h3 data-i18n="home.features.two.title">Insights that show patterns</h3>
+                <p data-i18n="home.features.two.description">Discover trends through projections and analytics.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-number">03</div>
+                <h3 data-i18n="home.features.three.title">Personalized from day one</h3>
+                <p data-i18n="home.features.three.description">Configure your finances and goals during onboarding.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- =========================================
+         SECURITY
+    ========================================= -->
+    <section class="page-section security-section">
+
+        <div class="section-header">
+            <div class="section-tag" data-i18n="home.security.tag">Security</div>
+            <h2 data-i18n="home.security.title">Security and privacy</h2>
+            <p data-i18n="home.security.subtitle">Designed to keep your financial information private.</p>
+        </div>
+
+        <div class="cards-grid security-grid">
+
+            <div class="security-card">
+                <div class="security-icon">🔒</div>
+                <h3 data-i18n="home.security.encryption.title"></h3>
+                <p data-i18n="home.security.encryption.description"></p>
+            </div>
+
+            <div class="security-card">
+                <div class="security-icon">👤</div>
+                <h3 data-i18n="home.security.accounts.title"></h3>
+                <p data-i18n="home.security.accounts.description"></p>
+            </div>
+
+            <div class="security-card">
+                <div class="security-icon">🌐</div>
+                <h3 data-i18n="home.security.language.title"></h3>
+                <p data-i18n="home.security.language.description"></p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- =========================================
+         HOW IT WORKS
+    ========================================= -->
+    <section class="page-section steps-section">
+
+        <div class="section-header">
+            <div class="section-tag" data-i18n="home.steps.tag">Process</div>
+            <h2 data-i18n="home.steps.title">How it works</h2>
+        </div>
+
+        <div class="steps-grid">
+
+            <div class="step-card">
+                <div class="step-connector"></div>
+                <div class="step-number">1</div>
+                <div class="step-body">
+                    <h3 data-i18n="home.steps.one.title"></h3>
+                    <p data-i18n="home.steps.one.description"></p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-connector"></div>
+                <div class="step-number">2</div>
+                <div class="step-body">
+                    <h3 data-i18n="home.steps.two.title"></h3>
+                    <p data-i18n="home.steps.two.description"></p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-body">
+                    <h3 data-i18n="home.steps.three.title"></h3>
+                    <p data-i18n="home.steps.three.description"></p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- =========================================
+         CTA
+    ========================================= -->
+    <section class="cta-section">
+
+        <div class="cta-inner">
+            <div class="cta-glow"></div>
+            <div class="section-tag cta-tag" data-i18n="home.cta.tag">Get Started</div>
+            <h2 data-i18n="home.cta.title">Ready to get started?</h2>
+            <p data-i18n="home.cta.description">Bring clarity to your finances.</p>
+            <div class="cta-actions">
+                <button id="ctaSignupBtn" class="btn-primary btn-lg">
+                    <span data-i18n="buttons.signup">Sign Up Free</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+                <button id="ctaLoginBtn" class="btn-ghost-light btn-lg" data-i18n="buttons.login">
+                    Login
+                </button>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- =========================================
+         FOOTER
+    ========================================= -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo-dot"></span>
+                <span>Seider</span>
+            </div>
+            <p class="footer-copy" data-i18n="home.footer.copy">© 2026 Seider. Personal finance, presented clearly.</p>
+        </div>
+    </footer>
+
+    <!-- SCROLL TOP -->
+    <div class="side-buttons-right">
+        <button id="btnScrollTop" class="scroll-top" style="display:none">↑</button>
     </div>
 
-</div>
+    <!-- =========================================
+         CUSTOM ALERT / CONFIRM
+    ========================================= -->
+    <div id="customModalOverlay" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="custom-modal-header">
+                <div id="customModalIcon" class="custom-modal-icon">⚡</div>
+                <div id="customModalTitle" class="custom-modal-title">Alert</div>
+            </div>
+            <div id="customModalMessage" class="custom-modal-message">Message here...</div>
+            <div class="custom-modal-actions">
+                <button id="customModalCancel" class="custom-modal-btn cancel">Cancel</button>
+                <button id="customModalConfirm" class="custom-modal-btn confirm">OK</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         if (localStorage.getItem("darkMode") === "true") {
             document.documentElement.classList.add("dark-mode");
+            document.body.classList.add("dark-mode");
         }
     </script>
 
@@ -164,35 +443,23 @@
         import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { app, auth, provider } from "./JS/firebase-config.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
         const db = getFirestore(app);
-
         function getSecretKey() {
             const user = auth.currentUser;
-            if (!user) {
-                throw new Error("No user logged in");
-            }
+            if (!user) throw new Error("No user logged in");
             return user.uid + user.email;
         }
-
         export function encryptData(text) {
             if (!text) return "";
-            const SECRET_KEY = getSecretKey();
-
-            return CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
+            return CryptoJS.AES.encrypt(text, getSecretKey()).toString();
         }
-
         export function decryptData(cipher) {
             if (!cipher) return "";
-            const SECRET_KEY = getSecretKey();
-
-            const bytes = CryptoJS.AES.decrypt(cipher, SECRET_KEY);
+            const bytes = CryptoJS.AES.decrypt(cipher, getSecretKey());
             return bytes.toString(CryptoJS.enc.Utf8);
         }
-
     </script>
 
     <script type="module" src="JS/home.js"></script>
 </body>
-
 </html>

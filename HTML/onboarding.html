@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title data-i18n="titles.onboarding">Seider - Welcome</title>
+<title data-i18n="titles.onboarding">Seider - Welcome</title>
 
-    <link rel="stylesheet" href="../CSS/onboarding.css">
 
+<link rel="stylesheet" href="../CSS/onboarding.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="/IMG/logo.png">
 </head>
+
 <body>
 
+
+
     <div class="background-glow"></div>
+
+
 
     <div class="onboarding-container">
 
@@ -46,13 +55,15 @@
 
                     <button class="option-btn gender-btn" data-value="Other" data-i18n="common.other">Other</button>
 
-                    <button class="option-btn gender-btn" data-value="no" data-i18n="onboarding.preferNotToSay">Prefer not to say</button>
+                    <button class="option-btn gender-btn" data-value="no" data-i18n="onboarding.preferNotToSay">Prefer
+                        not to say</button>
 
                 </div>
 
                 <select id="ageRange">
 
-                    <option value="no" selected data-i18n="onboarding.selectAgeRange">Select Age Range / Prefer not to say</option>
+                    <option value="no" selected data-i18n="onboarding.selectAgeRange">Select Age Range / Prefer not
+                        to say</option>
 
                     <option value="13-17">13 - 17</option>
                     <option value="18-24">18 - 24</option>
@@ -70,16 +81,6 @@
 
                 <h2 data-i18n="onboarding.yourFinances">Your finances</h2>
 
-                <select id="incomeFrequency">
-
-                    <option value="no" selected data-i18n="onboarding.incomeFrequency">Income frequency / Prefer not to say</option>
-
-                    <option value="Weekly" data-i18n="common.weekly">Weekly</option>
-                    <option value="Biweekly" data-i18n="common.biweekly">Biweekly</option>
-                    <option value="Monthly" data-i18n="common.monthly">Monthly</option>
-
-                </select>
-
                 <select id="currency">
                     <option value="USD" selected data-i18n="labels.baseCurrency">Base Currency</option>
                     <option id="USD" value="USD" data-i18n="currencies.USD">USD - US Dollar</option>
@@ -96,14 +97,23 @@
                     <option id="SEK" value="SEK" data-i18n="currencies.SEK">SEK - Swedish Krona</option>
                 </select>
 
-                <input
-                    type="number"
-                    id="currentBalance"
-                    placeholder="Current balance"
-                    data-i18n-placeholder="placeholders.currentBalance"
-                >
+                <select id="incomeFrequency">
 
-                
+                    <option value="no" selected data-i18n="onboarding.incomeFrequency">Income frequency / Prefer not
+                        to say</option>
+
+                    <option value="Weekly" data-i18n="common.weekly">Weekly</option>
+                    <option value="Biweekly" data-i18n="common.biweekly">Biweekly</option>
+                    <option value="Monthly" data-i18n="common.monthly">Monthly</option>
+
+                </select>
+
+
+
+                <input type="number" id="currentBalance" placeholder="Current balance"
+                    data-i18n-placeholder="placeholders.currentBalance">
+
+
 
             </div>
 
@@ -114,17 +124,22 @@
 
                 <div class="option-grid">
 
-                    <button class="option-btn goal-btn" data-value="Save Money" data-i18n="common.saveMoney">Save Money</button>
+                    <button class="option-btn goal-btn" data-value="Save Money" data-i18n="common.saveMoney">Save
+                        Money</button>
 
-                    <button class="option-btn goal-btn" data-value="Track Expenses" data-i18n="common.trackExpenses">Track Expenses</button>
+                    <button class="option-btn goal-btn" data-value="Track Expenses"
+                        data-i18n="common.trackExpenses">Track Expenses</button>
 
-                    <button class="option-btn goal-btn" data-value="Reduce Debt" data-i18n="common.reduceDebt">Reduce Debt</button>
+                    <button class="option-btn goal-btn" data-value="Reduce Debt" data-i18n="common.reduceDebt">Reduce
+                        Debt</button>
 
-                    <button class="option-btn goal-btn" data-value="Improve Habits" data-i18n="common.improveHabits">Improve Habits</button>
+                    <button class="option-btn goal-btn" data-value="Improve Habits"
+                        data-i18n="common.improveHabits">Improve Habits</button>
 
                     <button class="option-btn goal-btn" data-value="Other" data-i18n="common.other">Other</button>
 
-                    <button class="option-btn goal-btn" data-value="no" data-i18n="onboarding.preferNotToSay">Prefer not to say</button>
+                    <button class="option-btn goal-btn" data-value="no" data-i18n="onboarding.preferNotToSay">Prefer
+                        not to say</button>
 
                 </div>
 
@@ -164,15 +179,54 @@
     <div class="side-buttons-left">
         <button id="darkModeToggle" class="toggle-btn" data-i18n="common.darkMode">Dark Mode</button>
     </div>
-
     <script>
         if (localStorage.getItem("darkMode") === "true") {
             document.documentElement.classList.add("dark-mode");
         }
     </script>
 
+    <!-- CUSTOM ALERT/CONFIRM-->
+    <div id="customModalOverlay" class="custom-modal-overlay">
+
+        <div class="custom-modal">
+
+            <div class="custom-modal-header">
+
+                <div id="customModalIcon" class="custom-modal-icon">
+                    ⚡
+                </div>
+
+                <div id="customModalTitle" class="custom-modal-title">
+                    Alert
+                </div>
+
+            </div>
+
+            <div id="customModalMessage" class="custom-modal-message">
+                Message here...
+            </div>
+
+            <div class="custom-modal-actions">
+
+                <button id="customModalCancel" class="custom-modal-btn cancel">
+                    Cancel
+                </button>
+
+                <button id="customModalConfirm" class="custom-modal-btn confirm">
+                    OK
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <script type="module" src="../JS/onboarding.js"></script>
 
 </body>
+
 </html>

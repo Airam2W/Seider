@@ -1,146 +1,925 @@
-body.dark-mode {
-    background: #111;
+/* =========================================
+   BASE
+========================================= */
+
+body{
+    background:
+        radial-gradient(circle at top left,
+            rgba(91,140,255,0.06),
+            transparent 25%),
+        radial-gradient(circle at bottom right,
+            rgba(0,255,180,0.04),
+            transparent 25%),
+        #f4f7fb;
+
+    min-height:100vh;
+
+    color:#111827;
 }
 
-.entry-container {
-    max-width: 600px;
-    margin: 30px auto;
+
+/* =========================================
+   DARK MODE
+========================================= */
+
+body.dark-mode{
+    background:
+        radial-gradient(circle at top left,
+            rgba(91,140,255,0.08),
+            transparent 25%),
+        radial-gradient(circle at bottom right,
+            rgba(0,255,180,0.05),
+            transparent 25%),
+        #0f1115;
+
+    color:#f5f5f5;
 }
 
-.item-row {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 10px;
+/* =========================================
+   CONTAINER
+========================================= */
+
+.entry-container{
+    max-width:1200px;
+
+    margin:40px auto;
+
+    padding:0 20px;
 }
 
-.green {
-    border: 2px solid green;
+.entry-container::-webkit-scrollbar {
+
+    width: 10px;
 }
 
-.red {
-    border: 2px solid red;
+.entry-container::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-.total-box {
-    margin-top: 20px;
-    font-size: 20px;
-    font-weight: bold;
+body.dark-mode .entry-container::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-.actions {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
+body.dark-mode .entry-container::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
 }
 
-.notes-box {
-    margin-top: 20px;
+/* =========================================
+   DATE BOX
+========================================= */
+
+.entry-date-box{
+    background: rgba(0,0,0,0.78);
+
+    color:white;
+
+    border:1px solid rgba(255,255,255,0.6);
+
+    backdrop-filter: blur(12px);
+
+    border-radius:20px;
+
+    padding:18px 24px;
+
+    margin-bottom:24px;
+
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.06);
 }
 
-.modal {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex; justify-content: center; align-items: center;
-}
-.modal.hidden { display: none; }
-.modal-content {
-  background: white; padding: 20px; border-radius: 8px;
-  max-width: 300px; width: 100%;
+body.dark-mode .entry-date-box{
+    background: rgba(255,255,255,0.04);
+
+    border:1px solid rgba(255,255,255,0.06);
 }
 
-.tag-group {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fafafa;
+#entryDateValue{
+    font-weight:700;
 }
 
-.tag-items {
-    margin-bottom: 10px;
+/* =========================================
+   CATEGORY BUTTON
+========================================= */
+
+#btnAddGroup{
+    width:100%;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5b8cff,
+            #6f61ff
+        );
+
+    color:white;
+
+    font-size:15px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    margin-bottom:24px;
+
+    transition:0.25s ease;
 }
 
-.tag-group h3 {
-    margin-bottom: 10px;
+#btnAddGroup:hover{
+
+    box-shadow:
+        0 15px 30px rgba(91,140,255,0.25);
 }
 
-.tag-header {
-    margin-bottom: 10px;
+/* =========================================
+   TAG GROUP
+========================================= */
+
+.tag-group{
+    background:
+        rgba(255,255,255,0.82);
+
+    backdrop-filter: blur(12px);
+
+    border:1px solid rgba(255,255,255,0.6);
+
+    border-radius:28px;
+
+    padding:24px;
+
+    margin-bottom:24px;
+
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,0.06);
 }
 
-.item-row button {
-    background: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-    padding: 4px 8px;
+body.dark-mode .tag-group{
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,0.04),
+            rgba(255,255,255,0.02)
+        );
+
+    border:1px solid rgba(255,255,255,0.06);
 }
 
-.tag-header button {
-    margin-left: 10px;
-    background: #444;
-    color: white;
-    border: none;
-    cursor: pointer;
-    padding: 5px 10px;
+/* =========================================
+   TAG HEADER
+========================================= */
+
+.tag-header{
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    margin-bottom:20px;
 }
 
-.subtag-select {
-    margin-left: 10px;
+.tag-header select{
+    flex:1;
 }
 
-.subtag-block {
-    margin-left: 20px;
-    border-left: 2px solid #ccc;
-    padding-left: 10px;
-    margin-top: 10px;
+/* =========================================
+   SELECTS + INPUTS
+========================================= */
+
+select,
+input{
+    background: rgba(255,255,255,0.7);
+
+    border:1px solid rgba(0,0,0,0.08);
+
+    border-radius:16px;
+
+    padding:14px 16px;
+
+    font-size:14px;
+
+    outline:none;
+
+    transition:0.25s ease;
 }
 
-.entry-date-box {
-    background: #1e1e1e;
-    padding: 10px 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-    color: #ccc;
+body.dark-mode select,
+body.dark-mode input{
+    background: rgba(255,255,255,0.05);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    color:white;
 }
 
-#entryDateValue {
-    font-weight: bold;
-    color: #fff;
+select:focus,
+input:focus{
+    border-color:#5b8cff;
+
+    box-shadow:
+        0 0 0 4px rgba(91,140,255,0.15);
 }
 
-.side-buttons-left {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
+/* =========================================
+   TOTALS
+========================================= */
 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
+.tag-total{
+    font-weight:700;
 
-    z-index: 999;
+    font-size:18px;
+
+    color: #000000;
+
+    white-space:nowrap;
+}
+.subtag-total{
+    font-weight:700;
+
+    font-size:18px;
+
+    color: #292929;
+
+    white-space:nowrap;
 }
 
-.side-buttons-left button {
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: none;
-    background: #1e1e1e;
-    color: #fff;
-    cursor: pointer;
-    font-size: 14px;
+/* =========================================
+   SUBTAG GROUP
+========================================= */
 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    transition: all 0.2s ease;
+.subtag-Group{
+
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+
+
+    background:
+        rgba(255,255,255,0.45);
+
+    border:1px solid rgba(0,0,0,0.06);
+
+    border-radius:22px;
+
+    padding:18px;
+
+    margin-bottom:18px;
 }
 
-.side-buttons-left button:hover {
-    background: #2a2a2a;
-    transform: translateY(-2px);
+body.dark-mode .subtag-Group{
+    background:
+        rgba(255,255,255,0.03);
+
+    border:1px solid rgba(255,255,255,0.05);
+}
+
+/* =========================================
+   ITEM ROW
+========================================= */
+
+.item-row{
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        1fr
+        1fr;
+
+    gap:12px;
+
+    align-items:center;
+
+    margin-bottom:14px;
+
+    padding:16px;
+
+    border-radius:20px;
+
+    background:
+        rgba(255,255,255,0.55);
+
+    border:1px solid rgba(0,0,0,0.05);
+}
+
+body.dark-mode .item-row{
+    background:
+        rgba(255,255,255,0.03);
+
+    border:1px solid rgba(255,255,255,0.04);
+}
+
+.input-box{
+    display:flex;
+
+    gap:10px;
+
+    margin-top:20px;
+}
+
+.upload-box{
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-top:20px;
+}
+
+.preview-box{
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-top:20px;
+}
+
+/* =========================================
+   PLUS / MINUS
+========================================= */
+
+.green{
+    border:2px solid rgba(0, 200, 120, 0.8) !important;
+}
+
+.red{
+    border:2px solid rgba(255,70,70,0.8) !important;
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+button{
+    border:none;
+
+    border-radius:14px;
+
+    padding:12px 16px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:0.25s ease;
+}
+
+
+/* =========================================
+   PRIMARY BUTTONS
+========================================= */
+
+#btnSave{
+    background:
+        linear-gradient(
+            135deg,
+            #5b8cff,
+            #6f61ff
+        );
+
+    color:white;
+}
+
+#btnSave:hover{
+    box-shadow:
+        0 12px 24px rgba(91,140,255,0.25);
+}
+
+/* =========================================
+   SECONDARY BUTTONS
+========================================= */
+
+#btnCancel,
+.tag-header button,
+.subtag-header button,
+.item-row button{
+    background: rgba(0,0,0,0.08);
+
+    color:#111827;
+}
+
+body.dark-mode #btnCancel,
+body.dark-mode .tag-header button,
+body.dark-mode .item-row button{
+    background: rgba(255,255,255,0.08);
+
+    color:white;
+}
+
+/* =========================================
+   TOTAL BOX
+========================================= */
+
+.total-box{
+    margin-top:30px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(91,140,255,0.12),
+            rgba(111,97,255,0.12)
+        );
+
+    border-radius:22px;
+
+    padding:24px;
+
+    text-align:center;
+
+    font-size:24px;
+    font-weight:800;
+
+    color:#3b5cff;
+
+    border:1px solid rgba(91,140,255,0.15);
+}
+
+/* =========================================
+   NOTES
+========================================= */
+
+#editor{
+    margin-top:24px;
+
+    background:white;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    color: #111827;
+
+    border:1px solid rgba(0,0,0,0.06);
+}
+
+body.dark-mode #editor{
+    background:#414347;
+
+    color:#000000;
+
+    border:1px solid rgba(255,255,255,0.06);
+}
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.actions{
+    margin-top:24px;
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:14px;
+}
+
+/* =========================================
+   MODALS
+========================================= */
+
+.modal{
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,0.5);
+
+    backdrop-filter:blur(6px);
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    z-index:999;
+}
+
+.modal.hidden{
+    display:none;
+}
+
+.modal-content{
+    width:90%;
+    max-width:420px;
+
+    background:white;
+
+    border-radius:28px;
+
+    padding:28px;
+
+    box-shadow:
+        0 30px 60px rgba(0,0,0,0.25);
+}
+
+body.dark-mode .modal-content{
+    background:#17191d;
+}
+
+.modal-actions{
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    margin-top:20px;
+}
+
+/* =========================================
+   FLOATING BUTTON
+========================================= */
+
+.side-buttons-left{
+    position:fixed;
+
+    left:20px;
+    bottom:20px;
+
+    z-index:999;
+}
+
+.side-buttons-left button{
+    background:
+        rgba(0,0,0,0.85);
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,0.7);
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,0.08);
+}
+
+body.dark-mode .side-buttons-left button{
+    background:
+        rgba(255,255,255,0.06);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    color:white;
+}
+
+
+
+
+
+.converter-box{
+    display:flex;
+    flex-wrap:wrap;
+
+    flex-direction:row;
+
+    gap:10px;
+
+    align-items:center;
+}
+
+.file-name{
+    font-size:13px;
+    color:#777;
+}
+
+body.dark-mode .file-name{
+    color:#bbb;
+}
+
+.converter-box span{
+    font-weight:600;
+    color:#666;
+}
+
+body.dark-mode .converter-box span{
+    color:#ddd;
+}
+
+/* =========================================
+   IMPROVED DARK MODE
+========================================= */
+
+body.dark-mode{
+    background:
+        radial-gradient(circle at top left,
+            rgba(91,140,255,0.10),
+            transparent 28%),
+        radial-gradient(circle at bottom right,
+            rgba(0,255,180,0.06),
+            transparent 28%),
+        linear-gradient(
+            180deg,
+            #0b1220 0%,
+            #0f172a 100%
+        );
+
+    color:#f8fafc;
+}
+
+/* =========================================
+   DATE BOX
+========================================= */
+
+body.dark-mode .entry-date-box{
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255),
+            rgba(255,255,254)
+        );
+
+    border:
+        1px solid rgba(148,163,184,0.14);
+
+    color:
+        #080808;
+
+    box-shadow:
+        0 18px 40px rgba(0,0,0,0.35);
+}
+
+/* =========================================
+   TAG GROUP
+========================================= */
+
+body.dark-mode .tag-group{
+    background:
+        linear-gradient(
+            180deg,
+            rgba(30,41,59,0.74),
+            rgba(15,23,42,0.88)
+        );
+
+    border:
+        1px solid rgba(148,163,184,0.10);
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,0.32);
+}
+
+/* =========================================
+   INPUTS + SELECTS
+========================================= */
+
+body.dark-mode select,
+body.dark-mode input{
+    background:
+        rgba(15,23,42,0.88);
+
+    border:
+        1px solid rgba(148,163,184,0.14);
+
+    color:
+        #f8fafc;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+body.dark-mode select::placeholder,
+body.dark-mode input::placeholder{
+    color:#94a3b8;
+}
+
+body.dark-mode select:hover,
+body.dark-mode input:hover{
+    border-color:
+        rgba(96,165,250,0.30);
+}
+
+body.dark-mode select:focus,
+body.dark-mode input:focus{
+    border-color:#60a5fa;
+
+    box-shadow:
+        0 0 0 4px rgba(96,165,250,0.16);
+}
+
+/* =========================================
+   TOTALS
+========================================= */
+
+body.dark-mode .tag-total{
+    color:#f8fafc;
+}
+
+body.dark-mode .subtag-total{
+    color:#e2e8f0;
+}
+
+/* =========================================
+   SUBTAG GROUP
+========================================= */
+
+body.dark-mode .subtag-Group{
+    background:
+        rgba(15,23,42,0.55);
+
+    border:
+        1px solid rgba(148,163,184,0.08);
+}
+
+/* =========================================
+   ITEM ROW
+========================================= */
+
+body.dark-mode .item-row{
+    background:
+        linear-gradient(
+            180deg,
+            rgba(30,41,59,0.55),
+            rgba(15,23,42,0.72)
+        );
+
+    border:
+        1px solid rgba(148,163,184,0.08);
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.18);
+}
+
+body.dark-mode .item-row:hover{
+    border-color:
+        rgba(96,165,250,0.20);
+}
+
+/* =========================================
+   PLUS / MINUS STATES
+========================================= */
+
+body.dark-mode .green{
+    border:
+        2px solid rgba(34,197,94,0.32);
+}
+
+body.dark-mode .red{
+    border:
+        2px solid rgba(239,68,68,0.32);
+}
+
+/* =========================================
+   SECONDARY BUTTONS
+========================================= */
+
+body.dark-mode #btnCancel,
+body.dark-mode .tag-header button,
+body.dark-mode .subtag-header button,
+body.dark-mode .item-row button{
+    background:
+        rgba(255,255,255,0.06);
+
+    border:
+        1px solid rgba(148,163,184,0.08);
+
+    color:
+        #f8fafc;
+}
+
+body.dark-mode #btnCancel:hover,
+body.dark-mode .tag-header button:hover,
+body.dark-mode .subtag-header button:hover,
+body.dark-mode .item-row button:hover{
+    background:
+        rgba(255,255,255,0.10);
+
+    border-color:
+        rgba(96,165,250,0.20);
+}
+
+/* =========================================
+   TOTAL BOX
+========================================= */
+
+body.dark-mode .total-box{
+    background:
+        linear-gradient(
+            135deg,
+            rgba(59,130,246,0.16),
+            rgba(99,102,241,0.14)
+        );
+
+    border:
+        1px solid rgba(96,165,250,0.18);
+
+    color:
+        #93c5fd;
+
+    box-shadow:
+        0 18px 40px rgba(37,99,235,0.14);
+}
+
+/* =========================================
+   EDITOR
+========================================= */
+
+body.dark-mode #editor{
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.72),
+            rgba(255, 255, 255, 0.92)
+        );
+
+    border:
+        1px solid rgba(148,163,184,0.08);
+}
+
+body.dark-mode #editor::placeholder{
+    color:#000000;
+}
+
+/* =========================================
+   MODAL
+========================================= */
+
+body.dark-mode .modal{
+    background:
+        rgba(2,6,23,0.72);
+
+    backdrop-filter:
+        blur(10px);
+}
+
+body.dark-mode .modal-content{
+    background:
+        linear-gradient(
+            180deg,
+            rgba(30,41,59,0.92),
+            rgba(15,23,42,0.96)
+        );
+
+    border:
+        1px solid rgba(148,163,184,0.10);
+
+    color:
+        #f8fafc;
+
+    box-shadow:
+        0 30px 70px rgba(0,0,0,0.45);
+}
+
+/* =========================================
+   FLOATING BUTTON
+========================================= */
+
+body.dark-mode .side-buttons-left button{
+    background:
+        rgba(15,23,42,0.88);
+
+    border:
+        1px solid rgba(148,163,184,0.14);
+
+    color:
+        #f8fafc;
+
+    box-shadow:
+        0 12px 28px rgba(0,0,0,0.30);
+}
+
+body.dark-mode .side-buttons-left button:hover{
+    background:
+        rgba(30,41,59,0.92);
+
+    border-color:
+        rgba(96,165,250,0.20);
+}
+
+/* =========================================
+   TEXT DETAILS
+========================================= */
+
+body.dark-mode .file-name{
+    color:#94a3b8;
+}
+
+body.dark-mode .converter-box span{
+    color:#e2e8f0;
+}
+/* =========================================
+   MOBILE
+========================================= */
+@media (max-width: 700px) {
+    .item-row{
+        grid-template-columns:
+            1fr;
+    }
 }

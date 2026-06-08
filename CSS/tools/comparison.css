@@ -1,29 +1,43 @@
-/* =========================
-   COMPARISON LAYOUT
-========================= */
+/* =========================================
+   COMPARISON MODAL
+========================================= */
 
 .comparison-layout{
-    width: 85%;
-    max-width:1450px;
-    height:90vh;
+    width: 92vw;
+    max-width: 1500px;
+    height: 92vh;
 
-    background: #000;
+    background:
+        radial-gradient(circle at top left,
+            rgba(91,140,255,0.10),
+            transparent 28%),
+        radial-gradient(circle at bottom right,
+            rgba(0,180,255,0.08),
+            transparent 28%),
+        #f5f7fb;
 
-    border-radius:20px;
+    border: 1px solid rgba(0,0,0,0.06);
 
-    padding:20px;
+    border-radius: 28px;
 
-    display:flex;
-    flex-direction:column;
+    padding: 24px;
 
-    gap:20px;
+    display: flex;
+    flex-direction: column;
 
-    overflow:hidden;
+    gap: 22px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.10);
+
+    color: #1a1a1a;
 }
 
-/* =========================
+/* =========================================
    HEADER
-========================= */
+========================================= */
 
 .comparison-header{
     display:flex;
@@ -32,61 +46,194 @@
     align-items:center;
 
     gap:20px;
+
+    padding-bottom: 14px;
+
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.comparison-header h2{
+    font-size: 28px;
+    font-weight: 700;
+
+    color: #111827;
+
+    letter-spacing: -0.5px;
 }
 
 .comparison-controls{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:12px;
 }
 
-/* =========================
+/* =========================================
+   SELECT
+========================================= */
+
+.comparison-controls select{
+    background: white;
+
+    border: 1px solid rgba(0,0,0,0.08);
+
+    color: #222;
+
+    padding: 12px 16px;
+
+    border-radius: 14px;
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition: 0.25s ease;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.04);
+}
+
+.comparison-controls select:hover{
+    border-color: rgba(91,140,255,0.35);
+}
+
+.comparison-controls select:focus{
+    border-color: #5b8cff;
+
+    box-shadow:
+        0 0 0 4px rgba(91,140,255,0.14);
+}
+
+.comparison-controls select option{
+    background: white;
+}
+
+/* =========================================
+   BUTTON
+========================================= */
+
+.comparison-controls button{
+    background: linear-gradient(
+        135deg,
+        #5b8cff,
+        #7c6dff
+    );
+
+    border: none;
+
+    background:
+        rgba(148,163,184,0.12);
+
+    color:
+        #334155;
+
+    padding: 12px 18px;
+
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    transition: 0.25s ease;
+
+    box-shadow:
+        0 8px 18px rgba(91,140,255,0.18);
+}
+
+.comparison-controls button:hover{
+
+    box-shadow:
+        0 12px 24px rgba(91,140,255,0.25);
+}
+
+/* =========================================
    BODY
-========================= */
+========================================= */
 
 .comparison-body{
     flex:1;
 
     display:grid;
 
-    grid-template-columns:380px 1fr;
+    grid-template-columns: 360px 1fr;
 
-    gap:20px;
+    gap:22px;
 
     overflow:hidden;
+
+    min-height:0;
 }
 
-/* =========================
+/* =========================================
    LEFT PANEL
-========================= */
+========================================= */
 
 .comparison-analysis{
     display:flex;
 
     flex-direction:column;
 
-    gap:20px;
+    gap:18px;
 
     overflow-y:auto;
+
+    padding-right:4px;
 }
 
-/* =========================
+/* =========================================
    ANALYSIS CARDS
-========================= */
+========================================= */
 
 .comparison-card{
-    background: #1a1a1a;
+    background: white;
 
-    border-radius:16px;
+    border-radius: 22px;
 
-    padding:20px;
+    padding: 22px;
 
-    border:1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
+
+    transition: 0.25s ease;
+
+    box-shadow:
+        0 6px 20px rgba(0,0,0,0.05);
 }
 
-/* =========================
+.comparison-card:hover{
+
+    box-shadow:
+        0 14px 28px rgba(0,0,0,0.08);
+
+    border-color: rgba(91,140,255,0.20);
+}
+
+.comparison-card h3{
+    margin-bottom: 14px;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    color: #111827;
+}
+
+.comparison-card p{
+    line-height: 1.7;
+
+    color: #4b5563;
+
+    margin: 12px 0;
+
+    font-size: 14px;
+}
+
+.comparison-card strong,
+.comparison-card b{
+    color: #111827;
+}
+
+/* =========================================
    RIGHT PANEL
-========================= */
+========================================= */
 
 .comparison-charts{
     display:flex;
@@ -96,53 +243,286 @@
     gap:20px;
 
     overflow-y:auto;
+
+    padding-right:4px;
 }
 
-/* =========================
+/* =========================================
    CHART CARDS
-========================= */
+========================================= */
 
 .comparison-chart-card{
-    background: #1a1a1a;
+    background: white;
 
-    border-radius:16px;
+    border-radius: 24px;
 
-    padding:20px;
+    padding: 22px;
 
-    border:1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(0,0,0,0.05);
 
-    min-height:320px;
+    min-height: 340px;
+
+    transition: 0.25s ease;
+
+    box-shadow:
+        0 6px 20px rgba(0,0,0,0.05);
 }
 
-/* =========================
+.comparison-chart-card:hover{
+
+    border-color: rgba(91,140,255,0.18);
+
+    box-shadow:
+        0 14px 30px rgba(0,0,0,0.08);
+}
+
+.comparison-chart-card h3{
+    margin-bottom: 18px;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    color: #111827;
+}
+
+/* =========================================
    CANVAS
-========================= */
+========================================= */
 
 .comparison-chart-card canvas{
     width:100% !important;
-    height:260px !important;
+    height:270px !important;
 }
 
-/* =========================
-   TEXT
-========================= */
+/* =========================================
+   SCROLLBAR
+========================================= */
 
-.comparison-card p{
-    line-height:1.5;
-    margin:10px 0;
+.comparison-analysis::-webkit-scrollbar,
+.comparison-charts::-webkit-scrollbar{
+    width: 6px;
 }
 
-/* =========================
+.comparison-analysis::-webkit-scrollbar-thumb,
+.comparison-charts::-webkit-scrollbar-thumb{
+    background: rgba(0,0,0,0.15);
+
+    border-radius: 20px;
+}
+
+.comparison-analysis::-webkit-scrollbar-thumb:hover,
+.comparison-charts::-webkit-scrollbar-thumb:hover{
+    background: rgba(0,0,0,0.25);
+}
+
+
+
+
+
+
+
+/* =========================================
+   DARK MODE
+========================================= */
+
+body.dark-mode .comparison-layout{
+    background:
+        radial-gradient(circle at top left,
+            rgba(91,140,255,0.14),
+            transparent 28%),
+        radial-gradient(circle at bottom right,
+            rgba(0,180,255,0.10),
+            transparent 28%),
+        #0f172a;
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    box-shadow:
+        0 24px 60px rgba(0,0,0,0.45);
+
+    color: #f8fafc;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+body.dark-mode .comparison-header{
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+body.dark-mode .comparison-header h2{
+    color: #f8fafc;
+}
+
+/* =========================================
+   SELECT
+========================================= */
+
+body.dark-mode .comparison-controls select{
+    background: rgba(255,255,255,0.05);
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    color: #f1f5f9;
+
+    box-shadow:
+        0 4px 14px rgba(0,0,0,0.20);
+}
+
+body.dark-mode .comparison-controls select:hover{
+    border-color: rgba(91,140,255,0.35);
+
+    background: rgba(255,255,255,0.07);
+}
+
+body.dark-mode .comparison-controls select:focus{
+    border-color: #5b8cff;
+
+    box-shadow:
+        0 0 0 4px rgba(91,140,255,0.18);
+}
+
+body.dark-mode .comparison-controls select option{
+    background: rgba(0,0,0,0.95);
+}
+
+/* =========================================
+   BUTTON
+========================================= */
+
+body.dark-mode .comparison-controls button{
+    background:
+        linear-gradient(
+            135deg,
+            #5b8cff,
+            #7c6dff
+        );
+
+    color: white;
+
+    box-shadow:
+        0 10px 24px rgba(91,140,255,0.25);
+}
+
+body.dark-mode .comparison-controls button:hover{
+
+    box-shadow:
+        0 14px 28px rgba(91,140,255,0.32);
+}
+
+/* =========================================
+   ANALYSIS CARDS
+========================================= */
+
+body.dark-mode .comparison-card{
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,0.05),
+            rgba(255,255,255,0.025)
+        );
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    box-shadow:
+        0 10px 28px rgba(0,0,0,0.25);
+}
+
+body.dark-mode .comparison-card:hover{
+    border-color: rgba(91,140,255,0.25);
+
+    box-shadow:
+        0 18px 36px rgba(0,0,0,0.35);
+}
+
+body.dark-mode .comparison-card h3{
+    color: #f8fafc;
+}
+
+body.dark-mode .comparison-card p{
+    color: #cbd5e1;
+}
+
+body.dark-mode .comparison-card strong,
+body.dark-mode .comparison-card b{
+    color: #ffffff;
+}
+
+/* =========================================
+   CHART CARDS
+========================================= */
+
+body.dark-mode .comparison-chart-card{
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,0.05),
+            rgba(255,255,255,0.025)
+        );
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    box-shadow:
+        0 10px 28px rgba(0,0,0,0.25);
+}
+
+body.dark-mode .comparison-chart-card:hover{
+    border-color: rgba(91,140,255,0.22);
+
+    box-shadow:
+        0 18px 36px rgba(0,0,0,0.35);
+}
+
+body.dark-mode .comparison-chart-card h3{
+    color: #f8fafc;
+}
+
+/* =========================================
+   SCROLLBAR
+========================================= */
+
+body.dark-mode .comparison-analysis::-webkit-scrollbar-thumb,
+body.dark-mode .comparison-charts::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,0.14);
+}
+
+body.dark-mode .comparison-analysis::-webkit-scrollbar-thumb:hover,
+body.dark-mode .comparison-charts::-webkit-scrollbar-thumb:hover{
+    background: rgba(255,255,255,0.24);
+}
+/* =========================================
    MOBILE
-========================= */
+========================================= */
+@media (max-width: 700px) {
 
-@media(max-width:1000px){
-
-    .comparison-body{
-        grid-template-columns:1fr;
+    .comparison-body {
+        display: grid;
+        grid-template-columns: 1fr;
+        row-gap: 22px;
     }
 
-    .comparison-analysis{
-        max-height:320px;
+    .comparison-controls {
+        flex-direction: column;
+        align-items: stretch;
+        width: 40%;
+        height: auto;
+        font-size: 14px;
     }
+
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .chart-card {
+        position: relative;
+    }
+
+    .chart-card canvas {
+        width: 250px !important;
+        height: 230px !important;
+    }
+
 }

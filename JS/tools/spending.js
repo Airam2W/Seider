@@ -22,14 +22,14 @@ export async function loadInsights() {
 
     const allEntries = await getUserEntries(currentUser.uid);
 
-    
+
     const tagSelect = document.getElementById("tagSelect");
     const subtagSelect = document.getElementById("subtagSelect");
 
     // DEFAULTS
     timeSelect.value = "all";
 
-    
+
     function refreshAll() {
 
         const filtered = filterByRange(allEntries, timeSelect.value);
@@ -96,7 +96,7 @@ function renderPie(data) {
 function getTrend(entries) {
     if (entries.length < 2) return t("status.notEnoughData");
 
-    const sorted = [...entries].sort((a,b)=>a.date.seconds - b.date.seconds);
+    const sorted = [...entries].sort((a, b) => a.date.seconds - b.date.seconds);
 
     const first = sorted[0].total;
     const last = sorted[sorted.length - 1].total;
@@ -113,7 +113,7 @@ function generateStats(entries) {
 
     const totals = entries.map(e => e.total || 0);
 
-    const avg = totals.reduce((a,b)=>a+b,0) / totals.length;
+    const avg = totals.reduce((a, b) => a + b, 0) / totals.length;
 
     const max = Math.max(...totals);
     const min = Math.min(...totals);
@@ -166,6 +166,15 @@ function renderTagChart(labels, data) {
                 label: "Amount",
                 data
             }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
         }
     });
 }
@@ -310,7 +319,16 @@ function updateSubtagChart(entries, tag) {
 
         subChartInstance = new Chart(ctx, {
             type: "line",
-            data: { labels, datasets }
+            data: { labels, datasets },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
         });
 
         return;
@@ -347,7 +365,16 @@ function updateSubtagChart(entries, tag) {
 
         subChartInstance = new Chart(ctx, {
             type: "line",
-            data: { labels, datasets }
+            data: { labels, datasets },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
+            }
         });
 
         return;
@@ -366,6 +393,15 @@ function updateSubtagChart(entries, tag) {
                 label: translateStoredLabel(sub),
                 data: series.data
             }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            }
         }
     });
 }
@@ -383,6 +419,7 @@ function renderMultiLineChart(canvasId, labels, datasets) {
             datasets
         },
         options: {
+            maintainAspectRatio: false,
             responsive: true,
             plugins: {
                 legend: {
@@ -430,14 +467,14 @@ function getGeneralAnalysis(entries) {
 
     const avg = total / entries.length;
 
-    const bestDay = entries.reduce((a,b)=> a.total > b.total ? a : b);
-    const worstDay = entries.reduce((a,b)=> a.total < b.total ? a : b);
+    const bestDay = entries.reduce((a, b) => a.total > b.total ? a : b);
+    const worstDay = entries.reduce((a, b) => a.total < b.total ? a : b);
 
-    const maxTag = Object.entries(tagStats).sort((a,b)=>b[1]-a[1])[0];
-    const minTag = Object.entries(tagStats).sort((a,b)=>a[1]-b[1])[0];
+    const maxTag = Object.entries(tagStats).sort((a, b) => b[1] - a[1])[0];
+    const minTag = Object.entries(tagStats).sort((a, b) => a[1] - b[1])[0];
 
-    const maxSub = Object.entries(subStats).sort((a,b)=>b[1]-a[1])[0];
-    const minSub = Object.entries(subStats).sort((a,b)=>a[1]-b[1])[0];
+    const maxSub = Object.entries(subStats).sort((a, b) => b[1] - a[1])[0];
+    const minSub = Object.entries(subStats).sort((a, b) => a[1] - b[1])[0];
 
     let totalNetSymbol = "+"
     if (total < 0) {

@@ -276,7 +276,22 @@ function generateSmartNote(items, total, day) {
 
 export function cleanRender() {
     const container = document.getElementById("simulationResult");
-    container.innerHTML = "";
+    container.innerHTML=`<div class="future-empty">
+
+                        <div class="future-empty-icon">
+                            ✦
+                        </div>
+
+                        <h3 data-i18n="timeline.noPrediction">
+                            ${t("timeline.noPrediction")}
+                        </h3>
+
+                        <p data-i18n="timeline.selectSimulationPeriod">
+                            ${t("timeline.selectSimulationPeriod")}
+                        </p>
+
+                    </div>`;
+
 }
 
 function renderSimulation(entries) {
@@ -291,7 +306,9 @@ function renderSimulation(entries) {
         entryDiv.className = "simulation-entry";
 
         let html = `
-            <div class="entry-date">${entry.date.toLocaleDateString()}</div>
+            <div class="simulation-date">
+                ${t("labels.date")} ${entry.date.toLocaleDateString()}
+            </div>
         `;
 
         const grouped = {};
@@ -305,7 +322,8 @@ function renderSimulation(entries) {
 
         Object.keys(grouped).forEach((tag) => {
             let groupTotal = 0;
-            html += `<div class="group-title">${translateStoredLabel(tag)}</div>`;
+            html += `<div class="future-group">`;
+            html += `<div class="future-group-title">${translateStoredLabel(tag)}</div>`;
 
             Object.keys(grouped[tag]).forEach((subtag) => {
                 let subTotal = 0;
@@ -314,12 +332,12 @@ function renderSimulation(entries) {
                     const value = (item.plus || 0) - (item.minus || 0);
                     subTotal += value;
 
-                    html += `<div class="subtag-title">↳ ${translateStoredLabel(subtag)}</div>`;
+                    html += `<div class="future-subtag">${translateStoredLabel(subtag)}</div>`;
 
                     html += `
-                        <div class="item-row">
-                            ${item.plus > 0 ? `<span class="plus">+ ${getCurrencySymbol(currencyFromUserGlobal)} ${item.plus} ${currencyFromUserGlobal}</span>` : ""}
-                            ${item.minus > 0 ? `<span class="minus">- ${getCurrencySymbol(currencyFromUserGlobal)} ${item.minus} ${currencyFromUserGlobal}</span>` : ""}
+                        <div class="future-item">
+                            ${item.plus > 0 ? `<span class="future-plus">+ ${getCurrencySymbol(currencyFromUserGlobal)} ${item.plus} ${currencyFromUserGlobal}</span>` : ""}
+                            ${item.minus > 0 ? `<span class="future-minus">- ${getCurrencySymbol(currencyFromUserGlobal)} ${item.minus} ${currencyFromUserGlobal}</span>` : ""}
                         </div>
                     `;
                 });
@@ -327,22 +345,38 @@ function renderSimulation(entries) {
                 groupTotal += subTotal;
 
                 html += `
-                    <div class="subtotal">
-                        ${t("future.subtotal")}: ${subTotal >= 0 ? "+ " : "- "}${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(subTotal)} ${currencyFromUserGlobal}
+                    <div class="future-subtotal">
+                        ${t("future.subtotal")}:
+                        ${subTotal >= 0 ? "+ " : "- "}
+                        ${getCurrencySymbol(currencyFromUserGlobal)}
+                        ${Math.abs(subTotal)}
+                        ${currencyFromUserGlobal}
                     </div>
                 `;
             });
 
             html += `
-                <div class="group-total">
-                    ${t("future.total")}: ${groupTotal >= 0 ? "+ " : "- "}${getCurrencySymbol(currencyFromUserGlobal)} ${Math.abs(groupTotal)} ${currencyFromUserGlobal}
+                <div class="future-total">
+                    ${t("future.total")}:
+                    ${groupTotal >= 0 ? "+ " : "- "}
+                    ${getCurrencySymbol(currencyFromUserGlobal)}
+                    ${Math.abs(groupTotal)}
+                    ${currencyFromUserGlobal}
                 </div>
             `;
         });
 
         html += `
-            <div class="notes">${t("labels.notes")}: ${entry.notes || "-"}</div>
-            <div class="final-total">${t("future.totalEquals")}: ${getCurrencySymbol(currencyFromUserGlobal)} ${entry.total} ${currencyFromUserGlobal}</div>
+            <div class="future-notes">
+                ${t("labels.notes")} ${entry.notes || "-"}
+            </div>
+
+            <div class="future-final-total">
+                ${t("future.totalEquals")}
+                ${getCurrencySymbol(currencyFromUserGlobal)}
+                ${entry.total}
+                ${currencyFromUserGlobal}
+            </div>
         `;
 
         entryDiv.innerHTML = html;
