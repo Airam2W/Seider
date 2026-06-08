@@ -432,18 +432,6 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
     inputFile.accept = "image/*,application/pdf";
     inputFile.style.display = "none";
 
-    // ===== CAMERA CAPTURE (MOBILE) =====
-    const inputCamera = document.createElement("input");
-    inputCamera.type = "file";
-    inputCamera.accept = "image/*";
-    inputCamera.capture = "environment";
-    inputCamera.style.display = "none";
-
-    // ===== BUTTON TAKE PICTURE =====
-    const btnTake = document.createElement("button");
-    btnTake.textContent = t("entry.takePicture");
-    btnTake.onclick = () => inputCamera.click();
-
     // ===== BUTTON SELECT FILE =====
     const btnUpload = document.createElement("button");
     btnUpload.textContent = t("entry.upload");
@@ -566,7 +554,6 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
 
 
     uploadBox.appendChild(fileName);
-    uploadBox.appendChild(btnTake);
     uploadBox.appendChild(btnUpload);
     uploadBox.appendChild(btnDownload);
 
@@ -574,7 +561,6 @@ function createUIEntry(item = null, tagSelect = null, container = null) {
     previewBox.className = "preview-box";
 
     previewBox.appendChild(inputFile);
-    previewBox.appendChild(inputCamera);
     previewBox.appendChild(preview);
 
 
